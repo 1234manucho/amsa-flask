@@ -1,0 +1,1034 @@
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7fdf8;
+  color: #333;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #0f5132;
+  color: #fff;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom right, #e6f4ea, #ffffff);
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  animation: fadeInUp 1.5s ease-out;
+}
+
+.cta-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+
+.green {
+  background: #198754;
+}
+
+.orange {
+  background: #fd7e14;
+}
+
+.features {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #ffffff;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: #f0fdf4;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #0f5132;
+  color: #fff;
+  margin-top: 2rem;
+}
+footer p {
+  margin: 0;
+}
+.invest-hero {
+  background: linear-gradient(135deg, #d9f0d9 0%, #f7fdf8 100%);
+  padding: 3rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin: 2rem;
+}
+
+.invest-hero h1 {
+  font-size: 2.5rem;
+  color: #198754;
+  margin-bottom: 0.5rem;
+}
+
+.invest-hero p {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.investment-tiers {
+  margin: 3rem 2rem;
+  text-align: center;
+}
+
+.tiers-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tier-card {
+  background: #e6f4ea;
+  border-radius: 15px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 5px 15px rgba(25, 135, 84, 0.15);
+  width: 250px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.tier-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(25, 135, 84, 0.3);
+}
+
+.tier-card h3 {
+  color: #198754;
+  margin-bottom: 0.5rem;
+}
+
+.tier-card p {
+  font-weight: 600;
+  margin: 0.3rem 0;
+}
+
+.how-to-invest {
+  background: #ffffff;
+  padding: 2rem 3rem;
+  margin: 3rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(25, 135, 84, 0.1);
+}
+
+.how-to-invest h2 {
+  color: #198754;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.how-to-invest ol {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.faqs {
+  background: #f0fdf4;
+  margin: 3rem 2rem;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+}
+
+.faqs h2 {
+  color: #198754;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.faq-item {
+  max-width: 700px;
+  margin: 1rem auto;
+  font-size: 1.1rem;
+}
+
+.faq-item h3 {
+  font-weight: 700;
+  color: #14532d;
+}
+
+.faq-item p {
+  margin-top: 0.4rem;
+  color: #333;
+}
+
+.buyland-hero {
+  background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 100%);
+  padding: 3rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin: 2rem;
+}
+
+.buyland-hero h1 {
+  font-size: 2.5rem;
+  color: #f97316;
+  margin-bottom: 0.5rem;
+}
+
+.buyland-hero p {
+  font-size: 1.2rem;
+  color: #444;
+}
+
+.land-gallery {
+  margin: 3rem 2rem;
+  text-align: center;
+}
+
+.gallery-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  flex-wrap: wrap;
+}
+
+.parcel-card {
+  background: #fff7ed;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  padding-bottom: 1rem;
+}
+
+.parcel-card img {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  height: 180px;
+  object-fit: cover;
+}
+
+.parcel-card h3 {
+  color: #f97316;
+  margin: 0.6rem 0 0.2rem;
+}
+
+.parcel-card p {
+  margin: 0.2rem 0;
+  font-weight: 600;
+  color: #7c2d12;
+}
+
+.parcel-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+}
+
+.payment-calculator {
+  background: #fffaf0;
+  margin: 3rem 2rem;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(249, 115, 22, 0.15);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.payment-calculator h2 {
+  color: #f97316;
+  margin-bottom: 1rem;
+}
+
+.payment-calculator form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.payment-calculator label {
+  font-weight: 600;
+  color: #7c2d12;
+  flex: 1 1 100%;
+  text-align: left;
+}
+
+.payment-calculator select,
+.payment-calculator input[type="number"] {
+  flex: 1 1 45%;
+  padding: 0.5rem 1rem;
+  border: 2px solid #f97316;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #7c2d12;
+}
+
+.calc-result {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  color: #f97316;
+}
+
+.how-to-buy {
+  background: #fff7ed;
+  margin: 3rem 2rem;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.how-to-buy h2 {
+  color: #f97316;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.how-to-buy ol {
+  font-size: 1.1rem;
+  color: #7c2d12;
+  line-height: 1.6;
+  padding-left: 1.2rem;
+}
+
+.client-stories {
+  background: #fffaf0;
+  margin: 3rem 2rem;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.client-stories h2 {
+  color: #f97316;
+  margin-bottom: 1rem;
+}
+
+.client-stories .story {
+  margin: 1rem 0;
+  font-style: italic;
+  color: #92400e;
+}
+
+.cta-container {
+  margin: 2rem 0 4rem;
+  text-align: center;
+}
+
+.cta-btn {
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0.8rem 3rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+  background-color: #b45309;
+  box-shadow: 0 6px 20px rgba(180, 83, 9, 0.5);
+}
+.cta-btn:active {
+  transform: scale(0.98);
+}
+.microfinance-hero {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin: 2rem;
+  color: #065f46;
+}
+
+.microfinance-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.microfinance-hero p {
+  font-size: 1.2rem;
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.8rem;
+  margin: 3rem 1rem;
+}
+
+.product-card {
+  background: #d1fae5;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 5px 15px rgba(6, 95, 70, 0.15);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(6, 95, 70, 0.3);
+}
+
+.product-card h3 {
+  margin-bottom: 1rem;
+  color: #047857;
+}
+
+.btn.orange {
+  background-color: #059669;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.btn.orange:hover {
+  background-color: #065f46;
+}
+
+.investment-portfolio {
+  max-width: 600px;
+  margin: 2rem auto 5rem auto;
+  padding: 2rem 2rem;
+  background: #f0fdf4;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(6, 95, 70, 0.15);
+  color: #065f46;
+  text-align: center;
+}
+
+.progress-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+progress {
+  width: 100%;
+  height: 25px;
+  border-radius: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #d1fae5;
+  border-radius: 12px;
+}
+
+progress::-webkit-progress-value {
+  background-color: #059669;
+  border-radius: 12px;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background-color: #ecfdf5;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(6,95,70,0.3);
+}
+
+.close-btn {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #065f46;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #a7f3d0;
+  margin-bottom: 1rem;
+}
+
+
+
+
+
+
+        
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7fdf8;
+  color: #333;
+  scroll-behavior: smooth;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #0f5132;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #fd7e14;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom right, #e6f4ea, #ffffff);
+  animation: fadeIn 2s ease-out;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  animation: fadeInUp 1.5s ease-out;
+}
+
+.cta-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.green {
+  background: #198754;
+}
+
+.orange {
+  background: #fd7e14;
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+}
+
+.features {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #ffffff;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: #f0fdf4;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+  animation: fadeInUp 1s ease forwards;
+}
+
+.page-section {
+  padding: 3rem 2rem;
+  animation: fadeIn 1s ease-out;
+}
+
+.form {
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form input,
+.form textarea {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #0f5132;
+  color: #fff;
+  margin-top: 2rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* Loader Wrapper */
+#loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0fdf4;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loader Animation */
+#loader {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 3rem;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.emoji {
+  animation: bounce 1.5s infinite;
+}
+
+.emoji:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.emoji:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* Make all code blocks horizontally scrollable on small screens */
+pre, code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem; /* readable font size */
+  white-space: pre; /* preserve whitespace, no wrapping */
+  overflow-x: auto; /* horizontal scrollbar if needed */
+  max-width: 100%; /* don't exceed container width */
+  box-sizing: border-box;
+  padding: 0.75em;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  display: block;
+  word-wrap: normal; /* prevent breaking words inside code */
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+/* Optional: limit max height so code blocks don't take too much vertical space */
+pre {
+  max-height: 300px; /* adjust as needed */
+  overflow-y: auto;
+}
+
+/* Responsive tweaks for small screens */
+@media (max-width: 600px) {
+  pre, code {
+    font-size: 0.9rem; /* slightly smaller font on phones */
+  }
+}
+
+/* Responsive design for smaller screens */
+  input, select, button {
+    border-radius: 0.5rem;
+  }
+
+  @media (max-width: 576px) {
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .btn-lg, .form-control-lg, .form-select-lg {
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .hero-content h1 {
+      font-size: 2rem;
+    }
+
+    .hero-content p {
+      font-size: 1rem;
+    }
+  }
+ 
+
+  .microfinance-hero {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .products-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .product-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 1rem);
+    text-align: center;
+  }
+  
+  .investment-portfolio {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .progress-container {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px; 
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+    max-width: 500px; 
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close-btn:hover,
+  .close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn.orange {
+    background-color: #0c9f3b;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn.orange:hover {
+    background-color: #0c9f3b;
+  }
+  .btn.orange:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.5);
+  }
+  .btn {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+  .calc-result {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    color: #f97316;
+  }
+  .how-to-buy {
+    background: #fffaf0;
+    margin: 3rem 2rem;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .how-to-buy h2 {
+    color: #f97316;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .how-to-buy ol {
+    font-size: 1.1rem;
+    color: #7c2d12;
+    line-height: 1.6;
+    padding-left: 1.2rem;
+  }
+  .client-stories {
+    background: #fffaf0;
+    margin: 3rem 2rem;
+    padding: 2rem 3rem;
+    border-radius: 12px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  .client-stories h2 {
+    color: #f97316;
+    margin-bottom: 1rem;
+  }
+  .client-stories .story {
+    margin: 1rem 0;
+    font-style: italic;
+    color: #92400e;
+  }
+  .cta-container {
+    margin: 2rem 0 4rem;
+    text-align: center;
+  }
+  .cta-btn {
+    font-weight: 700;
+    font-size: 1.2rem;
+    padding: 0.8rem 3rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+    transition: background-color 0.3s ease;
+    color: white;
+    background-color: #f97316;
+  }
+  .cta-btn:hover {
+    background-color: #b45309;
+    box-shadow: 0 6px 20px rgba(180, 83, 9, 0.5);
+  }
+  .cta-btn:active {
+    transform: scale(0.98);
+  }
+  .microfinance-hero {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-radius: 12px;
+    margin: 2rem;
+    color: #065f46;
+  }
+  .microfinance-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  /* Make all code blocks horizontally scrollable on small screens */
+pre, code {
+  font-family: 'Courier New', Courier, monospace; /* Ensures a monospaced font for readability */
+  font-size: 1rem; /* Readable default font size */
+  white-space: pre; /* Preserves whitespace and prevents automatic wrapping */
+  overflow-x: auto; /* Enables horizontal scrollbar if content overflows */
+  max-width: 100%; /* Ensures the block doesn't exceed its container's width */
+  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+  padding: 0.75em; /* Adds some padding around the code */
+  background-color: #f5f5f5; /* Light background for code blocks */
+  border-radius: 6px; /* Slightly rounded corners */
+  border: 1px solid #ddd; /* Subtle border */
+  display: block; /* Ensures it behaves as a block element */
+  word-wrap: normal; /* Prevents breaking words inside the code block */
+  -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS devices */
+}
+
+/* Optional: limit max height so code blocks don't take too much vertical space */
+pre {
+  max-height: 300px; /* Adjust as needed; adds vertical scrollbar if content exceeds this height */
+  overflow-y: auto; /* Enables vertical scrollbar if content overflows vertically */
+}
+
+/* Responsive tweaks for small screens */
+@media (max-width: 600px) {
+  pre, code {
+    font-size: 0.9rem; /* Slightly smaller font on phones for better fit */
+  }
+}

@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - AMSA Developers{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --primary: #007bff;
+        --secondary: #6c757d;
+        --bg-light: #f8f9fa;
+        --bg-hover: #e9ecef;
+        --card-shadow: 0 6px 24px rgba(44, 62, 80, 0.12);
+        --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    body {
+        background: linear-gradient(120deg, #f8fafc 0%, #e9ecef 100%);
+    }
+    .dashboard-header {
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: #2c3e50;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px);}
+        to { opacity: 1; transform: translateY(0);}
+    }
+    .dashboard-card {
+        border: none;
+        border-radius: 18px;
+        background: var(--bg-light);
+        transition: box-shadow var(--transition), background var(--transition), transform var(--transition);
+        min-height: 140px;
+        box-shadow: 0 2px 12px rgba(44,62,80,0.06);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: cardFadeIn 0.7s forwards;
+    }
+    .dashboard-card:nth-child(1) { animation-delay: 0.1s;}
+    .dashboard-card:nth-child(2) { animation-delay: 0.2s;}
+    .dashboard-card:nth-child(3) { animation-delay: 0.3s;}
+    .dashboard-card:nth-child(4) { animation-delay: 0.4s;}
+    .dashboard-card:nth-child(5) { animation-delay: 0.5s;}
+    .dashboard-card:nth-child(6) { animation-delay: 0.6s;}
+    .dashboard-card:nth-child(7) { animation-delay: 0.7s;}
+    @keyframes cardFadeIn {
+        to { opacity: 1; transform: translateY(0);}
+        from { opacity: 0; transform: translateY(30px);}
+    }
+    .dashboard-card:hover {
+        box-shadow: var(--card-shadow), 0 8px 32px rgba(0,123,255,0.08);
+        background: var(--bg-hover);
+        transform: translateY(-6px) scale(1.03);
+    }
+    .dashboard-card h5 {
+        color: var(--secondary);
+        font-size: 1.08rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        opacity: 0.85;
+    }
+    .dashboard-card h3 {
+        color: var(--primary);
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 0;
+        text-shadow: 0 2px 8px rgba(0,123,255,0.08);
+        animation: popIn 0.7s;
+    }
+    @keyframes popIn {
+        from { transform: scale(0.8); opacity: 0;}
+        to { transform: scale(1); opacity: 1;}
+    }
+    .admin-actions .btn {
+        font-size: 1.13rem;
+        padding: 18px 0;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        letter-spacing: 0.5px;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(90deg, #f8fafc 0%, #e9ecef 100%);
+    }
+    .admin-actions .btn:before {
+        content: "";
+        position: absolute;
+        left: -50%;
+        top: 0;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(0,123,255,0.08) 0%, rgba(0,123,255,0.02) 100%);
+        opacity: 0;
+        transition: opacity var(--transition);
+        z-index: 0;
+    }
+    .admin-actions .btn:hover:before {
+        opacity: 1;
+    }
+    .admin-actions .btn:hover {
+        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 6px 24px rgba(0,123,255,0.12);
+        color: #fff !important;
+        background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    }
+    .admin-actions .btn i {
+        font-size: 1.2em;
+        vertical-align: middle;
+        margin-right: 0.5em;
+    }
+    @media (max-width: 767px) {
+        .dashboard-card {
+            min-height: 100px;
+        }
+        .admin-actions .btn {
+            font-size: 1rem;
+            padding: 14px 0;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 dashboard-header">Admin Dashboard</h2>
+    <div class="row text-center mb-5 g-3">
+        <!-- Dashboard cards here (unchanged) -->
+        <!-- ... -->
+    </div>
+    <style>
+        @keyframes iconPop {
+            from { transform: scale(0.6); opacity: 0;}
+            to { transform: scale(1); opacity: 1;}
+        }
+        .dashboard-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+            animation: popIn 0.7s;
+        }
+        .dashboard-icon i {
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
+        }
+        /* Modern horizontal admin actions */
+        .admin-actions-row {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .admin-action-card {
+            flex: 1 1 220px;
+            min-width: 220px;
+            max-width: 320px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(44,62,80,0.10);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1.2rem 1.2rem 1.2rem;
+            transition: box-shadow 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-action-card:hover {
+            box-shadow: 0 8px 32px rgba(0,123,255,0.13);
+            transform: translateY(-6px) scale(1.03);
+        }
+        .admin-action-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #f8fafc 60%, #e9ecef 100%);
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+        }
+        .admin-action-title {
+            font-weight: 700;
+            font-size: 1.13rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+        .admin-action-link {
+            margin-top: auto;
+            width: 100%;
+            display: block;
+            text-align: center;
+            padding: 0.85rem 0;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.07rem;
+            background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+            color: #fff !important;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            transition: background 0.3s, color 0.3s, transform 0.3s;
+            text-decoration: none;
+        }
+        .admin-action-link:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            color: #fff !important;
+            transform: translateY(-2px) scale(1.03);
+        }
+        /* Custom colors for each action */
+        .admin-action-users .admin-action-icon { background: linear-gradient(135deg, #e3f0ff 60%, #007bff22 100%); color: #007bff;}
+        .admin-action-land .admin-action-icon { background: linear-gradient(135deg, #fffbe3 60%, #ffc10722 100%); color: #ffc107;}
+        .admin-action-investments .admin-action-icon { background: linear-gradient(135deg, #e3ffe3 60%, #28a74522 100%); color: #28a745;}
+        .admin-action-transactions .admin-action-icon { background: linear-gradient(135deg, #e3f7ff 60%, #17a2b822 100%); color: #17a2b8;}
+        @media (max-width: 991px) {
+            .admin-actions-row { flex-wrap: wrap; gap: 1rem;}
+            .admin-action-card { min-width: 180px; padding: 1.2rem 0.7rem;}
+        }
+        @media (max-width: 767px) {
+            .admin-actions-row { flex-direction: column; gap: 1rem;}
+            .admin-action-card { max-width: 100%; min-width: 0;}
+        }
+    </style>
+    <h3 class="text-center mb-4 dashboard-header">Admin Actions</h3>
+    <div class="admin-actions-row">
+        <div class="admin-action-card admin-action-users">
+            <div class="admin-action-icon">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="admin-action-title">Manage Users</div>
+           <a href="{{ url_for('main.manage_users') }}" class="admin-action-link">
+
+                Go to Users
+            </a>
+        </div>
+        <div class="admin-action-card admin-action-land">
+            <div class="admin-action-icon">
+                <i class="fas fa-map"></i>
+            </div>
+            <div class="admin-action-title">Manage Land Listings</div>
+            <a href="{{ url_for('main.manage_land') }}" class="admin-action-link" style="background: linear-gradient(90deg, #ffc107 0%, #ffecb3 100%); color: #2c3e50;">
+                Go to Land
+            </a>
+        </div>
+        <div class="admin-action-card admin-action-investments">
+            <div class="admin-action-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="admin-action-title">Manage Investments</div>
+            <a href="{{ url_for('main.manage_investments') }}" class="admin-action-link" style="background: linear-gradient(90deg, #28a745 0%, #b2f2bb 100%);">
+                Go to Investments
+            </a>
+        </div>
+        <div class="admin-action-card admin-action-transactions">
+            <div class="admin-action-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="admin-action-title">View Transactions</div>
+            <a href="{{ url_for('main.view_transactions') }}" class="admin-action-link" style="background: linear-gradient(90deg, #17a2b8 0%, #b2f0ff 100%);">
+                Go to Transactions
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}✏️ Edit User - AMSA Developers{% endblock %}
+
+{% block content %}
+<style>
+    /* General container styling */
+    .edit-user-container {
+        background: linear-gradient(135deg, #f8fafc 70%, #e0e7ef 100%);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(37,99,235,0.10), 0 1.5px 6px rgba(0,0,0,0.06);
+        padding: 40px 28px;
+        margin-top: 40px;
+        animation: fadeIn 1s ease-out;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Keyframe for fade-in animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Title styling */
+    .edit-user-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #2563eb;
+        letter-spacing: 1.5px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        animation: bounceIn 1.2s ease-out;
+    }
+
+    /* Keyframe for bounce-in animation */
+    @keyframes bounceIn {
+        0% { transform: scale(0.8); }
+        60% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Form control styling */
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        padding: 12px 18px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 0.2rem rgba(37,99,235,0.25);
+    }
+
+    /* Label styling */
+    label {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Button styling */
+    .btn-primary {
+        background: linear-gradient(90deg, #2563eb 70%, #60a5fa 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 15px rgba(37,99,235,0.2);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37,99,235,0.3);
+        background: linear-gradient(90deg, #1d4ed8 70%, #3b82f6 100%); /* Slightly darker on hover */
+    }
+
+    .btn-secondary {
+        background-color: #64748b;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 4px 15px rgba(100,116,139,0.2);
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(100,116,139,0.3);
+        background-color: #475569; /* Slightly darker on hover */
+    }
+
+    /* Emoji styling */
+    .emoji {
+        font-size: 1.2em;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+    /* Form group spacing */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .edit-user-container {
+            padding: 20px 15px;
+            margin-top: 20px;
+        }
+        .edit-user-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .form-control, .btn-primary, .btn-secondary {
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="container edit-user-container">
+    <h2 class="text-center mb-4 edit-user-title">
+        <span class="emoji">✏️</span> Edit User: {{ user.full_name }} <span class="emoji">⚙️</span>
+    </h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages-container my-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+       
+
+        <div class="form-group">
+            <label for="full_name"><span class="emoji">👤</span> Full Name</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.full_name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email"><span class="emoji">📧</span> Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+        <div class="form-group">
+            <label for="role"><span class="emoji">🎖️</span> Role</label>
+            <select class="form-control" id="role" name="role" required {% if user.id == session.user_id %}disabled{% endif %}>
+                <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                <option value="investor" {% if user.role == 'investor' %}selected{% endif %}>Investor</option>
+                <option value="landbuyer" {% if user.role == 'landbuyer' %}selected{% endif %}>Land Buyer</option>
+                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+            {% if user.id == session.user_id %}
+                <small class="form-text text-muted">You cannot change your own role.</small>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="id_number"><span class="emoji">🪪</span> ID Number</label>
+            <input type="text" class="form-control" id="id_number" name="id_number" value="{{ user.id_number | default('') }}">
+        </div>
+        <div class="form-group">
+            <label for="phone_number"><span class="emoji">📱</span> Phone Number</label>
+            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number | default('') }}">
+        </div>
+        <div class="form-group">
+            <label for="next_of_kin_name"><span class="emoji">👨‍👩‍👧‍👦</span> Next of Kin Name</label>
+            <input type="text" class="form-control" id="next_of_kin_name" name="next_of_kin_name" value="{{ user.next_of_kin_name | default('') }}">
+        </div>
+        <div class="form-group">
+            <label for="next_of_kin_phone"><span class="emoji">📞</span> Next of Kin Phone</label>
+            <input type="text" class="form-control" id="next_of_kin_phone" name="next_of_kin_phone" value="{{ user.next_of_kin_phone | default('') }}">
+        </div>
+        <div class="form-group">
+            <label for="password"><span class="emoji">🔑</span> New Password (leave blank to keep current)</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary"><span class="emoji">💾</span> Save Changes</button>
+            <a href="{{ url_for('manage_users') }}" class="btn btn-secondary ms-2"><span class="emoji">↩️</span> Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

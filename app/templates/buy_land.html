@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buy Land - AMSA Group</title>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    :root {
+      --main-green: #16a34a;
+      --main-green-dark: #14532d;
+      --main-green-light: #e6f4ea;
+      --accent-gold: #ffd700;
+      --blue: #2563eb;
+      --nav-link: #14532d;
+      --nav-link-hover: #16a34a;
+      --shadow: 0 2px 16px #16653422;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f6f8fa;
+      margin: 0;
+      color: #222;
+      min-height: 100vh;
+    }
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      padding: 1.2rem 2.5vw;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px #16653411;
+      animation: navFadeIn 1s;
+    }
+    @keyframes navFadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .navbar .logo {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--main-green-dark);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: logoBounce 1.2s;
+      user-select: none;
+    }
+    @keyframes logoBounce {
+      0% { transform: scale(0.8);}
+      60% { transform: scale(1.1);}
+      100% { transform: scale(1);}
+    }
+    .navbar nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .navbar a {
+      color: var(--nav-link);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.07rem;
+      transition: color 0.2s;
+      position: relative;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.4rem;
+    }
+    .navbar a::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 2px;
+      background: var(--main-green);
+      transition: width 0.2s;
+      position: absolute;
+      left: 0; bottom: -3px;
+    }
+    .navbar a:hover, .navbar a.active {
+      color: var(--nav-link-hover);
+      background: #e6f4ea;
+    }
+    .navbar a:hover::after, .navbar a.active::after {
+      width: 100%;
+    }
+    .navbar .explore-btn {
+      background: linear-gradient(90deg, var(--main-green), var(--accent-gold));
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 0.7rem;
+      padding: 0.6rem 1.5rem;
+      margin-left: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #ffd70033;
+      transition: background 0.2s, transform 0.2s;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: fadeIn 1.2s;
+    }
+    .navbar .explore-btn:hover {
+      background: linear-gradient(90deg, var(--accent-gold), var(--main-green));
+      transform: scale(1.05);
+      color: var(--main-green-dark);
+    }
+    /* Hero Section */
+    .buyland-hero {
+      background: linear-gradient(120deg, var(--main-green) 0%, var(--main-green-light) 100%);
+      padding: 4rem 1rem 3rem 1rem;
+      text-align: center;
+      border-radius: 2rem;
+      margin: 2.5rem auto 2.5rem auto;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      max-width: 1100px;
+      animation: fadeIn 1.2s;
+    }
+    .buyland-hero::before {
+      content: "";
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
+      opacity: 0.18;
+      z-index: 0;
+      animation: float 6s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(30px);}
+    }
+    .buyland-hero h1 {
+      font-size: 2.7rem;
+      font-weight: 800;
+      color: var(--main-green-dark);
+      margin-bottom: 0.7rem;
+      letter-spacing: 1px;
+      z-index: 1;
+      position: relative;
+      text-shadow: 0 2px 12px #fff8;
+      animation: fadeInDown 1s;
+    }
+    .buyland-hero p {
+      font-size: 1.25rem;
+      color: #222;
+      z-index: 1;
+      position: relative;
+      margin-bottom: 1.2rem;
+      animation: fadeInUp 1.2s;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .buyland-hero .hero-cta {
+      margin-top: 1.2rem;
+      display: inline-block;
+      background: var(--accent-gold);
+      color: var(--main-green-dark);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.7rem 2.2rem;
+      border-radius: 0.7rem;
+      text-decoration: none;
+      box-shadow: 0 2px 12px #ffd70033;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      animation: fadeIn 1.5s;
+      position: relative;
+    }
+    .buyland-hero .hero-cta::after {
+      content: "🌍";
+      margin-left: 0.7rem;
+      font-size: 1.2rem;
+      animation: bounce 1.2s infinite alternate;
+    }
+    .buyland-hero .hero-cta:hover {
+      background: #ffe066;
+      color: #14532d;
+      transform: scale(1.04);
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    @keyframes bounce {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-8px);}
+    }
+    /* Feature Highlights */
+    .features-bar {
+      max-width: 1100px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px #16653411;
+      padding: 1.2rem 1.5rem;
+      animation: fadeInUp 1.2s;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 1.1rem;
+      color: var(--main-green-dark);
+      font-weight: 600;
+      background: var(--main-green-light);
+      border-radius: 0.7rem;
+      padding: 0.6rem 1.2rem;
+      box-shadow: 0 1px 6px #16653411;
+      transition: transform 0.2s, background 0.2s;
+      min-width: 160px;
+      justify-content: center;
+    }
+    .feature-item:hover {
+      transform: scale(1.06) rotate(-2deg);
+      background: #fffbe6;
+    }
+    /* Filter Bar */
+    .filter-bar {
+      max-width: 1100px;
+      margin: 0 auto 2rem auto;
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px #16653411;
+      padding: 1rem 1.5rem;
+      animation: fadeInUp 1.2s;
+    }
+    .filter-bar label {
+      font-weight: 600;
+      color: var(--main-green-dark);
+      margin-right: 0.5rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .filter-bar select {
+      padding: 0.4rem 1rem;
+      border-radius: 0.5rem;
+      border: 1.5px solid var(--main-green);
+      font-size: 1rem;
+      background: #fff;
+      transition: border 0.2s;
+    }
+    .filter-bar select:focus {
+      border: 1.5px solid var(--accent-gold);
+      outline: none;
+    }
+    .filter-bar .quick-action-btn {
+      margin-left: 1rem;
+    }
+    /* Gallery Section */
+    .land-gallery {
+      margin-bottom: 2.5rem;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .land-gallery h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      color: var(--main-green);
+      font-weight: 700;
+      letter-spacing: 1px;
+      animation: fadeInDown 1.2s;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .parcel-card {
+      background: #fff;
+      border-radius: 1.2rem;
+      box-shadow: var(--shadow);
+      padding: 2rem 1.2rem 1.5rem 1.2rem;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 420px;
+      animation: fadeInUp 1.2s;
+    }
+    .parcel-card:hover, .parcel-card:focus {
+      transform: translateY(-10px) scale(1.04) rotate(-1deg);
+      box-shadow: 0 12px 40px #16653422;
+      border: 2px solid var(--accent-gold);
+    }
+    .parcel-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      border-radius: 0.9rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 12px #16653411;
+      transition: filter 0.3s;
+      animation: fadeIn 1.2s;
+    }
+    .parcel-card:hover img {
+      filter: brightness(1.08) saturate(1.2);
+    }
+    .parcel-card h3 {
+      color: var(--main-green-dark);
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .parcel-card p {
+      color: #222;
+      margin-bottom: 0.2rem;
+      font-size: 1.07rem;
+    }
+    .parcel-card .badge {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: var(--accent-gold);
+      color: #222;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.3rem 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 6px #ffd70033;
+      letter-spacing: 0.5px;
+      animation: fadeIn 1.2s;
+    }
+    .parcel-card .badge::after {
+      content: "🔥";
+      margin-left: 0.4rem;
+      font-size: 1.1rem;
+      display: inline-block;
+      animation: bounce 1.2s infinite alternate;
+    }
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      margin: 2rem 0 2.5rem 0;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.2s;
+    }
+    .quick-action-btn {
+      background: linear-gradient(90deg, var(--main-green), var(--blue));
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 0.7rem;
+      padding: 0.8rem 2.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #16653422;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      transition: background 0.2s, transform 0.2s, color 0.2s;
+    }
+    .quick-action-btn i {
+      font-size: 1.2rem;
+    }
+    .quick-action-btn:hover {
+      background: linear-gradient(90deg, var(--blue), var(--main-green));
+      transform: scale(1.05);
+      color: var(--accent-gold);
+    }
+    /* Payment Calculator */
+    .payment-calculator {
+      background: #fff;
+      border-radius: 1.2rem;
+      box-shadow: var(--shadow);
+      max-width: 600px;
+      margin: 2.5rem auto;
+      padding: 2rem 1.5rem;
+      animation: fadeIn 1.2s;
+    }
+    .payment-calculator h2 {
+      color: var(--main-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    #calc-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    #calc-form label {
+      font-weight: 600;
+      color: var(--main-green-dark);
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    #calc-form input, #calc-form select {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1.5px solid var(--main-green);
+      font-size: 1rem;
+      background: #fff;
+      transition: border 0.2s;
+      margin-top: 0.2rem;
+    }
+    #calc-form input:focus, #calc-form select:focus {
+      border: 1.5px solid var(--accent-gold);
+      outline: none;
+    }
+    #calc-form .btn {
+      background: var(--main-green);
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 0.7rem;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #16653422;
+      font-size: 1.05rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    #calc-form .btn:hover {
+      background: var(--main-green-dark);
+      transform: scale(1.05);
+      color: var(--accent-gold);
+    }
+    .calc-result {
+      text-align: center;
+      color: var(--main-green-dark);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-top: 0.7rem;
+      min-height: 1.5em;
+      animation: fadeIn 1.2s;
+    }
+    /* How to Buy */
+    .how-to-buy {
+      background: #fff;
+      border-radius: 1.2rem;
+      box-shadow: var(--shadow);
+      max-width: 700px;
+      margin: 2.5rem auto;
+      padding: 2rem 1.5rem;
+      animation: fadeIn 1.2s;
+    }
+    .how-to-buy h2 {
+      color: var(--main-green);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .how-to-buy ol {
+      margin-left: 1.2rem;
+      color: #222;
+      font-size: 1.12rem;
+      line-height: 1.8;
+      font-weight: 500;
+      z-index: 1;
+      position: relative;
+    }
+    .how-to-buy li {
+      margin-bottom: 0.7rem;
+      transition: color 0.2s;
+      position: relative;
+      padding-left: 2.2rem;
+    }
+    .how-to-buy li::before {
+      content: "✅";
+      position: absolute;
+      left: 0;
+      font-size: 1.2rem;
+      top: 0.1rem;
+      animation: bounce 1.2s infinite alternate;
+    }
+    .how-to-buy li:hover {
+      color: var(--main-green);
+    }
+    /* Client Stories */
+    .client-stories {
+      margin: 3rem 0 2rem 0;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      animation: fadeIn 1.2s;
+    }
+    .client-stories h2 {
+      color: var(--main-green);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .story {
+      background: var(--main-green-light);
+      border-left: 5px solid var(--main-green);
+      border-radius: 0.9rem;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.2rem;
+      font-style: italic;
+      color: #222;
+      box-shadow: 0 1px 8px #16653411;
+      position: relative;
+      animation: fadeIn 1.2s;
+    }
+    .story::before {
+      content: "❝";
+      font-size: 2.5rem;
+      color: var(--accent-gold);
+      position: absolute;
+      left: 10px; top: -10px;
+      opacity: 0.7;
+      animation: bounce 1.2s infinite alternate;
+    }
+    /* Feedback */
+    .client-feedback {
+      background: #fff;
+      border-radius: 1.2rem;
+      box-shadow: var(--shadow);
+      max-width: 700px;
+      margin: 2.5rem auto;
+      padding: 2rem 1.5rem;
+      animation: fadeIn 1.2s;
+    }
+    .client-feedback h2 {
+      text-align:center;
+      color: var(--main-green);
+      margin-bottom: 1.2rem;
+    }
+    .client-feedback form {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .client-feedback input, .client-feedback textarea {
+      padding: 0.8rem;
+      border-radius: 0.6rem;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+    .client-feedback input:focus, .client-feedback textarea:focus {
+      border: 1.5px solid var(--main-green);
+      outline: none;
+    }
+    .client-feedback .btn {
+      background: var(--main-green);
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 0.7rem;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #16653422;
+      font-size: 1.05rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .client-feedback .btn:hover {
+      background: var(--main-green-dark);
+      transform: scale(1.05);
+      color: var(--accent-gold);
+    }
+    .feedback-success {
+      color: var(--main-green-dark);
+      text-align: center;
+      font-weight: 700;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      animation: fadeIn 1.2s;
+    }
+    /* CTA */
+    .cta-container {
+      text-align: center;
+      margin: 3rem 0 2rem 0;
+      animation: fadeIn 1.2s;
+    }
+    .cta-btn {
+      background: var(--main-green);
+      color: #fff;
+      font-size: 1.18rem;
+      font-weight: 800;
+      padding: 1rem 2.7rem;
+      border-radius: 1rem;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 2px 16px #16653422;
+      display: inline-block;
+      letter-spacing: 1px;
+      border: 2px solid var(--accent-gold);
+      position: relative;
+    }
+    .cta-btn::after {
+      content: "🚀";
+      margin-left: 0.7rem;
+      font-size: 1.2rem;
+      animation: bounce 1.2s infinite alternate;
+    }
+    .cta-btn:hover {
+      background: var(--main-green-dark);
+      box-shadow: 0 6px 32px #16653433;
+      transform: scale(1.04);
+      color: var(--accent-gold);
+    }
+    /* Animations for AOS */
+    [data-aos] {
+      opacity: 0;
+      transition-property: opacity, transform;
+    }
+    [data-aos].aos-animate {
+      opacity: 1;
+    }
+    @media (max-width: 900px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 2vw;
+      }
+      .navbar nav {
+        gap: 1.2rem;
+      }
+      .features-bar {
+        gap: 1rem;
+      }
+    }
+    @media (max-width: 700px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .how-to-buy, .client-stories, .payment-calculator, .client-feedback {
+        padding: 1.2rem 0.5rem;
+      }
+      .buyland-hero {
+        padding: 2.2rem 0.5rem 1.5rem 0.5rem;
+      }
+      .parcel-card img {
+        height: 140px;
+      }
+      .features-bar {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .filter-bar {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      .quick-actions {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .navbar nav {
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  
+
+  <!-- Buy Land Hero Section -->
+  <section class="buyland-hero" data-aos="fade-up">
+    <h1>Own Land with Confidence <span style="font-size:2rem;">🌳</span></h1>
+    <p>
+      Invest in <span style="color:var(--accent-gold);font-weight:700;">verified</span>,
+      <span style="color:var(--main-green-dark);font-weight:700;">affordable</span> parcels and build your future today.
+      <span style="font-size:1.3rem;">✨</span>
+    </p>
+    <a href="/microfinance" class="hero-cta">Explore Land Listings</a>
+  </section>
+
+  <!-- Feature Highlights -->
+  <div class="features-bar" data-aos="fade-up">
+    <div class="feature-item"><span>🔒</span> Secure Titles</div>
+    <div class="feature-item"><span>💰</span> Flexible Payments</div>
+    <div class="feature-item"><span>📍</span> Prime Locations</div>
+    <div class="feature-item"><span>👨‍💼</span> Free Consultation</div>
+    <div class="feature-item"><span>🚗</span> Free Site Visits</div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar" data-aos="fade-up">
+    <label for="location">Location:
+      <select id="location">
+        <option value="">All</option>
+        <option value="Kajiado">Kajiado</option>
+        <option value="Kitengela">Kitengela</option>
+        <option value="Naivasha">Naivasha</option>
+      </select>
+    </label>
+    <label for="size">Size:
+      <select id="size">
+        <option value="">All</option>
+        <option value="1/8">1/8 Acre</option>
+        <option value="1/4">1/4 Acre</option>
+        <option value="1/2">1/2 Acre</option>
+      </select>
+    </label>
+    <label for="price-range">Price:
+      <select id="price-range">
+        <option value="">All</option>
+        <option value="0-400000">Below 400K</option>
+        <option value="400001-700000">400K - 700K</option>
+        <option value="700001-1000000">700K - 1M</option>
+      </select>
+    </label>
+    <button class="quick-action-btn" id="reset-filters"><i class="fa fa-sync"></i> Reset</button>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions" data-aos="fade-up">
+    <button class="quick-action-btn" onclick="window.open('tel:+254793570338')"><i class="fa fa-phone"></i> Call Us</button>
+    <button class="quick-action-btn" onclick="window.open('mailto:amsavillage@gmail.com')"><i class="fa fa-envelope"></i> Email</button>
+    <button class="quick-action-btn" onclick="window.open('https://wa.me/254793570338')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+    <button class="quick-action-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fa fa-arrow-up"></i> Top</button>
+  </div>
+
+  <!-- Land Gallery Section -->
+  <section class="land-gallery" id="gallery" data-aos="fade-up">
+    <h2>Available Land Parcels</h2>
+    <div class="gallery-grid" id="gallery-grid" style="gap:1.2rem;">
+      <div class="parcel-card" data-location="Kajiado" data-size="1/8" data-price="350000" style="min-height:220px;display:flex;flex-direction:column;justify-content:center;">
+        <h3 style="margin-top:0;">Emali along Mombasa Road <span style="color:var(--accent-gold);font-size:1rem;">• 1/8 Acre</span></h3>
+        <p style="font-size:1.15rem;font-weight:700;color:var(--main-green);margin-bottom:0.7rem;">KES 500,000</p>
+        <span class="badge">Hot Deal</span>
+        <table style="width:100%;margin:0.7rem 0 0 0;font-size:1rem;color:#444;border-collapse:collapse;">
+          <tr>
+            <td style="padding:0.3rem 0;"><i class="fa fa-map-marker-alt" style="color:var(--main-green);margin-right:0.5rem;"></i>along Mombasa Road</td>
+          </tr>
+          <tr>
+            <td style="padding:0.3rem 0;"><i class="fa fa-certificate" style="color:var(--accent-gold);margin-right:0.5rem;"></i>Ready Title Deed</td>
+          </tr>
+          <tr>
+            <td style="padding:0.3rem 0;"><i class="fa fa-calendar-check" style="color:var(--main-green);margin-right:0.5rem;"></i>Flexible Payment</td>
+          </tr>
+        </table>
+      </div>
+      
+  </section>
+
+  <!-- Payment Calculator -->
+  <section class="payment-calculator" id="calculator" data-aos="fade-up" style="box-shadow:0 4px 24px #16653422;">
+    <h2><i class="fa fa-calculator" style="color:var(--main-green);margin-right:0.5rem;"></i>Payment Calculator</h2>
+    <form id="calc-form">
+ 
+
+      <label>
+        Parcel Price (KES)
+        <input type="number" id="parcel-price" min="0" value="350000" required>
+      </label>
+      <label>
+        Deposit (KES)
+        <input type="number" id="deposit" min="0" value="50000" required>
+      </label>
+      <label>
+        Months
+        <select id="months">
+          <option value="6">6</option>
+          <option value="12" selected>12</option>
+          <option value="18">18</option>
+        </select>
+      </label>
+      <button type="submit" class="btn"><i class="fa fa-equals"></i> Calculate</button>
+    </form>
+    <div class="calc-result" id="calc-result" style="font-size:1.25rem;"></div>
+    <div style="text-align:center;color:#888;font-size:0.98rem;margin-top:0.5rem;">
+      *For illustration only. Contact us for a custom plan.
+    </div>
+  </section>
+
+  <!-- How to Buy -->
+  <section class="how-to-buy" data-aos="fade-up" style="background:linear-gradient(90deg,#fff, #e6f4ea 80%);">
+    <h2><i class="fa fa-shopping-cart" style="color:var(--main-green);margin-right:0.5rem;"></i>How to Buy Land</h2>
+    <ol style="font-size:1.08rem;">
+      <li>Browse available parcels and select your preferred option.</li>
+      <li>Contact us for a <b style="color:var(--main-green);">free site visit</b> and consultation.</li>
+      <li>Reserve your parcel with a <b style="color:var(--accent-gold);">deposit</b>.</li>
+      <li>Complete payment via <b style="color:var(--main-green);">flexible installments</b>.</li>
+      <li>Receive your <b style="color:var(--accent-gold);">title deed</b> and start your journey!</li>
+    </ol>
+  </section>
+
+  <!-- Client Stories -->
+  <section class="client-stories" data-aos="fade-up">
+    <h2><i class="fa fa-users" style="color:var(--main-green);margin-right:0.5rem;"></i>Client Stories</h2>
+    <div class="story" style="border-left:5px solid var(--accent-gold);">
+      <span style="font-size:1.1rem;">“Amsa Developers made my land buying process so easy and transparent. Highly recommended!”</span>
+      <div style="margin-top:0.7rem;font-style:normal;color:var(--main-green-dark);font-weight:700;">— Jane K.</div>
+    </div>
+    <div class="story" style="border-left:5px solid var(--main-green);">
+      <span style="font-size:1.1rem;">“I loved the flexible payment plans and the free site visit. Thank you!”</span>
+      <div style="margin-top:0.7rem;font-style:normal;color:var(--main-green-dark);font-weight:700;">— Peter M.</div>
+    </div>
+  </section>
+
+  <!-- Client Feedback -->
+  <section class="client-feedback" id="feedback" data-aos="fade-up" style="background:linear-gradient(90deg,#fff,#e6f4ea 80%);">
+    <h2><i class="fa fa-comment-dots" style="color:var(--main-green);margin-right:0.5rem;"></i>We Value Your Feedback</h2>
+    <form id="feedback-form">
+      <input type="text" placeholder="Your Name" required style="font-size:1.05rem;">
+      <textarea rows="4" placeholder="Your Feedback" required style="font-size:1.05rem;"></textarea>
+      <button type="submit" class="btn"><i class="fa fa-paper-plane"></i> Submit</button>
+    </form>
+    <div class="feedback-success" id="feedback-success"></div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-container" data-aos="fade-up">
+    <a href="mailto:info@amsadevelopers.com" class="cta-btn" style="font-size:1.25rem;">
+      <i class="fa fa-handshake" style="margin-right:0.7rem;"></i>Get Started
+    </a>
+    <div style="color:#888;font-size:1rem;margin-top:0.7rem;">Ready to own your dream land? Contact us today!</div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    // Payment Calculator
+    document.getElementById('calc-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var price = parseInt(document.getElementById('parcel-price').value) || 0;
+      var deposit = parseInt(document.getElementById('deposit').value) || 0;
+      var months = parseInt(document.getElementById('months').value) || 1;
+      var balance = price - deposit;
+      if (balance < 0) balance = 0;
+      var monthly = Math.ceil(balance / months);
+      document.getElementById('calc-result').textContent =
+        'Monthly Payment: KES ' + monthly.toLocaleString();
+    });
+
+    // Feedback Form
+    document.getElementById('feedback-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('feedback-success').textContent = "Thank you for your feedback!";
+      this.reset();
+    });
+
+    // Filter Functionality
+    function filterGallery() {
+      var loc = document.getElementById('location').value;
+      var size = document.getElementById('size').value;
+      var priceRange = document.getElementById('price-range').value;
+      var cards = document.querySelectorAll('.parcel-card');
+      cards.forEach(function(card) {
+        var show = true;
+        if (loc && card.dataset.location !== loc) show = false;
+        if (size && card.dataset.size !== size) show = false;
+        if (priceRange) {
+          var price = parseInt(card.dataset.price);
+          var parts = priceRange.split('-');
+          if (price < parseInt(parts[0]) || price > parseInt(parts[1])) show = false;
+        }
+        card.style.display = show ? '' : 'none';
+      });
+    }
+    document.getElementById('location').addEventListener('change', filterGallery);
+    document.getElementById('size').addEventListener('change', filterGallery);
+    document.getElementById('price-range').addEventListener('change', filterGallery);
+    document.getElementById('reset-filters').addEventListener('click', function() {
+      document.getElementById('location').value = '';
+      document.getElementById('size').value = '';
+      document.getElementById('price-range').value = '';
+      filterGallery();
+    });
+  </script>
+</body>
+</html>

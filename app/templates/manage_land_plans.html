@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .admin-container {
+        padding: 2rem;
+        max-width: 1000px;
+        margin: 2rem auto;
+        background: var(--card-bg-light);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #e5e7eb;
+    }
+    body.dark-mode .admin-container {
+        background: var(--card-bg-dark);
+        border-color: #2e335a;
+    }
+    h1 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+    body.dark-mode h1 {
+        color: var(--primary-color);
+    }
+    .form-section {
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    body.dark-mode .form-section {
+        background: var(--input-bg-dark);
+        border-color: var(--input-border-dark);
+    }
+    .form-section h2 {
+        color: var(--text-light);
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    body.dark-mode .form-section h2 {
+        color: var(--text-dark);
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-weight: 500;
+        color: var(--text-light);
+    }
+    body.dark-mode .form-group label {
+        color: var(--text-dark);
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--input-border);
+        border-radius: 0.5rem;
+        background: var(--input-bg);
+        color: var(--text-light);
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group textarea,
+    body.dark-mode .form-group select {
+        background: var(--input-bg-dark);
+        border-color: var(--input-border-dark);
+        color: var(--text-dark);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .checkbox-group input[type="checkbox"] {
+        margin-right: 0.5rem;
+        width: auto;
+    }
+    .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: normal;
+    }
+    button.btn-submit {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.7rem;
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 600;
+        transition: background 0.2s, transform 0.2s;
+    }
+    button.btn-submit:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+    .table-section {
+        margin-top: 2rem;
+    }
+    .table-section h2 {
+        color: var(--text-light);
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    body.dark-mode .table-section h2 {
+        color: var(--text-dark);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: var(--card-bg-light);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    body.dark-mode table {
+        background: var(--card-bg-dark);
+    }
+    th, td {
+        padding: 0.9rem 1.2rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    body.dark-mode th, body.dark-mode td {
+        border-bottom: 1px solid #3b4252;
+    }
+    th {
+        background-color: #f8fafc;
+        color: var(--primary-color);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    body.dark-mode th {
+        background-color: #2e335a;
+        color: var(--text-dark);
+    }
+    td {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+    body.dark-mode td {
+        color: var(--text-dark);
+    }
+    tr:last-child td {
+        border-bottom: none;
+    }
+    tr:nth-child(even) {
+        background-color: #fcfdff;
+    }
+    body.dark-mode tr:nth-child(even) {
+        background-color: #1f253a;
+    }
+    .action-buttons a, .action-buttons button {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        margin-right: 0.5rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+    .action-buttons a.edit {
+        background-color: #2563eb;
+        color: white;
+    }
+    .action-buttons a.edit:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-1px);
+    }
+    .action-buttons button.delete {
+        background-color: #dc2626;
+        color: white;
+        border: none;
+    }
+    .action-buttons button.delete:hover {
+        background-color: #b91c1c;
+        transform: translateY(-1px);
+    }
+    .alert {
+        background: var(--alert-bg);
+        color: var(--alert-text);
+        border-radius: 0.7rem;
+        padding: 0.8rem 1.2rem;
+        margin-bottom: 1.1rem;
+        font-size: 1rem;
+        border: none;
+        box-shadow: 0 1px 4px rgba(99,102,241,0.07);
+        position: relative;
+        z-index: 2;
+    }
+    .alert-success { background: #d1fae5; color: #065f46; }
+    .alert-danger { background: #fee2e2; color: #991b1b; }
+    body.dark-mode .alert {
+        background: var(--alert-bg-dark);
+        color: var(--alert-text-dark);
+    }
+    body.dark-mode .alert-success { background: #134e4a; color: #6ee7b7; }
+    body.dark-mode .alert-danger { background: #7f1d1d; color: #fecaca; }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #64748b;
+        position: absolute;
+        top: 0.7rem;
+        right: 1rem;
+        cursor: pointer;
+        z-index: 3;
+    }
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 1rem;
+            margin: 1rem auto;
+        }
+        h1, .form-section h2, .table-section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .action-buttons a, .action-buttons button {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            margin-right: 0.3rem;
+        }
+    }
+</style>
+
+<div class="admin-container">
+    <h1>Manage Land Purchase Plans</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="form-section">
+        <h2>Add New Land Plan</h2>
+        <form method="POST" action="{{ url_for('main.available_land') }}">
+            
+
+            <div class="form-group">
+                <label for="name">Plan Name</label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Daily Installment Plan">
+            </div>
+            <div class="form-group">
+                <label for="description">Description (e.g., KES 500 / day)</label>
+                <input type="text" id="description" name="description" placeholder="Short description of the plan">
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required placeholder="e.g., 500 or 500000">
+            </div>
+            <div class="form-group">
+                <label for="price_unit">Price Unit</label>
+                <input type="text" id="price_unit" name="price_unit" value="KES" placeholder="e.g., KES, USD">
+            </div>
+            <div class="form-group">
+                <label for="billing_period">Billing Period</label>
+                <select id="billing_period" name="billing_period">
+                    <option value="">Select period</option>
+                    <option value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                    <option value="one-off">One-off</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (e.g., 36 months, 90 days, One-off payment)</label>
+                <input type="text" id="duration" name="duration" placeholder="e.g., 36 months">
+            </div>
+            <div class="form-group">
+                <label for="discount_info">Discount Info (Optional)</label>
+                <input type="text" id="discount_info" name="discount_info" placeholder="e.g., Includes a 5% discount!">
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="is_active" name="is_active" checked>
+                <label for="is_active">Is Active (Visible to customers)</label>
+            </div>
+            <button type="submit" class="btn-submit">Add Plan</button>
+        </form>
+    </div>
+
+    <div class="table-section">
+        <h2>Existing Land Plans</h2>
+        {% if land_plans %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Period</th>
+                    <th>Duration</th>
+                    <th>Discount</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in land_plans %}
+                <tr>
+                    <td>{{ plan.id }}</td>
+                    <td>{{ plan.name }}</td>
+                    <td>{{ plan.description }}</td>
+                    <td>{{ plan.price_unit }} {{ "%.0f"|format(plan.price) }}</td>
+                    <td>{{ plan.billing_period or 'N/A' }}</td>
+                    <td>{{ plan.duration or 'N/A' }}</td>
+                    <td>{{ plan.discount_info or 'N/A' }}</td>
+                    <td>{% if plan.is_active %}Yes{% else %}No{% endif %}</td>
+                    <td class="action-buttons">
+                        <a href="{{ url_for('edit_land_plan', plan_id=plan.id) }}" class="edit">Edit</a>
+                        <form action="{{ url_for('delete_land_plan', plan_id=plan.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this plan? This action cannot be undone.');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No land plans have been added yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.alert .btn-close').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.alert').style.display = 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

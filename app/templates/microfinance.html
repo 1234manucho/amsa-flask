@@ -1,0 +1,1199 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    /* --- Base Styles --- */
+    body {
+        font-family: 'Inter', Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f2f5;
+        scroll-behavior: smooth; /* Smooth scroll for anchor links */
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    h1, h2, h3 {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    /* --- Navigation Bar --- */
+    .navbar {
+        background-color: #fff;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid #e0e7ef;
+    }
+
+    .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1aae49;
+        text-decoration: none;
+    }
+
+    .navbar .nav-links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .navbar .nav-links a {
+        text-decoration: none;
+        color: #444;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: color 0.2s;
+    }
+
+    .navbar .nav-links a:hover {
+        color: #1aae49;
+    }
+
+    /* --- Sections General Styling --- */
+    section {
+        padding: 4rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    section:nth-of-type(even) {
+        background-color: #f8fafc;
+    }
+
+    section h2 {
+        text-align: center;
+        font-size: 2.2rem;
+        color: #1aae49;
+        margin-bottom: 2.5rem;
+    }
+
+    /* --- Hero Section (Existing + Minor Tweaks) --- */
+    .microfinance-hero {
+        background: linear-gradient(100deg, #f8fafc 60%, #fff5e0 100%);
+        padding: 4rem 1.5rem 3.5rem 1.5rem; /* Adjusted padding */
+        border-radius: 1.5rem;
+        text-align: center;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.08);
+        border: 1px solid #e0e7ef;
+        position: relative;
+        overflow: hidden;
+    }
+    .microfinance-hero::after {
+        content: "";
+        position: absolute;
+        right: -60px; top: -60px;
+        width: 180px; height: 180px;
+        background: radial-gradient(circle, #10be39 0%, #fff0 70%);
+        opacity: 0.12;
+        z-index: 0;
+    }
+    .microfinance-hero h1 {
+        font-size: 3.2rem; /* Slightly larger */
+        color: #1aae49;
+        margin-bottom: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        z-index: 1;
+        position: relative;
+    }
+    .microfinance-hero p {
+        font-size: 1.35rem; /* Slightly larger */
+        color: #444;
+        margin-bottom: 0;
+        z-index: 1;
+        position: relative;
+    }
+
+    /* --- About Us Section --- */
+    .about-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    .about-content div {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border: 1px solid #e0e7ef;
+    }
+    .about-content h3 {
+        color: #1cdd56;
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+    .about-content p {
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+   #products {
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  #products h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #222;
+  }
+
+  .product-card {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    font-size: 1.05rem;
+    color: #333;
+    line-height: 1.8;
+    width: 100%;
+  }
+
+  .product-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    color: #145a32;
+  }
+
+  .btn.orange {
+    display: inline-block;
+    background-color: #1aae49;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .btn.orange:hover {
+    background-color: #168d3e;
+  }
+
+  @media (max-width: 600px) {
+    #products {
+      padding: 20px 10px;
+    }
+
+    #products h2 {
+      font-size: 1.5rem;
+    }
+
+    .product-card {
+      padding: 20px;
+      font-size: 0.95rem;
+    }
+
+    .product-card h3 {
+      font-size: 1.25rem;
+    }
+
+    .btn.orange {
+      width: 100%;
+      font-size: 1rem;
+      padding: 12px;
+    }
+  }
+
+    /* --- How It Works Section --- */
+    .how-it-works-steps {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    .how-it-works-step {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        flex: 1;
+        min-width: 280px;
+        max-width: 350px;
+        text-align: center;
+        border: 1px solid #e0e7ef;
+    }
+    .how-it-works-step .icon {
+        font-size: 2.5rem;
+        color: #1aae49;
+        margin-bottom: 1rem;
+    }
+    .how-it-works-step h3 {
+        font-size: 1.4rem;
+        color: #1cdd56;
+        margin-bottom: 0.7rem;
+    }
+    .how-it-works-step p {
+        font-size: 1.05rem;
+        color: #555;
+    }
+
+    /* --- Impact/Testimonials Section --- */
+    .testimonial-card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        margin: 1.5rem auto;
+        max-width: 700px;
+        border: 1px solid #e0e7ef;
+        text-align: center;
+    }
+    .testimonial-card p {
+        font-style: italic;
+        font-size: 1.15rem;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+    .testimonial-card .author {
+        font-weight: 600;
+        color: #1aae49;
+        font-size: 1.05rem;
+    }
+
+    /* --- Investment Portfolio (Existing + Minor Tweaks) --- */
+    .investment-portfolio {
+        background: linear-gradient(120deg, #f9fafb 80%, #e0ffe9 100%);
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 4px 24px rgba(16, 185, 129, 0.07);
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #e0e7ef;
+        position: relative;
+        overflow: hidden;
+    }
+    .investment-portfolio::before {
+        content: "";
+        position: absolute;
+        left: -60px; bottom: -60px;
+        width: 180px; height: 180px;
+        background: radial-gradient(circle, #10be39 0%, #fff0 70%);
+        opacity: 0.10;
+        z-index: 0;
+    }
+    .investment-portfolio h2 {
+        color: #1aae49;
+        font-size: 2rem; /* Slightly larger */
+        font-weight: 700;
+        margin-bottom: 1.2rem;
+        z-index: 1;
+        position: relative;
+        text-align: center;
+    }
+    .investment-portfolio p {
+        font-size: 1.13rem;
+        margin: 0.3rem 0;
+        color: #333;
+        z-index: 1;
+        position: relative;
+        text-align: left;
+    }
+    .progress-container {
+        margin: 1.2rem 0 1.5rem 0;
+        z-index: 1;
+        position: relative;
+    }
+    progress {
+        width: 100%;
+        height: 1.2rem;
+        border-radius: 0.7rem;
+        overflow: hidden;
+        accent-color: #10be39;
+        background: #e0ffe9;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.07);
+    }
+
+    /* --- FAQ Section --- */
+    .faq-item {
+        background: #fff;
+        border: 1px solid #e0e7ef;
+        border-radius: 0.8rem;
+        margin-bottom: 1rem;
+        padding: 1.2rem 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .faq-item h3 {
+        font-size: 1.25rem;
+        color: #1cdd56;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .faq-item h3 .arrow {
+        transition: transform 0.3s ease;
+    }
+    .faq-item h3.active .arrow {
+        transform: rotate(90deg);
+    }
+    .faq-item p {
+        font-size: 1.05rem;
+        color: #555;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        padding: 0 1rem;
+    }
+    .faq-item p.show {
+        max-height: 150px; /* Adjust as needed based on content */
+        padding: 0.5rem 1rem;
+    }
+
+    /* --- Contact Us Section --- */
+    .contact-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+    }
+    .contact-info, .contact-form-container {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border: 1px solid #e0e7ef;
+    }
+    .contact-info h3, .contact-form-container h3 {
+        color: #1cdd56;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    .contact-info p {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+        color: #555;
+    }
+    .contact-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #444;
+    }
+    .contact-form input[type="text"],
+    .contact-form input[type="email"],
+    .contact-form textarea {
+        width: calc(100% - 20px);
+        padding: 0.8rem 10px;
+        margin-bottom: 1rem;
+        border: 1.5px solid #e0e7ef;
+        border-radius: 0.6rem;
+        font-size: 1rem;
+        background: #f8fafc;
+        transition: border 0.2s;
+    }
+    .contact-form input[type="text"]:focus,
+    .contact-form input[type="email"]:focus,
+    .contact-form textarea:focus {
+        border-color: #1aae49;
+        outline: none;
+        background: #e0ffe9;
+    }
+    .contact-form textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    /* --- Buttons --- */
+    .btn.orange {
+        background: linear-gradient(90deg, #10be39 60%, #1aae49 100%);
+        color: #fff;
+        border: none;
+        border-radius: 0.8rem;
+        padding: 0.7rem 1.7rem;
+        font-size: 1.08rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+    }
+    .btn.orange:hover {
+        background: linear-gradient(90deg, #1aae49 60%, #10be39 100%);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.13);
+    }
+    .btn.full-width {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.15rem;
+    }
+
+    /* --- Modal (Existing + Minor Tweaks) --- */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        overflow: auto;
+        background: rgba(16,185,129,0.10);
+        backdrop-filter: blur(2px);
+    }
+    .modal-content {
+        background: #fff;
+        margin: 6% auto;
+        padding: 2.2rem 2.7rem 1.7rem 2.7rem;
+        border-radius: 1.3rem;
+        width: 95%;
+        max-width: 410px;
+        box-shadow: 0 8px 32px rgba(16,185,129,0.13);
+        position: relative;
+        text-align: center;
+        border: 1.5px solid #e0e7ef;
+    }
+    .close-btn {
+        color: #1aae49;
+        font-size: 2rem;
+        font-weight: bold;
+        position: absolute;
+        right: 1.2rem;
+        top: 1rem;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .close-btn:hover { color: #0e7c2f; }
+    #investmentForm label {
+        display: block;
+        margin-bottom: 0.7rem;
+        color: #444;
+        font-weight: 600;
+        text-align: left;
+    }
+    #investmentAmount {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 0.6rem;
+        border: 1.5px solid #e0e7ef;
+        margin-bottom: 1.2rem;
+        font-size: 1.13rem;
+        background: #f8fafc;
+        transition: border 0.2s;
+    }
+    #investmentAmount:focus {
+        border: 1.5px solid #1aae49;
+        outline: none;
+        background: #e0ffe9;
+    }
+
+    /* --- Footer --- */
+    .footer {
+        background-color: #1aae49;
+        color: #fff;
+        text-align: center;
+        padding: 2rem 0;
+        font-size: 0.95rem;
+    }
+    .footer p {
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+    .footer .social-links a {
+        color: #fff;
+        font-size: 1.5rem;
+        margin: 0 0.8rem;
+        transition: color 0.2s;
+    }
+    .footer .social-links a:hover {
+        color: #d4edda;
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 400px) {
+        .navbar .nav-links { display: none; } /* Hide nav links on smaller screens for a menu icon */
+        .products-list { flex-direction: column; gap: 1.5rem; align-items: center; }
+        .product-card { max-width: 90vw; }
+        .about-content div, .how-it-works-step, .contact-info, .contact-form-container {
+            max-width: 90vw;
+            flex-basis: 100%;
+        }
+        section { padding: 3rem 0; }
+        section h2 { font-size: 1.8rem; }
+    }
+    @media (max-width: 400px) {
+        .navbar .logo { font-size: 1.5rem; }
+        .product-card, .investment-portfolio, .modal-content, .contact-info, .contact-form-container { padding: 1.2rem; }
+        .products-list { gap: 1rem; }
+        .microfinance-hero { padding: 2rem 1.2rem; }
+        .microfinance-hero h1 { font-size: 2.2rem; }
+        .microfinance-hero p { font-size: 1.1rem; }
+        .investment-portfolio { padding: 1.5rem; }
+        .modal-content { padding: 1.5rem; }
+        .contact-form input, .contact-form textarea { width: calc(100% - 16px); padding: 0.6rem 8px; }
+        .footer { padding: 1.5rem 0; }
+    }
+</style>
+
+
+
+<main class="microfinance-container container">
+    <section id="hero" class="microfinance-hero animate__animated animate__fadeIn">
+        <h1>
+            <span style="font-size:2.5rem; color:#1aae49;">Amsa Group</span> <span style="font-size:2rem;">💼</span>
+        </h1>
+        <p style="font-size:1.25rem; max-width:700px; margin:0 auto;">
+            <strong>Amsa Group</strong> is a registered Kenyan investment and land development company, dedicated to providing secure, high-yield investment opportunities and affordable land ownership solutions. We offer flexible installment plans for land buyers and transparent investment contracts with fixed interest returns—paid weekly, monthly, or quarterly—serving both local and diaspora clients. <br>
+            <span style="color:#1aae49; font-weight:600;">Our mission:</span> To make wealth creation and property acquisition accessible, trustworthy, and client-focused through legal compliance and exceptional service.
+            <br>
+            <span style="font-size:1.15rem; color:#1976d2;">🌾 Grow your wealth, grow the future! 💸</span>
+        </p>
+    </section>
+
+    <section id="about" class="animate__animated animate__fadeInUp">
+        <h2>Why Choose Amsa Group? <span>🤝</span></h2>
+        <div class="about-content">
+            <div>
+                <h3 style="color:#1aae49;">Earn 3.5% Weekly Returns <span>🎯</span></h3>
+                <p>
+                    Experience unmatched liquidity and flexibility with our weekly investment plans. Amsa Group empowers everyday investors and SMEs to enjoy regular, reliable returns—interest is paid as soon as 7 days after investing. Perfect for business owners and individuals seeking consistent cash flow to meet short-term financial needs.
+                </p>
+            </div>
+            <div>
+                <h3 style="color:#1976d2;">Own Land from Just KES 500/Day <span>🌟</span></h3>
+                <p>
+                    Step onto the property ladder with our affordable, flexible payment plans. Secure prime land in Emali and Kajiado with daily payments as low as <strong>KES 500</strong> over three years. We make home ownership accessible—speak to our expert sales team to start your journey today.
+                </p>
+            </div>
+            <div>
+                <h3 style="color:#ff9800;">Market-Leading Returns up to 14% Monthly <span>🌱</span></h3>
+                <p>
+                    Maximize your wealth with Amsa Group’s diverse investment products, tailored for every investor. Our cornerstone is delivering industry-leading yields—enjoy up to <strong>14% monthly returns</strong> with our innovative, client-centric solutions for long-term financial growth.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="products-list-modern animate__animated animate__fadeInUp" data-aos="fade-up">
+    <h2>Available Land Investment Opportunities <span class="emoji">🌍</span></h2>
+
+    <div class="modern-product-card">
+        <span class="modern-badge">Prime Location</span>
+        <img src="https://placehold.co/400x200/16a34a/ffffff?text=Upper+Valley+Estate" alt="Upper Valley Estate, Emali" class="product-image">
+        <div class="card-content">
+            <h3>Land Parcel: Upper Valley Estate <span class="emoji">🌱</span></h3>
+            <p class="product-description">
+                In the green, lush, and fertile plains of Emali, Amsa Group offers land within a secure, controlled community—ideal for investors seeking a primary residence or a tranquil weekend/holiday home. Located just 1.5 hours from Nairobi, these plots are nestled on serene plains along Mombasa Road.
+            </p>
+            <div class="product-details">
+                <p><strong>Plot Size:</strong> <span>1/8 Acre</span></p>
+                <p><strong>Price:</strong> <span>KES 500,000</span></p>
+                <p><strong>Payment Options:</strong> Flexible installment plans available</p>
+                <p><strong>Location:</strong> <span>Emali, along Mombasa Road</span></p>
+            </div>
+            <p class="contact-note">
+                Contact our sales agents for more information and to secure your plot.
+            </p>
+        </div>
+        <div class="card-actions">
+            <a href="/invest_land" class="btn modern-green-btn">Invest and Secure Land</a>
+            <a href="/buy-land" class="btn modern-outline-btn">View Details</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Add these variables if they are not already in your main CSS */
+    :root {
+        --primary-green: #16a34a;
+        --dark-green: #14532d;
+        --light-green-bg: #e6f4ea;
+        --off-white: #f6f8fa;
+        --white: #ffffff;
+        --accent-gold: #ffd700;
+        --accent-gold-light: #ffe066;
+        --primary-blue: #2563eb;
+        --text-color-primary: #222;
+        --text-color-secondary: #555;
+        --shadow-light: rgba(22, 163, 74, 0.08);
+        --shadow-medium: rgba(22, 163, 74, 0.15);
+        --shadow-dark: rgba(22, 163, 74, 0.25);
+        --border-light: #d1e7d1;
+    }
+
+    /* Section Styling */
+    .products-list-modern {
+        max-width: 1100px;
+        margin: 3rem auto; /* Centered with good vertical spacing */
+        padding: 0 1.5rem; /* Horizontal padding for smaller screens */
+        text-align: center;
+    }
+
+    .products-list-modern h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--dark-green);
+        margin-bottom: 2.5rem;
+        letter-spacing: 1.5px;
+        position: relative;
+    }
+
+    .products-list-modern h2::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background-color: var(--accent-gold);
+        margin: 0.8rem auto 0;
+        border-radius: 2px;
+    }
+
+    .products-list-modern .emoji {
+        font-size: 1.8rem;
+        margin-left: 0.5rem;
+    }
+
+    /* Product Card Styling */
+    .modern-product-card {
+        background: var(--white);
+        border-radius: 1.5rem; /* More rounded cards */
+        box-shadow: 0 8px 30px var(--shadow-light); /* Softer, larger shadow */
+        padding: 1.8rem; /* Adjusted padding */
+        text-align: left; /* Align text left within the card */
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent; /* Prepare for hover border */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 520px; /* Ensures consistent height, adjusted for more content */
+        margin: 0 auto; /* Center the single card if not in a grid */
+        max-width: 600px; /* Increased optimal width for a single card on desktop */
+    }
+
+    .products-list-modern .modern-product-card:hover, 
+    .products-list-modern .modern-product-card:focus {
+        transform: translateY(-12px) scale(1.03) rotate(-1deg); /* More dynamic hover */
+        box-shadow: 0 16px 50px var(--shadow-medium); /* Stronger shadow on hover */
+        border-color: var(--accent-gold); /* Gold border on hover */
+    }
+
+    .modern-product-card .product-image {
+        width: 100%;
+        height: 200px; /* Slightly taller images */
+        object-fit: cover;
+        border-radius: 1rem; /* More rounded image corners */
+        margin-bottom: 1.5rem; /* More space below image */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Subtle image shadow */
+        transition: filter 0.3s ease;
+    }
+
+    .products-list-modern .modern-product-card:hover .product-image {
+        filter: brightness(1.05) saturate(1.1);
+    }
+
+    .modern-product-card .card-content {
+        flex-grow: 1; /* Allows content area to expand */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .modern-product-card h3 {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-green);
+        font-size: 1.35rem; /* Larger heading */
+        margin-bottom: 0.6rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        line-height: 1.3;
+        display: flex; /* For emoji alignment */
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .modern-product-card .product-description {
+        color: var(--text-color-secondary);
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .modern-product-card .product-details p {
+        margin-bottom: 0.4rem;
+        font-size: 1rem;
+        color: var(--text-color-primary);
+    }
+    .modern-product-card .product-details p strong {
+        color: var(--dark-green);
+        font-weight: 700;
+        margin-right: 0.5rem;
+    }
+    .modern-product-card .product-details p span {
+        color: var(--primary-green); /* Price and size highlights */
+        font-weight: 600;
+    }
+
+    .modern-product-card .contact-note {
+        color: var(--primary-blue); /* Distinct color for contact note */
+        font-size: 0.95rem;
+        margin-top: 1rem;
+        font-style: italic;
+    }
+
+    .modern-product-card .modern-badge {
+        position: absolute;
+        top: 22px; right: 22px; /* Positioned slightly more inward */
+        background: var(--accent-gold);
+        color: var(--dark-green); /* Dark text on gold */
+        font-weight: 800; /* Bolder badge text */
+        font-size: 0.95rem;
+        padding: 0.4rem 1.2rem; /* More padding */
+        border-radius: 1.5rem; /* Fully rounded pill shape */
+        box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
+        letter-spacing: 0.5px;
+        animation: fadeIn 1.2s ease-out;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .modern-product-card .modern-badge::after {
+        content: "✨"; /* Replaced emoji for consistency */
+        font-size: 1.1rem;
+        display: inline-block;
+        animation: bounce 1.2s infinite alternate;
+    }
+
+    /* Buttons within the card */
+    .card-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        flex-direction: column; /* Stack buttons by default */
+        gap: 0.8rem;
+    }
+
+    .modern-product-card .btn {
+        font-weight: 700;
+        border: none;
+        border-radius: 0.7rem;
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .modern-product-card .modern-green-btn { /* Primary Action Button */
+        background: var(--primary-green);
+        color: var(--white);
+        box-shadow: 0 2px 10px rgba(22, 163, 74, 0.2);
+    }
+    .modern-product-card .modern-green-btn:hover {
+        background: var(--dark-green);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+    }
+
+    .modern-product-card .modern-outline-btn { /* Secondary Action Button */
+        background: var(--white);
+        color: var(--primary-green);
+        border: 1px solid var(--primary-green);
+        box-shadow: none;
+    }
+    .modern-product-card .modern-outline-btn:hover {
+        background: var(--light-green-bg);
+        color: var(--dark-green);
+        box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+    }
+
+    /* Responsive Adjustments for this section */
+    @media (max-width: 768px) {
+        .products-list-modern h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        .products-list-modern .modern-product-card {
+            max-width: 95%; /* Increased max-width for better fit on tablets */
+            min-height: auto; /* Allow height to adjust based on content */
+            padding: 1.5rem;
+        }
+        .modern-product-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .modern-product-card .product-image {
+            height: 180px;
+            margin-bottom: 1rem;
+        }
+        .modern-product-card .product-description,
+        .modern-product-card .product-details p,
+        .modern-product-card .contact-note {
+            font-size: 0.95rem;
+        }
+        .modern-product-card .modern-badge {
+            font-size: 0.85rem;
+            padding: 0.3rem 1rem;
+            top: 18px; right: 18px;
+        }
+        .card-actions {
+            gap: 0.6rem;
+        }
+        .modern-product-card .btn {
+            font-size: 0.9rem;
+            padding: 0.7rem 1.2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .products-list-modern h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .products-list-modern .modern-product-card {
+            padding: 1.2rem;
+            max-width: calc(100% - 2rem); /* Take full width minus typical container padding */
+            border-radius: 1rem;
+        }
+        .modern-product-card h3 {
+            font-size: 1.15rem;
+            gap: 0.4rem;
+        }
+        .modern-product-card .product-image {
+            height: 150px;
+            margin-bottom: 0.8rem;
+            border-radius: 0.8rem;
+        }
+        .modern-product-card .product-description,
+        .modern-product-card .product-details p,
+        .modern-product-card .contact-note {
+            font-size: 0.9rem;
+        }
+        .modern-product-card .modern-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.8rem;
+            top: 12px; right: 12px;
+        }
+        .card-actions {
+            gap: 0.5rem;
+        }
+        .modern-product-card .btn {
+            font-size: 0.85rem;
+            padding: 0.6rem 1rem;
+        }
+    }
+
+    /* Keyframe Animations (Ensure these are in your main CSS or this style block) */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+    @keyframes float { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(20px) rotate(5deg); } }
+
+</style>
+
+
+    <section id="how-it-works" class="animate__animated animate__fadeInUp">
+        <h2>How It Works <span>💡</span></h2>
+        <div class="how-it-works-steps">
+            <div class="how-it-works-step">
+                <div class="icon">1️⃣</div>
+                <h3>Choose a Plan <span>📝</span></h3>
+                <p>Select the investment product that best fits your financial goals and risk appetite.</p>
+                <button class="btn orange" onclick="window.location='#products'">View Products 🚀</button>
+            </div>
+            <div class="how-it-works-step">
+                <div class="icon">2️⃣</div>
+                <h3>Make Your Investment <span>💳</span></h3>
+                <p>Invest your desired amount securely through our platform. Minimums apply per product.</p>
+                <button class="btn orange" onclick="window.location='#products'">Invest Now 💸</button>
+            </div>
+            <div class="how-it-works-step">
+                <div class="icon">3️⃣</div>
+                <h3>Track Your Portfolio <span>📊</span></h3>
+                <p>Monitor your investments and estimated returns directly from your personalized portfolio dashboard.</p>
+                <button class="btn orange" onclick="window.location='#portfolio'">View Portfolio 📈</button>
+            </div>
+            <div class="how-it-works-step">
+                <div class="icon">4️⃣</div>
+                <h3>Earn & Impact <span>🌱</span></h3>
+                <p>Receive your expected returns and contribute to sustainable agricultural development.</p>
+                <button class="btn orange" onclick="window.location='#impact'">See Impact 🌟</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="impact" class="animate__animated animate__fadeInUp">
+        <h2>Our Impact & Success Stories <span>🌟</span></h2>
+        <div class="testimonial-card">
+            <p>"Investing with MicroInvest has been a game-changer! My returns are consistent, and knowing my money helps farmers grow their businesses makes it even more rewarding."</p>
+            <div class="author">- Jane W., Investor</div>
+        </div>
+        <div class="testimonial-card">
+            <p>"Thanks to the GreenGrow plan, I was able to expand my farm and double my yields. This truly empowers small farmers like me."</p>
+            <div class="author">- David O., Farmer & Beneficiary</div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="investment-portfolio animate__animated animate__fadeInUp">
+        <h2>Your Investment Portfolio <span>📊</span></h2>
+        <p>Total Invested: <span id="total-invested">KES 0</span> <span>💵</span></p>
+        <p>Estimated Returns: <span id="estimated-returns">KES 0</span> <span>💸</span></p>
+        <div class="progress-container">
+            <label for="progress">Investment Progress: <span>⏳</span></label>
+            <progress id="progress" max="100000" value="0"></progress> <p style="font-size:0.95rem; color:#777;">Goal: KES 1,000,000 total investment</p>
+        </div>
+        <div>
+            <canvas id="returnsChart" width="400" height="200"></canvas>
+        </div>
+    </section>
+
+    <section id="faq" class="animate__animated animate__fadeInUp">
+        <h2>Frequently Asked Questions <span>❓</span></h2>
+        <div class="faq-item">
+            <h3 onclick="toggleFAQ(this)">What is microfinance? <span class="arrow">▶</span></h3>
+            <p>Microfinance is a category of financial services for low-income individuals or groups who traditionally lack access to conventional banking services. It includes microloans, micro-savings, and micro-insurance.</p>
+        </div>
+        <div class="faq-item">
+            <h3 onclick="toggleFAQ(this)">What are the risks involved? <span class="arrow">▶</span></h3>
+            <p>While microfinance investments aim for stability, all investments carry some level of risk. We diversify our portfolio and conduct thorough due diligence to minimize risks. Detailed risk disclosures are provided upon inquiry.</p>
+        </div>
+        <div class="faq-item">
+            <h3 onclick="toggleFAQ(this)">How are returns calculated? <span class="arrow">▶</span></h3>
+            <p>Returns are calculated annually based on the performance of the agricultural projects we support. Your estimated returns are a projection, and actual returns may vary slightly.</p>
+        </div>
+        <div class="faq-item">
+            <h3 onclick="toggleFAQ(this)">Can I withdraw my investment early? <span class="arrow">▶</span></h3>
+            <p>Our investment plans are designed for specific durations. Early withdrawals may be subject to penalty fees as outlined in our terms and conditions. Please refer to your investment agreement for details.</p>
+        </div>
+    </section>
+
+    <section id="contact" class="animate__animated animate__fadeInUp">
+        <h2>Get in Touch <span>✉️</span></h2>
+        
+            <div class="contact-form-container">
+                <h3>Send Us a Message</h3>
+                <form class="contact-form" action="{{ url_for('main.microfinance') }}" method="POST">
+                    
+
+
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject">
+
+                    <label for="message">Your Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+
+                    <button type="submit" class="btn orange full-width">Send Message ✉️</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+
+<div id="investModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Invest in <span id="modalProductName"></span></h2>
+        <form id="investmentForm">
+            <label for="investmentAmount">Amount (KES):</label>
+            <input type="number" id="investmentAmount" name="amount" min="10000" placeholder="KES 10,000" required>
+            <button type="submit" class="btn orange full-width">Confirm Investment</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+<script>
+    // --- Chart.js and Investment Logic (Your existing code) ---
+    const investBtns = document.querySelectorAll('.invest-btn'); // Note: There are no elements with class 'invest-btn' in the HTML, so this won't do anything. The 'Invest and secure land' button links to a new page.
+    const modal = document.getElementById('investModal');
+    const closeBtn = modal.querySelector('.close-btn');
+    const modalProductName = document.getElementById('modalProductName');
+    const investmentForm = document.getElementById('investmentForm');
+    const investmentAmountInput = document.getElementById('investmentAmount');
+    const totalInvestedElem = document.getElementById('total-invested');
+    const estimatedReturnsElem = document.getElementById('estimated-returns');
+    const progressElem = document.getElementById('progress');
+
+    let totalInvested = 0;
+    let estimatedReturns = 0;
+    const returnsHistory = [];
+    const labels = [];
+
+    const ctx = document.getElementById('returnsChart').getContext('2d');
+    const returnsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Estimated Returns (KES) 💸',
+                data: returnsHistory,
+                fill: true,
+                backgroundColor: 'rgba(16,185,129,0.13)',
+                borderColor: '#1aae49',
+                tension: 0.35,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#1aae49',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Investment Returns Over Time 📈',
+                    color: '#1aae49',
+                    font: { size: 18, weight: 'bold', family: 'Inter' }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { color: '#1aae49', font: { family: 'Inter' } } },
+                x: { ticks: { color: '#444', font: { family: 'Inter' } } }
+            }
+        }
+    });
+
+    investBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const product = btn.getAttribute('data-product');
+            modalProductName.textContent = product === 'GreenGrow' ? 'GreenGrow Investment Plan 🌱' : "Farmers’ Growth Fund 🚜";
+            investmentAmountInput.value = '';
+            modal.style.display = 'block';
+            investmentAmountInput.min = product === 'GreenGrow' ? 10000 : 20000;
+            investmentAmountInput.placeholder = `KES ${investmentAmountInput.min.toLocaleString()}`;
+            setTimeout(() => investmentAmountInput.focus(), 200);
+        });
+    });
+
+    closeBtn.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = e => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    investmentForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const amount = parseFloat(investmentAmountInput.value);
+        if (isNaN(amount) || amount < parseFloat(investmentAmountInput.min)) {
+            alert(`Please enter a valid amount of at least KES ${investmentAmountInput.min.toLocaleString()}`);
+            return;
+        }
+
+        totalInvested += amount;
+        // The previous code had a hardcoded GreenGrow/Farmers' Growth Fund check
+        // but the HTML only has one product card ("Land Parcel: Upper Valley Estate")
+        // with an "Invest and secure land" button that links to a new page.
+        // The modal logic seems to be for a different set of products.
+        // Assuming this modal is for general investments, you might want to
+        // adjust the returnsRate based on a selected product or a default.
+        // For now, I'll keep the previous logic but note it's not directly
+        // triggered by the current HTML product card.
+        let returnsRate = modalProductName.textContent.includes('GreenGrow') ? 0.12 : 0.15;
+        estimatedReturns = totalInvested * returnsRate;
+
+        totalInvestedElem.textContent = totalInvested.toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+        estimatedReturnsElem.textContent = estimatedReturns.toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+
+        // Adjusted progress bar to scale to a higher goal, e.g., KES 1,000,000
+        let progressGoal = 1000000;
+        let progressValue = (totalInvested / progressGoal) * 100;
+        progressElem.value = Math.min(progressValue, 100); // Ensure it doesn't go over 100%
+        progressElem.max = 100; // Keep max at 100 for percentage display
+
+        // Update chart
+        const date = new Date().toLocaleDateString();
+        labels.push(date);
+        returnsHistory.push(estimatedReturns);
+        returnsChart.update();
+
+        modal.style.display = 'none';
+        setTimeout(() => {
+            const toast = document.createElement('div');
+            toast.textContent = `🎉 Thank you for investing KES ${amount.toLocaleString()} in ${modalProductName.textContent}!`;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '2.5rem';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = '#1aae49';
+            toast.style.color = '#fff';
+            toast.style.padding = '1rem 2rem';
+            toast.style.borderRadius = '1rem';
+            toast.style.fontWeight = '600';
+            toast.style.fontFamily = 'Inter, Arial, sans-serif';
+            toast.style.boxShadow = '0 4px 24px rgba(16,185,129,0.13)';
+            toast.style.zIndex = 2000;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }, 200);
+    });
+
+    // --- FAQ Accordion Logic ---
+    function toggleFAQ(element) {
+        const answer = element.nextElementSibling;
+        const arrow = element.querySelector('.arrow');
+        if (answer.classList.contains('show')) {
+            answer.classList.remove('show');
+            element.classList.remove('active'); // Also remove active class from header
+            arrow.style.transform = 'rotate(0deg)';
+        } else {
+            // Close all other open FAQs
+            document.querySelectorAll('.faq-item p.show').forEach(openAnswer => {
+                openAnswer.classList.remove('show');
+                openAnswer.previousElementSibling.querySelector('.arrow').style.transform = 'rotate(0deg)';
+                openAnswer.previousElementSibling.classList.remove('active'); // Remove active class from header
+            });
+
+            answer.classList.add('show');
+            element.classList.add('active'); // Add active class to header for styling
+            arrow.style.transform = 'rotate(90deg)';
+        }
+    }
+</script>
+{% endblock %}

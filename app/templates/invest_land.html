@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    /* --- CSS Variables from invest_form.html --- */
+    :root {
+        --bg-light: #f4f6fb;
+        --bg-dark: #181c2f;
+        --text-light: #232946;
+        --text-dark: #f4f6fb;
+        --card-bg-light: #fff;
+        --card-bg-dark: #232946;
+        --primary-color: #6366f1; /* Changed slightly for consistency with Amsa Green */
+        --primary-dark: #4f46e5;  /* Changed slightly for consistency */
+        --accent: #16a085; /* Green accent from your previous designs */
+        --border-radius: 1.25rem;
+        --shadow: 0 8px 32px rgba(44,62,80,0.10);
+        --input-bg: #f8fafc;
+        --input-bg-dark: #232946;
+        --input-border: #d1d5db;
+        --input-border-dark: #3b4252;
+        --alert-bg: #e0e7ff;
+        --alert-bg-dark: #373a53;
+        --alert-text: #3730a3;
+        --alert-text-dark: #a5b4fc;
+
+        /* Amsa Specific Overrides/Additions for Green Theme */
+        --amsagreen-primary: #1aae49;
+        --amsagreen-dark: #10be39;
+        --amsagreen-light: #d4edda;
+        --amsagreen-shadow: rgba(26, 174, 73, 0.15);
+    }
+
+    /* Override some general styles to match Amsa Green */
+    body {
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    .center-wrapper {
+        min-height: calc(100vh - 120px); /* Adjust for header/footer height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(120deg, #e0e7ff 0%, #f4f6fb 100%);
+        box-sizing: border-box; /* Include padding in element's total width and height */
+    }
+    body.dark-mode .center-wrapper {
+        background: linear-gradient(120deg, #232946 0%, #181c2f 100%);
+    }
+
+    .land-options-container {
+        background: var(--card-bg-light);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        max-width: 900px; /* Wider container for land options */
+        width: 100%;
+        padding: 3rem;
+        transition: background 0.3s, color 0.3s;
+        border: 1.5px solid #e5e7eb;
+        position: relative;
+        overflow: hidden;
+        margin: 2rem auto; /* Added margin for spacing */
+    }
+    body.dark-mode .land-options-container {
+        background: var(--card-bg-dark);
+        border-color: #2e335a;
+    }
+    .land-options-container::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        left: -80px;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle, var(--amsagreen-primary) 0%, #fff0 70%);
+        opacity: 0.1;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .land-options-container::after {
+        content: "";
+        position: absolute;
+        bottom: -80px;
+        right: -80px;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(circle, var(--amsagreen-dark) 0%, #fff0 70%);
+        opacity: 0.08;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    h2.main-title {
+        color: var(--amsagreen-primary);
+        margin-bottom: 2rem;
+        font-weight: 800;
+        font-size: 2.5rem;
+        text-align: center;
+        letter-spacing: -0.03em;
+        z-index: 1;
+        position: relative;
+    }
+    .info-text {
+        font-size: 1.1rem;
+        color: #64748b;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        z-index: 1;
+        position: relative;
+    }
+    body.dark-mode .info-text {
+        color: #cbd5e1;
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        z-index: 1;
+        position: relative;
+    }
+
+    .option-card {
+        background: var(--card-bg-light);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: 0 4px 20px var(--amsagreen-shadow);
+        border: 1.5px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s;
+        cursor: pointer;
+    }
+    body.dark-mode .option-card {
+        background: var(--card-bg-dark);
+        border-color: #2e335a;
+    }
+    .option-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 32px var(--amsagreen-shadow);
+        border-color: var(--amsagreen-primary);
+    }
+    .option-card.selected {
+        border-color: var(--amsagreen-primary);
+        box-shadow: 0 0 0 4px var(--amsagreen-light), 0 12px 32px var(--amsagreen-shadow);
+        transform: translateY(-4px);
+    }
+
+    .option-card h3 {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--amsagreen-primary);
+        margin-bottom: 1rem;
+        letter-spacing: -0.01em;
+    }
+
+    .price-display {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-light);
+        margin-bottom: 0.5rem;
+    }
+    body.dark-mode .price-display {
+        color: var(--text-dark);
+    }
+    .price-display span {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #64748b;
+    }
+    body.dark-mode .price-display span {
+        color: #cbd5e1;
+    }
+
+    .period {
+        font-size: 1.1rem;
+        color: #4a5568;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+    body.dark-mode .period {
+        color: #a0aec0;
+    }
+    .period b {
+        font-weight: 700;
+        color: var(--text-light);
+    }
+    body.dark-mode .period b {
+        color: var(--text-dark);
+    }
+
+    .discount {
+        color: var(--accent); /* Green accent */
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    button.btn-select {
+        background: linear-gradient(90deg, var(--amsagreen-primary) 0%, var(--amsagreen-dark) 100%);
+        border: none;
+        border-radius: 0.9rem;
+        padding: 0.9rem 1.8rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 2px 8px var(--amsagreen-shadow);
+        transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+        margin-top: auto; /* Push button to bottom */
+        letter-spacing: 0.01em;
+    }
+    button.btn-select:hover {
+        background: linear-gradient(90deg, var(--amsagreen-dark) 0%, var(--amsagreen-primary) 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px var(--amsagreen-shadow);
+    }
+    button.btn-select:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px var(--amsagreen-shadow);
+    }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .land-options-container {
+            padding: 2rem;
+            margin: 1.5rem auto;
+        }
+        h2.main-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .info-text {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        .options-grid {
+            grid-template-columns: 1fr; /* Stack cards on smaller screens */
+            gap: 1.5rem;
+        }
+        .option-card {
+            padding: 1.8rem;
+        }
+        .price-display {
+            font-size: 1.8rem;
+        }
+        .price-display span {
+            font-size: 1rem;
+        }
+        .period {
+            font-size: 1rem;
+        }
+        .discount {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .center-wrapper {
+            padding: 1rem;
+        }
+        .land-options-container {
+            padding: 1.5rem;
+            margin: 1rem auto;
+        }
+        h2.main-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .info-text {
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-card {
+            padding: 1.5rem 1rem;
+        }
+        .option-card h3 {
+            font-size: 1.4rem;
+        }
+        .price-display {
+            font-size: 1.6rem;
+        }
+        .price-display span {
+            font-size: 0.9rem;
+        }
+        .period {
+            font-size: 0.9rem;
+        }
+        .discount {
+            font-size: 0.85rem;
+        }
+        button.btn-select {
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<!-- Main Layout -->
+<div class="options-grid">
+  <!-- Daily Plan -->
+  <div class="option-card">
+    <h3>Daily Installment Plan</h3>
+    <div class="price-display">KES 500 <span>/ day</span></div>
+    <div class="period">Payment Period: <b>36 months</b></div>
+    <a href="{{ url_for('land_purchase_form') }}?plan_id=daily-500" class="btn-select">Select Plan</a>
+  </div>
+
+  <!-- 90-Day Plan -->
+  <div class="option-card">
+    <h3>Short-Term Installment</h3>
+    <div class="price-display">KES 5,000 <span>/ month</span></div>
+    <div class="period">Payment Period: <b>90 days</b></div>
+    <a href="{{ url_for('land_purchase_form') }}?plan_id=90-day-5000" class="btn-select">Select Plan</a>
+  </div>
+
+  <!-- 12-Month Plan -->
+  <div class="option-card">
+    <h3>Annual Installment Plan</h3>
+    <div class="price-display">KES 40,000 <span>/ month</span></div>
+    <div class="period">Payment Period: <b>12 months</b></div>
+    <a href="{{ url_for('land_purchase_form') }}?plan_id=monthly-40000" class="btn-select">Select Plan</a>
+  </div>
+
+  <!-- One-off -->
+  <div class="option-card">
+    <h3>One-Off Cash Purchase</h3>
+    <div class="price-display">KES 500,000</div>
+    <div class="period">Payment Period: <b>One-off payment</b></div>
+    <div class="discount">Includes a 5% discount!</div>
+    <a href="{{ url_for('land_purchase_form') }}?plan_id=one-off-500000" class="btn-select">Select Plan</a>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

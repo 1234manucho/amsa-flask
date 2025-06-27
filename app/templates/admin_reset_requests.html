@@ -1,0 +1,43 @@
+<h2>Password Reset Requests</h2>
+{% for req in requests %}
+  <div>
+    <p>{{ req.user_email }} - {{ req.status }}</p>
+    {% if req.status == 'Pending' %}
+      <form method="POST" action="/admin/respond-reset/{{ req.id }}">
+        
+        <input type="text" name="new_password" placeholder="New password">
+        <button type="submit">Reset</button>
+      </form>
+    {% else %}
+      <p>Responded on: {{ req.response_time }}</p>
+    {% endif %}
+  </div>
+{% endfor %}
+
+
+<style>
+    .card {
+        border-radius: 1rem;
+        border: none;
+    }
+    .table thead th {
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f0f8ff;
+        transition: background 0.2s;
+    }
+    .btn-success {
+        box-shadow: 0 2px 6px rgba(40,167,69,0.15);
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+        box-shadow: 0 4px 12px rgba(40,167,69,0.25);
+    }
+    .table td, .table th {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}

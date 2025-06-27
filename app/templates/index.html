@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block content %}
+<style>
+  /* --- Basic Body/HTML setup (you might have this in base.html) --- */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f7f6; /* A light background for the page */
+    color: #333;
+  }
+
+  /* --- Hero Section Styles --- */
+  .hero {
+    background: linear-gradient(135deg, #e0ffe9 0%, #a7eed3 100%); /* Light green gradient */
+    color: #1A5E44; /* Darker green text for contrast */
+    text-align: center;
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* Make hero section take at least 60% of viewport height */
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    z-index: 2; /* Ensure content is above any background elements */
+  }
+
+  .hero h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    font-weight: bold;
+    color: #0A4F32; /* Even darker green for the main heading */
+  }
+
+  .hero p {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+    color: #1A5E44;
+  }
+
+  /* CTA Buttons */
+  .cta-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background-color: #0A4F32; /* A darker shade of green */
+    color: #E0FFE9; /* A lighter, complementary green for text */
+    text-decoration: none;
+    padding: 10px 20px; /* Smaller padding */
+    font-size: 0.9rem; /* Slightly smaller font size */
+    font-weight: 600;
+    border-radius: 8px;
+    min-width: 160px; /* Reduced minimum width */
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Slightly adjusted shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .cta-btn:hover {
+    background-color: #073C26; /* Even darker on hover */
+    transform: scale(1.02);
+  }
+
+  /* --- Features Section Styles --- */
+  .features {
+    background-color: #ffffff;
+    padding: 60px 20px;
+    text-align: center;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  }
+
+  .features h2 {
+    font-size: 2.5em;
+    color: #1A5E44;
+    margin-bottom: 40px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background-color: #F8FDF9; /* Very light green background */
+    border: 1px solid #D5EEDD;
+    border-radius: 10px;
+    padding: 25px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #0E7C48; /* Green text */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px; /* Ensure cards have a consistent height */
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  /* --- Animations (if you have them defined elsewhere, they should be included) --- */
+  /* Example:
+  .animate {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInSlideUp 0.8s forwards;
+  }
+
+  .animate.delay {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes fadeInSlideUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  */
+
+  /* --- Responsive Design --- */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5em;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+    }
+
+    .features h2 {
+      font-size: 2em;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr; /* Stack cards on smaller screens */
+    }
+
+    .cta-buttons {
+      flex-direction: column; /* Stack buttons vertically on small screens */
+      align-items: center;
+    }
+
+    .cta-btn {
+      min-width: 80%; /* Make buttons wider on small screens */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: 2em;
+    }
+
+    .hero p {
+      font-size: 1em;
+    }
+
+    .hero {
+      padding: 60px 15px;
+    }
+
+    .features {
+      padding: 40px 15px;
+    }
+  }
+</style>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="animate">🌍 Invest in Your Future</h1>
+    <p class="animate delay">Secure land. Grow wealth. One trusted platform.</p>
+   <div class="cta-buttons">
+  <a href="/invest" class="cta-btn">💰 Start Investing</a>
+  <a href="/buy-land" class="cta-btn">🏞 Own Your Land</a>
+</div>
+
+
+  </div>
+</section>
+<section class="features">
+  <h2>✨ Why Choose Amsa?</h2>
+  <div class="features-grid">
+    <div class="feature-card">🔒 Instant Principal Return</div>
+    <div class="feature-card">📅 Flexible Land Payments</div>
+    <div class="feature-card">📈 Low-Risk, High Trust</div>
+    <div class="feature-card">🌐 Built for Modern Investors</div>
+  </div>
+</section>
+{% endblock %}

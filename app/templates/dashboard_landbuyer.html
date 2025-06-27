@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8f9fa;
+    }
+    .dashboard-card {
+        background: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .dashboard-card h5 {
+        font-weight: 600;
+        color: #333;
+    }
+    .dashboard-card p {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #4caf50;
+    }
+    .quick-links a {
+        display: block;
+        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        background-color: #28a745;
+        color: #fff;
+        border-radius: 0.5rem;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+    .quick-links a:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Land Buyer Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="quick-links">
+                <a href="{{ url_for('main.dashboard') }}">🏠 Home</a>
+>
+                <a href="{{ url_for('main.invest_land') }}">📋 See Land Plans</a>
+
+                <a href="{{ url_for('main.available_land') }}">🌍 See Land Available</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h5>Total Plots Owned</h5>
+                        <p>{{ stats.total_plots or 0 }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h5>Total Amount Invested</h5>
+                        <p>KES {{ stats.total_invested or 0 }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card">
+                        <h5>Pending Payments</h5>
+                        <p>KES {{ stats.pending_payments or 0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Payment Overview</h5>
+                    <canvas id="paymentChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Land Purchases</h5>
+                    {% if recent_purchases %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Plot Name</th>
+                                <th>Date</th>
+                                <th>Paid</th>
+                                <th>Balance</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in recent_purchases %}
+                            <tr>
+                                <td>{{ item.plot_name }}</td>
+                                <td>{{ item.purchase_date }}</td>
+                                <td>KES {{ item.total_paid }}</td>
+                                <td>KES {{ item.balance_remaining }}</td>
+                                <td>{{ item.progress_percentage }}%</td>
+                                <td>{{ item.status }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <p class="text-muted">No recent land purchases yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart JS and Setup -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chartLabels = {{ payment_data.labels | tojson | safe }};
+    const chartAmounts = {{ payment_data.amounts | tojson | safe }};
+
+    const data = {
+        labels: chartLabels,
+        datasets: [{
+            label: 'Monthly Payments (KES)',
+            data: chartAmounts,
+            backgroundColor: 'rgba(75, 192, 192, 0.4)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            borderRadius: 6
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Your Land Payment History'
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'KES'
+                    }
+                }
+            }
+        }
+    };
+
+    const ctx = document.getElementById("paymentChart").getContext("2d");
+    new Chart(ctx, config);
+});
+</script>
+{% endblock %}

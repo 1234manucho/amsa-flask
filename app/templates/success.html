@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="page-section container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto text-center" style="max-width: 450px; background: #f8f9fa;">
+    <div class="card-body p-5">
+      <div class="mb-4">
+        <img src="{{ url_for('static', filename='img/success.png') }}" alt="Success" style="height: 80px;">
+      </div>
+      <h2 class="fw-bold text-success mb-3">Success!</h2>
+      <p class="text-secondary mb-4">Your action was completed successfully.</p>
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-success btn-lg w-100 shadow-sm">
+        Go to Dashboard
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

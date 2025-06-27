@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}📨 Reset Request Sent{% endblock %}
+
+{% block content %}
+<style>
+    .confirmation-container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: #f0f4f8;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .confirmation-container h3 {
+        color: #2563eb;
+        font-weight: 700;
+    }
+
+    .confirmation-container p {
+        margin-top: 15px;
+        font-size: 1rem;
+        color: #374151;
+    }
+
+    .btn-back {
+        margin-top: 25px;
+        background: linear-gradient(to right, #2563eb, #3b82f6);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: linear-gradient(to right, #1e40af, #2563eb);
+    }
+</style>
+
+<div class="confirmation-container">
+    <h3>📨 Password Reset Email Sent</h3>
+    <p>If the email you provided is registered, you'll receive instructions to reset your password shortly.</p>
+    <a href="{{ url_for('main.login') }}" class="btn btn-back mt-3">🔙 Back to Login</a>
+</div>
+{% endblock %}

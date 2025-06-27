@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Land Listing - AMSA Developers{% endblock %}
+
+{% block content %}
+<style>
+    /* Reuse your existing styles from manage_land.html or put them in a shared CSS file */
+    body {
+        background: linear-gradient(120deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .center-viewport {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .container {
+        max-width: 900px; /* Slightly adjusted max-width for edit form */
+        margin: 0 auto;
+        background: rgba(255,255,255,0.98);
+        border-radius: 24px;
+        box-shadow: 0 8px 40px rgba(44,62,80,0.13);
+        padding: 2.5rem 2rem;
+    }
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1a2238;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 8px rgba(44,62,80,0.07);
+    }
+    .card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+        background: #fff;
+        transition: box-shadow 0.2s;
+        margin-bottom: 2rem;
+    }
+    .card-header {
+        border-radius: 18px 18px 0 0;
+        background: linear-gradient(90deg, #1a2238 60%, #9daaf2 100%);
+        color: #fff;
+        padding: 1.2rem 1.5rem;
+        border: none;
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #1a2238;
+        letter-spacing: 0.5px;
+    }
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 1px solid #e0e6ed;
+        background: #f8fafc;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+    }
+    .form-control:focus {
+        border-color: #9daaf2;
+        box-shadow: 0 0 0 2px #9daaf233;
+    }
+    .btn-primary {
+        border-radius: 24px;
+        padding: 8px 32px;
+        font-weight: 600;
+        background: linear-gradient(90deg, #1a2238 60%, #9daaf2 100%);
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+    }
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #9daaf2 0%, #1a2238 100%);
+        box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+    }
+    .btn-secondary { /* Added style for cancel button */
+        border-radius: 24px;
+        padding: 8px 32px;
+        font-weight: 600;
+        background: #6c757d;
+        border: none;
+        color: #fff;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+    }
+    .btn-secondary:hover {
+        background: #5a6268;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+    }
+    .current-image {
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        background-color: #f9f9f9;
+        display: inline-block;
+    }
+    .current-image img {
+        max-width: 150px;
+        height: auto;
+        border-radius: 6px;
+    }
+    @media (max-width: 767px) {
+        .section-title {
+            font-size: 1.3rem;
+        }
+        .card-header {
+            font-size: 1.1rem;
+            padding: 1rem;
+        }
+        .container {
+            padding: 0.5rem 0.2rem;
+        }
+    }
+</style>
+
+<div class="center-viewport">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title" style="font-size:2.3rem; letter-spacing:2px; background: linear-gradient(90deg, #1a2238 60%, #9daaf2 100%); color: #fff; display: inline-block; padding: 0.6em 2em; border-radius: 20px; box-shadow: 0 4px 24px rgba(44,62,80,0.13); text-shadow: 0 2px 8px rgba(44,62,80,0.10);">
+            <i class="bi bi-pencil-square" style="margin-right:10px; color:#ffe066;"></i>
+            Edit Land Plot
+            </h2>
+            <p class="mt-2 text-muted" style="font-size:1.1em;">Update details for Plot Reference: <strong class="text-dark">{{ land.plot_reference }}</strong></p>
+        </div>
+
+        <div class="form-section">
+            <div class="card shadow-lg border-0" style="background:rgba(255,255,255,0.97);">
+                <div class="card-header d-flex align-items-center justify-content-center" style="background: linear-gradient(90deg, #1a2238 60%, #9daaf2 100%);">
+                    <h4 class="mb-0 flex-grow-1 text-center">Editing Plot ID: {{ land.id }}</h4>
+                    <span class="badge bg-info ms-2" style="font-size:1em;">Edit Mode</span>
+                </div>
+                <div class="card-body px-4 py-4">
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('edit_land', land_id=land.id) }}">
+                        
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="plot_reference" class="form-label">Plot Reference</label>
+                                <input type="text" class="form-control shadow-sm" id="plot_reference" name="plot_reference" value="{{ land.plot_reference }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control shadow-sm" id="location" name="location" value="{{ land.location }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="size_acres" class="form-label">Size (Acres)</label>
+                                <input type="text" class="form-control shadow-sm" id="size_acres" name="size_acres" value="{{ land.size_acres }}" placeholder="e.g. 0.125 or 1/8" pattern="^(\d+(\.\d+)?|\d+/\d+)$" required>
+                                <small class="form-text text-muted">Enter as decimal (e.g. 0.125) or fraction (e.g. 1/8)</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="price_kes" class="form-label">Price (KES)</label>
+                                <input type="number" step="0.01" class="form-control shadow-sm" id="price_kes" name="price_kes" value="{{ '%.2f'|format(land.price_kes) }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="description" class="form-label">Description (Optional)</label>
+                                <textarea class="form-control shadow-sm" id="description" name="description" rows="2">{{ land.description }}</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select shadow-sm" id="status" name="status" required>
+                                    <option value="Available" {% if land.status == 'Available' %}selected{% endif %}>Available</option>
+                                    <option value="Sold" {% if land.status == 'Sold' %}selected{% endif %}>Sold</option>
+                                    <option value="Reserved" {% if land.status == 'Reserved' %}selected{% endif %}>Reserved</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="image" class="form-label">Plot Image (Upload new or keep existing)</label>
+                                <input type="file" class="form-control shadow-sm" id="image" name="image" accept="image/*">
+                                <small class="form-text text-muted">Leave blank to keep current image. Allowed formats: PNG, JPG, JPEG, GIF</small>
+                                {% if land.image_filename %}
+                                <div class="current-image mt-2">
+                                    <p class="mb-1 text-muted small">Current Image:</p>
+                                    <img src="{{ url_for('uploaded_file', filename=land.image_filename) }}" alt="Current Image" class="img-fluid">
+                                </div>
+                                {% else %}
+                                <p class="text-muted small mt-2">No current image.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="text-end mt-4">
+                            <a href="{{ url_for('manage_land') }}" class="btn btn-secondary px-4 py-2 me-2" style="font-size:1.1em;">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5 py-2" style="font-size:1.1em;">Update Plot</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

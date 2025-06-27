@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .page-section {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        padding: 2rem 2.5rem;
+    }
+    .transaction-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1rem;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .transaction-table th, .transaction-table td {
+        padding: 1rem;
+        text-align: left;
+    }
+    .transaction-table th {
+        background: #198754;
+        color: #fff;
+        font-weight: 600;
+        border-bottom: 2px solid #146c43;
+    }
+    .transaction-table tr:nth-child(even) {
+        background: #f6f8fa;
+    }
+    .transaction-table tr:nth-child(odd) {
+        background: #fff;
+    }
+    .transaction-table tr:hover {
+        background: #e9f7ef;
+        transition: background 0.2s;
+    }
+    .btn.green {
+        background: #198754;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+    .btn.green:hover {
+        background: #146c43;
+        color: #fff;
+    }
+    .alert {
+        margin: 1rem 0;
+        padding: 0.75rem 1.25rem;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    .alert-success { background: #d1e7dd; color: #0f5132; }
+    .alert-danger { background: #f8d7da; color: #842029; }
+    .alert-warning { background: #fff3cd; color: #664d03; }
+    .alert-info { background: #cff4fc; color: #055160; }
+    @media (max-width: 700px) {
+        .page-section { padding: 1rem 0.5rem; }
+        .transaction-table th, .transaction-table td { padding: 0.5rem; font-size: 0.95rem; }
+    }
+</style>
+
+<div class="page-section">
+    <h2 class="text-center" style="margin-bottom: 2rem; color: #198754; font-weight: 700;">My Transactions</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if transactions %}
+        <div class="table-container" style="overflow-x:auto;">
+            <table class="transaction-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in transactions %}
+                    <tr>
+                        <td>{{ txn.id }}</td>
+                        <td>{{ txn.date.strftime('%Y-%m-%d') }}</td>
+                        <td>KSh {{ "{:,.2f}".format(txn.amount) }}</td>
+                        <td>{{ txn.description }}</td>
+                        <td>
+                            <a class="btn green" href="{{ url_for('download_receipt', txn_id=txn.id) }}">Download</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center" style="margin-top:2rem; color: #888;">No transactions found.</p>
+    {% endif %}
+</div>
+{% endblock %}

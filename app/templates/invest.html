@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="invest-hero">
+  <h1>💰 Invest with Amsa Group</h1>
+  <p>Start growing your wealth today with safe, transparent microfinance opportunities.</p>
+</section>
+<section class="investment-tiers">
+  <h2>Choose Your Investment Tier</h2>
+  <div class="tiers-grid">
+    
+   <div class="tier-card">
+  <h3>Seed</h3>
+  <p class="amount">Investment: <span>KES 5,500</span></p>
+  <p class="return">Return: <span>2.5% per month, payable every month</span></p>
+  <p class="principal">Principal: <span>After 6 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Seed') }}" class="btn green invest-btn" title="Start with a low-risk investment">Invest Now</a>
+</div>
+
+
+    <div class="tier-card featured">
+  <h3>Sprout</h3>
+  <p class="amount">Investment: <span>KES 20,800</span></p>
+  <p class="return">Return: <span>3.5% payable every month</span></p>
+  <p class="principal">Principal: <span>After 6 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Sprout') }}" class="btn green">Invest Now</a>
+  <div class="badge">Popular</div>
+</div>
+
+  <div class="tier-card">
+  <h3>Harvest</h3>
+  <p class="amount">Investment: <span>KES 51,200</span></p>
+  <p class="return">Return: <span>4.5% payable monthly</span></p>
+  <p class="principal">Principal: <span>After 6 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Harvest') }}" class="btn green invest-btn" title="Longer commitment, higher returns">Invest Now</a>
+</div>
+
+
+    <div class="tier-card">
+  <h3>Orchard</h3>
+  <p class="amount">Investment: <span>KES 100,700</span></p>
+  <p class="return">Return: <span>5.5% payable monthly</span></p>
+  <p class="principal">Principal: <span>After 6 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Orchard') }}" class="btn green invest-btn" title="Premium investors' tier">Invest Now</a>
+</div>
+
+
+  <div class="tier-card">
+  <h3>Legacy</h3>
+  <p class="amount">Investment: <span>KES 256,200</span></p>
+  <p class="return">Return: <span>6.5% payable monthly</span></p>
+  <p class="principal">Principal: <span>After 9 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Legacy') }}" class="btn green invest-btn" title="Build generational wealth">Invest Now</a>
+</div>
+ <div class="tier-card">
+  <h3>Summit</h3>
+  <p class="amount">Investment: <span>KES 498,500</span></p>
+  <p class="return">Return: <span>7% payable monthly</span></p>
+  <p class="principal">Principal: <span>After 12 months</span></p>
+  <a href="{{ url_for('main.invest_form', tier='Summit') }}" class="btn green invest-btn" title="Build generational wealth">Invest Now</a>
+</div>
+
+
+
+  </div>
+</section>
+
+
+<section class="how-to-invest">
+  <h2>How to Invest</h2>
+  <ol>
+    <li>Register or login to your account.</li>
+    <li>Choose your investment tier and amount.</li>
+    <li>Agree to the terms and confirm investment.</li>
+    <li>Make a payment via M-Pesa . bank transfer (coming soon).</li>
+    <li>Track your investment progress on your dashboard.</li>
+    <li>Receive your principal and interest on maturity.</li>
+  </ol>
+</section>
+
+<section class="faqs">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <h3>Is my principal guaranteed?</h3>
+      <p>Yes! Amsa guarantees the return of your principal investment.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I withdraw before maturity?</h3>
+      <p>Currently, early withdrawal is not supported to protect investment stability.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I track my investment?</h3>
+      <p>Simply log in and visit your investor dashboard to see real-time progress.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  body {
+    background: #f4f7fa;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    color: #222;
+  }
+
+  .invest-hero {
+    background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+    color: #fff;
+    padding: 3rem 1rem 2rem 1rem;
+    text-align: center;
+    border-radius: 1.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 24px rgba(40,167,69,0.08);
+  }
+
+  .invest-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+  }
+
+  .invest-hero p {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    margin-bottom: 0;
+  }
+
+  .investment-tiers {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .investment-tiers h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    color: #28a745;
+  }
+
+  .tiers-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tier-card {
+    background: #fff;
+    border-radius: 1.25rem;
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(40,167,69,0.08);
+    flex: 1 1 300px;
+    max-width: 340px;
+    position: relative;
+    transition: transform 0.18s, box-shadow 0.18s;
+    border: 2px solid transparent;
+  }
+
+  .tier-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 32px rgba(40,167,69,0.13);
+    border-color: #28a74533;
+  }
+
+  .tier-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #222;
+  }
+
+  .tier-card .amount, .tier-card .return {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tier-card .amount span, .tier-card .return span {
+    font-weight: 600;
+    color: #28a745;
+  }
+
+  .tier-card .btn {
+    margin-top: 1.2rem;
+    width: 100%;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    padding: 0.85rem 0;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .tier-card.featured {
+    border: 2px solid #28a745;
+    box-shadow: 0 8px 32px rgba(40,167,69,0.18);
+    z-index: 1;
+  }
+
+  .tier-card .badge {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: #28a745;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.3rem 0.9rem;
+    border-radius: 1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.12);
+  }
+
+  .btn.green {
+    background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+    color: #fff;
+    border: none;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.08);
+    transition: background 0.3s, box-shadow 0.2s;
+  }
+
+  .btn.green:hover {
+    background: linear-gradient(90deg, #218838 0%, #28a745 100%);
+    box-shadow: 0 4px 16px rgba(40,167,69,0.16);
+  }
+
+  .how-to-invest {
+    background: #fff;
+    border-radius: 1.25rem;
+    padding: 2rem 1.5rem;
+    margin: 2.5rem 0;
+    box-shadow: 0 4px 24px rgba(40,167,69,0.06);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .how-to-invest h2 {
+    color: #28a745;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+
+  .how-to-invest ol {
+    padding-left: 1.2rem;
+    font-size: 1.08rem;
+    color: #333;
+  }
+
+  .how-to-invest li {
+    margin-bottom: 0.7rem;
+    line-height: 1.6;
+  }
+
+  .faqs {
+    margin: 2.5rem 0 1.5rem 0;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .faqs h2 {
+    color: #28a745;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    text-align: center;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .faq-item {
+    background: #f9f9f9;
+    border-radius: 1rem;
+    padding: 1.2rem 1rem;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.04);
+    transition: box-shadow 0.2s;
+  }
+
+  .faq-item h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 0.4rem;
+  }
+
+  .faq-item p {
+    color: #444;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .faq-item:hover {
+    box-shadow: 0 4px 16px rgba(40,167,69,0.09);
+  }
+
+  @media (max-width: 900px) {
+    .tiers-grid {
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .tier-card {
+      max-width: 95vw;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .invest-hero {
+      padding: 2rem 0.5rem 1.5rem 0.5rem;
+      border-radius: 1rem;
+    }
+
+    .how-to-invest, .faqs {
+      padding: 1.2rem 0.5rem;
+      border-radius: 0.8rem;
+    }
+
+    .tier-card {
+      padding: 1.5rem 0.7rem 1.2rem 0.7rem;
+      border-radius: 0.8rem;
+    }
+  }
+</style>
+
+
+
+{% endblock %}

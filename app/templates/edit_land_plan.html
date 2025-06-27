@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #4f46e5;
+        --primary-dark: #3730a3;
+        --card-bg-light: #fff;
+        --card-bg-dark: #23263a;
+        --border-radius: 1rem;
+        --shadow: 0 4px 24px rgba(80, 112, 255, 0.08);
+        --input-bg: #f9fafb;
+        --input-bg-dark: #23263a;
+        --input-border: #d1d5db;
+        --input-border-dark: #373a5d;
+        --text-light: #1e293b;
+        --text-dark: #f1f5f9;
+        --alert-bg: #f1f5f9;
+        --alert-bg-dark: #23263a;
+        --alert-text: #1e293b;
+        --alert-text-dark: #f1f5f9;
+    }
+
+    body {
+        background: #f3f4f6;
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        color: var(--text-light);
+    }
+    body.dark-mode {
+        background: #181a2a;
+        color: var(--text-dark);
+    }
+
+    .admin-container {
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        max-width: 540px;
+        margin: 3rem auto 2rem auto;
+        background: var(--card-bg-light);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #e5e7eb;
+        transition: background 0.3s, border-color 0.3s;
+    }
+    body.dark-mode .admin-container {
+        background: var(--card-bg-dark);
+        border-color: #2e335a;
+    }
+
+    h1 {
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        font-size: 2.1rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        text-align: center;
+    }
+    body.dark-mode h1 {
+        color: var(--primary-color);
+    }
+
+    .form-group {
+        margin-bottom: 1.4rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.45rem;
+        font-weight: 600;
+        color: var(--text-light);
+        letter-spacing: 0.01em;
+    }
+    body.dark-mode .form-group label {
+        color: var(--text-dark);
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border: 1.5px solid var(--input-border);
+        border-radius: 0.6rem;
+        background: var(--input-bg);
+        color: var(--text-light);
+        font-size: 1.05rem;
+        font-family: inherit;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group textarea,
+    body.dark-mode .form-group select {
+        background: var(--input-bg-dark);
+        border-color: var(--input-border-dark);
+        color: var(--text-dark);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.13);
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin-top: 1.2rem;
+        margin-bottom: 1.3rem;
+        gap: 0.7rem;
+    }
+    .checkbox-group input[type="checkbox"] {
+        accent-color: var(--primary-color);
+        width: 1.1rem;
+        height: 1.1rem;
+        margin: 0;
+    }
+    .checkbox-group label {
+        margin-bottom: 0;
+        font-weight: 500;
+        color: var(--text-light);
+    }
+    body.dark-mode .checkbox-group label {
+        color: var(--text-dark);
+    }
+
+    .btn-submit {
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 0.85rem 2.2rem;
+        border-radius: 0.7rem;
+        cursor: pointer;
+        font-size: 1.08rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        margin-right: 0.7rem;
+        box-shadow: 0 2px 8px rgba(80, 112, 255, 0.07);
+    }
+    .btn-submit:hover, .btn-submit:focus {
+        background: var(--primary-dark);
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 4px 16px rgba(80, 112, 255, 0.13);
+    }
+    .btn-cancel {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        padding: 0.85rem 2.2rem;
+        border-radius: 0.7rem;
+        cursor: pointer;
+        font-size: 1.08rem;
+        font-weight: 600;
+        transition: background-color 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-cancel:hover, .btn-cancel:focus {
+        background-color: #495057;
+        transform: translateY(-2px) scale(1.03);
+    }
+
+    /* Flash Messages */
+    .alert {
+        background: var(--alert-bg);
+        color: var(--alert-text);
+        border-radius: 0.7rem;
+        padding: 0.9rem 1.3rem;
+        margin-bottom: 1.2rem;
+        font-size: 1.02rem;
+        border: none;
+        box-shadow: 0 1px 4px rgba(99,102,241,0.07);
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .alert-success { background: #e0f7ef; color: #0f5132; }
+    .alert-danger { background: #ffeaea; color: #842029; }
+    body.dark-mode .alert {
+        background: var(--alert-bg-dark);
+        color: var(--alert-text-dark);
+    }
+    body.dark-mode .alert-success { background: #134e4a; color: #6ee7b7; }
+    body.dark-mode .alert-danger { background: #7f1d1d; color: #fecaca; }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.3rem;
+        color: #64748b;
+        position: static;
+        cursor: pointer;
+        margin-left: auto;
+        line-height: 1;
+        padding: 0 0.3rem;
+        transition: color 0.2s;
+    }
+    .btn-close:hover {
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 600px) {
+        .admin-container {
+            padding: 1.2rem 0.7rem 1rem 0.7rem;
+            margin: 1.2rem auto;
+        }
+        h1 {
+            font-size: 1.3rem;
+            margin-bottom: 1.1rem;
+        }
+        .btn-submit, .btn-cancel {
+            width: 100%;
+            margin-bottom: 0.7rem;
+        }
+    }
+</style>
+
+<div class="admin-container">
+    <h1>Edit Land Plan: {{ plan.name }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" aria-label="Close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('edit_land_plan', plan_id=plan.id) }}">
+        
+
+        <div class="form-group">
+            <label for="name">Plan Name</label>
+            <input type="text" id="name" name="name" value="{{ plan.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" value="{{ plan.description or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" value="{{ plan.price }}" required>
+        </div>
+        <div class="form-group">
+            <label for="price_unit">Price Unit</label>
+            <input type="text" id="price_unit" name="price_unit" value="{{ plan.price_unit or 'KES' }}">
+        </div>
+        <div class="form-group">
+            <label for="billing_period">Billing Period</label>
+            <input type="text" id="billing_period" name="billing_period" value="{{ plan.billing_period or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="duration">Duration</label>
+            <input type="text" id="duration" name="duration" value="{{ plan.duration or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="discount_info">Discount Info</label>
+            <input type="text" id="discount_info" name="discount_info" value="{{ plan.discount_info or '' }}">
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="is_active" name="is_active" {% if plan.is_active %}checked{% endif %}>
+            <label for="is_active">Is Active (Visible to customers)</label>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button type="submit" class="btn-submit">Update Plan</button>
+            <a href="{{ url_for('manage_land_plans') }}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.alert .btn-close').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.alert').style.display = 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

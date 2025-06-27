@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}Available Land - Amsa Group{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light-gray">
+    <div class="container py-5" style="max-width: 900px;"></div>
+        <div class="text-center mb-5">
+            <h1 class="mb-3 animate__animated animate__fadeInDown text-dark-blue fw-bold display-5 shadow-sm rounded-4 px-3 py-2" style="background: rgba(255,255,255,0.8);">
+                Explore Prime Land Opportunities in Emali
+            </h1>
+            <p class="lead animate__animated animate__fadeIn text-secondary-light fs-5">
+                Discover lucrative investment prospects or the perfect spot for your tranquil home on Emali's green and fertile plains.
+            </p>
+        </div>
+
+        {# Flash Messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="row justify-content-center mb-4">
+                    <div class="col-md-10">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if land_listings %}
+            <div class="row row-cols-1 row-cols-md-2 g-4 justify-content-center">
+                {% for land in land_listings %}
+                <div class="col animate__animated animate__fadeInUp d-flex justify-content-center">
+                    <div class="card land-card h-100 border-0 shadow-lg rounded-4 overflow-hidden" style="width: 100%; max-width: 370px;"></div>
+                        {% if land.image_filename %}
+                            <div class="land-card-image-wrapper">
+                                <img src="{{ url_for('uploaded_file', filename=land.image_filename) }}" 
+                                     class="card-img-top land-card-image" 
+                                     alt="Image of {{ land.plot_reference }}" 
+                                     loading="lazy">
+                            </div>
+                        {% else %}
+                            <div class="land-card-image-wrapper placeholder-image">
+                                <img src="{{ url_for('static', filename='images/placeholder.png') }}" 
+                                     class="card-img-top land-card-image" 
+                                     alt="No image available" 
+                                     loading="lazy">
+                                <span class="placeholder-text">Image Coming Soon</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body d-flex flex-column p-4">
+                            <h5 class="card-title mb-2 text-primary-amsagroup">{{ land.plot_reference }}</h5>
+                            <p class="card-subtitle mb-3 text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i> {{ land.location }}
+                            </p>
+                            
+                            <div class="info-group mb-2">
+                                <p class="mb-0"><strong><i class="fas fa-ruler-combined me-2"></i> Size:</strong> <span class="info-value">{{ "%.3f"|format(land.size_acres) }} Acres</span></p>
+                            </div>
+                            <div class="info-group mb-3">
+                                <p class="mb-0"><strong><i class="fas fa-tag me-2"></i> Price:</strong> <span class="info-value price-highlight">KES {{ "{:,.2f}".format(land.price_kes) }}</span></p>
+                            </div>
+                            
+                            <p class="card-text flex-grow-1 description-preview mb-4 text-secondary-light">
+                                {{ land.description or 'Amsa Group offers this prime land for sale. Contact us for more details and secure your investment today.' }}
+                            </p>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span class="badge rounded-pill p-2 fw-bold text-uppercase status-badge 
+                                    {% if land.status == 'Available' %}bg-success-subtle text-success border border-success
+                                    {% elif land.status == 'Sold' %}bg-danger-subtle text-danger border border-danger
+                                    {% elif land.status == 'Reserved' %}bg-warning-subtle text-warning border border-warning
+                                    {% else %}bg-secondary-subtle text-secondary border border-secondary{% endif %}">
+                                    {{ land.status }}
+                                </span>
+                                <a href="{{ url_for('main.microfinance') }}?plot={{ land.plot_reference }}" class="btn btn-primary-amsagroup btn-sm shadow-sm">Inquire Now</a>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted bg-light-gray border-0 pt-3 pb-2">
+                            <small>Added: {{ land.added_date.strftime('%B %d, %Y') }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="d-flex align-items-center justify-content-center" style="min-height: 350px;">
+                <div class="alert alert-info text-center py-5 px-4 animate__animated animate__fadeIn shadow-lg rounded-4 w-100" role="alert" style="max-width: 500px;">
+                    <h4 class="alert-heading mb-3">No Land Listings Available Right Now!</h4>
+                    <p class="mb-4">We're constantly updating our portfolio with new opportunities. Please check back soon!</p>
+                    <hr>
+                    <p class="mb-0">For personalized assistance, don't hesitate to <a href="{{ url_for('main.microfinance') }}" class="alert-link fw-bold">contact our sales team</a>.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    :root {
+        --amsagroup-primary: #2ecc71;
+        --amsagroup-dark-blue: #2c3e50;
+        --amsagroup-secondary-light: #6c757d;
+        --amsagroup-light-gray: #f8f9fa;
+        --amsagroup-border-color: #e0e0e0;
+    }
+    .text-dark-blue { color: var(--amsagroup-dark-blue) !important; }
+    .text-primary-amsagroup { color: var(--amsagroup-primary) !important; }
+    .text-secondary-light { color: var(--amsagroup-secondary-light) !important; }
+    .bg-light-gray { background-color: var(--amsagroup-light-gray) !important; }
+    .btn-primary-amsagroup {
+        background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        box-shadow: 0 2px 8px rgba(46,204,113,0.08);
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary-amsagroup:hover {
+        background: linear-gradient(90deg, #27ae60 0%, #219150 100%);
+        box-shadow: 0 4px 16px rgba(46,204,113,0.15);
+    }
+    .land-card {
+        background: #fff;
+        border: 1px solid var(--amsagroup-border-color);
+        box-shadow: 0 4px 16px rgba(44,62,80,0.07);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .land-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 32px rgba(44,62,80,0.13);
+    }
+    .land-card-image-wrapper {
+        width: 100%;
+        height: 240px;
+        overflow: hidden;
+        position: relative;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .land-card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .land-card:hover .land-card-image {
+        transform: scale(1.06);
+    }
+    .placeholder-image {
+        color: #6c757d;
+        font-size: 1.2rem;
+        text-align: center;
+        flex-direction: column;
+    }
+    .placeholder-image img {
+        opacity: 0.5;
+    }
+    .placeholder-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255,255,255,0.85);
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    .card-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    .card-subtitle {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .info-group p {
+        font-size: 1.05rem;
+        margin-bottom: 0.5rem;
+    }
+    .info-group strong {
+        color: var(--amsagroup-dark-blue);
+        font-weight: 600;
+    }
+    .info-group .info-value {
+        font-weight: 600;
+        color: var(--amsagroup-dark-blue);
+    }
+    .price-highlight {
+        font-size: 1.15rem;
+        color: var(--amsagroup-primary);
+        font-weight: 800;
+    }
+    .description-preview {
+        font-size: 0.97rem;
+        color: var(--amsagroup-secondary-light);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 54px;
+    }
+    .status-badge {
+        font-size: 0.85rem;
+        padding: 0.5em 1.1em;
+        border-radius: 50px;
+        border-width: 1px !important;
+        letter-spacing: 0.04em;
+    }
+    .bg-success-subtle { background-color: #d1e7dd !important; }
+    .text-success { color: #0f5132 !important; }
+    .border-success { border-color: #badbcc !important; }
+    .bg-danger-subtle { background-color: #f8d7da !important; }
+    .text-danger { color: #842029 !important; }
+    .border-danger { border-color: #f5c2c7 !important; }
+    .bg-warning-subtle { background-color: #fff3cd !important; }
+    .text-warning { color: #664d03 !important; }
+    .border-warning { border-color: #ffecb5 !important; }
+    .bg-secondary-subtle { background-color: #e2e3e5 !important; }
+    .text-secondary { color: #41464b !important; }
+    .border-secondary { border-color: #c4c4c4 !important; }
+    @media (max-width: 991px) {
+        .land-card-image-wrapper { height: 180px; }
+    }
+    @media (max-width: 767px) {
+        .land-card-image-wrapper { height: 140px; }
+        .container { max-width: 100% !important; }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* General body styling inherited from base.html or a central CSS file */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+    }
+    body.dark-mode {
+        background-color: #1a1a2e;
+        color: #e0e0e0;
+    }
+
+    .admin-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        color: #28a745;
+        margin-bottom: 1.5rem;
+    }
+    body.dark-mode h1 {
+        color: #4CAF50;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+    }
+    body.dark-mode .card {
+        background-color: #2e2e4a;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    body.dark-mode table {
+        background-color: #2e2e4a;
+    }
+
+    th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    body.dark-mode th, body.dark-mode td {
+        border-bottom: 1px solid #3b3b5c;
+    }
+
+    th {
+        background-color: #f8f8f8;
+        font-weight: 600;
+        color: #444;
+    }
+    body.dark-mode th {
+        background-color: #3b3b5c;
+        color: #e0e0e0;
+    }
+
+    .status-badge {
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.5rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    .status-badge.pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    body.dark-mode .status-badge.pending {
+        background-color: #5c4b00;
+        color: #ffe082;
+    }
+
+    .status-badge.completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    body.dark-mode .status-badge.completed {
+        background-color: #1a523a;
+        color: #c8e6c9;
+    }
+
+    .status-badge.failed, .status-badge.cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    body.dark-mode .status-badge.failed, body.dark-mode .status-badge.cancelled {
+        background-color: #8c3b4a;
+        color: #f4b4b4;
+    }
+
+    .action-button {
+        background-color: #007bff; /* Blue for action */
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease;
+    }
+    .action-button:hover {
+        background-color: #0056b3;
+    }
+    .action-button.danger {
+        background-color: #dc3545;
+    }
+    .action-button.danger:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="admin-container">
+    <h1>Manage Investments</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% if investment_details %}
+        <div class="card table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Investor Name</th>
+                        <th>Investor Email</th>
+                        <th>Tier</th>
+                        <th>Initial Amount</th>
+                        <th>Purpose</th>
+                        <th>Target Amount</th>
+                        <th>Total Paid</th>
+                        <th>Balance Remaining</th>
+                        <th>Progress</th>
+                        <th>Date Invested</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detail in investment_details %}
+                    <tr>
+                        <td>{{ detail.investment.id }}</td>
+                        <td>{{ detail.investor.full_name | default('N/A') }}</td>
+                        <td>{{ detail.investor.email | default('N/A') }}</td>
+                        <td>{{ detail.investment.tier }}</td>
+                        <td>KES {{ detail.investment.amount | floatformat(2) | intcomma }}</td>
+                        <td>{{ detail.investment.purpose | default('N/A') }}</td>
+                        <td>
+                            {% if detail.investment.target_amount is not none %} {# Corrected 'None' to 'none' #}
+                                KES {{ detail.investment.target_amount | floatformat(2) | intcomma }}
+                            {% else %}
+                                Not Set
+                            {% endif %}
+                        </td>
+                        <td>KES {{ detail.total_paid | floatformat(2) | intcomma }}</td>
+                        <td>
+                            {% if detail.balance_remaining is not none %} {# Corrected 'None' to 'none' #}
+                                KES {{ detail.balance_remaining | floatformat(2) | intcomma }}
+                            {% else %}
+                                N/A (No target set)
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if detail.progress_percentage is not none %} {# Corrected 'None' to 'none' #}
+                                {{ detail.progress_percentage | floatformat(0) }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>{{ detail.investment.date_invested.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('send_payment_reminder', investment_id=detail.investment.id) }}" class="action-button">Send Reminder</a>
+                            {# Add other actions like 'Edit', 'View Details' here if needed #}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card">
+            <p>No investment records found.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f0f2f5;
+        color: #333;
+    }
+    body.dark-mode {
+        background-color: #1a1a2e;
+        color: #e0e0e0;
+    }
+    .dashboard-container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    h1, h2, h3 {
+        color: #28a745;
+    }
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+        color: #4CAF50;
+    }
+    .card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+    }
+    body.dark-mode .card {
+        background-color: #2e2e4a;
+    }
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    .status-badge {
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.5rem;
+        font-weight: bold;
+        font-size: 0.85rem;
+    }
+    .status-badge.pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .status-badge.completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .status-badge.failed, .status-badge.cancelled {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 1rem;
+        }
+        .stat-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <h1>Investor Dashboard</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="stat-grid">
+        <div class="card stat-card">
+            <h3>Total Invested</h3>
+            <p>KES {{ user.total_invested | default(0) | intcomma }}</p>
+        </div>
+        <div class="card stat-card">
+            <h3>Total Earned Interest</h3>
+            <p>KES {{ user.total_earned_interest | default(0) | intcomma }}</p>
+        </div>
+        <div class="card stat-card">
+            <h3>Active Investments</h3>
+            <p>{{ user.active_investments_count | default(0) }}</p>
+        </div>
+        <div class="card stat-card">
+            <h3>Expected Payouts</h3>
+            <p>KES {{ user.expected_payouts | default(0) | intcomma }}</p>
+        </div>
+        <div class="card stat-card">
+            <h3>Balance Remaining</h3>
+            <p>
+                {% if user.balance_remaining is not none %}
+                    KES {{ user.balance_remaining | intcomma }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <h2>Your Investments</h2>
+    {% if user.investments %}
+        <div class="card table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tier</th>
+                        <th>Amount</th>
+                        <th>Purpose</th>
+                        <th>Target</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in user.investments %}
+                    <tr>
+                        <td>{{ item.investment.id }}</td>
+                        <td>{{ item.investment.tier }}</td>
+                        <td>KES {{ item.investment.amount | intcomma }}</td>
+                        <td>{{ item.investment.purpose | default('N/A') }}</td>
+                        <td>
+                            {% if item.investment.target_amount %}
+                                KES {{ item.investment.target_amount | intcomma }}
+                            {% else %} N/A {% endif %}
+                        </td>
+                        <td>{{ item.investment.date_invested.strftime('%Y-%m-%d %H:%M') if item.investment.date_invested else 'N/A' }}</td>
+                        <td><span class="status-badge {{ item.investment.status | lower }}">{{ item.investment.status }}</span></td>
+                        <td>
+                            {% if item.progress_percentage is not none %}
+                                {{ item.progress_percentage | intcomma }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card">
+            <p>You currently have no investments.</p>
+        </div>
+    {% endif %}
+
+    <h2>Your Transactions</h2>
+    {% if user.transactions %}
+        <div class="card table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trans in user.transactions %}
+                    <tr>
+                        <td>{{ trans.id }}</td>
+                        <td>KES {{ trans.amount | intcomma }}</td>
+                        <td>{{ trans.description | default('N/A') }}</td>
+                        <td>{{ trans.date.strftime('%Y-%m-%d %H:%M') if trans.date else 'N/A' }}</td>
+                        <td><span class="status-badge {{ trans.status | lower }}">{{ trans.status }}</span></td>
+                        <td>{{ trans.mpesa_receipt_number | default('N/A') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="card">
+            <p>No recent transactions.</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>👥 Manage Users - AMSA Developers</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
+  <style>
+  
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .manage-users-container {
+            background: linear-gradient(135deg, #f8fafc 70%, #e0e7ef 100%);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.10), 0 1.5px 6px rgba(0, 0, 0, 0.06);
+            padding: 40px 28px;
+            margin-top: 40px;
+            animation: fadeIn 1s forwards;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .manage-users-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #2563eb;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: bounceIn 1.2s forwards;
+            font-size: 2.2rem;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            60% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .table thead th {
+            background: linear-gradient(90deg, #2563eb 80%, #60a5fa 100%);
+            color: #fff;
+            border: none;
+            font-size: 1.05rem;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+            text-align: center;
+            padding: 12px 8px;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #e0e7ef;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #c7d2fe;
+            transition: background 0.2s;
+            animation: rowHighlight 0.3s forwards;
+        }
+        @keyframes rowHighlight {
+            from { background-color: #e0e7ef; }
+            to { background-color: #c7d2fe; }
+        }
+        .badge.bg-primary {
+            background: linear-gradient(90deg, #2563eb 70%, #60a5fa 100%) !important;
+            border-radius: 8px;
+            font-size: 1em;
+            padding: 6px 14px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            animation: badgePop 0.7s forwards;
+            color: #fff !important;
+        }
+        @keyframes badgePop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .badge.bg-secondary {
+            background-color: #6c757d !important;
+            color: #fff !important;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .btn-info, .btn-danger, .btn-warning, .btn-success {
+            transition: transform 0.15s, box-shadow 0.15s;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        .btn-info:hover, .btn-danger:hover, .btn-warning:hover, .btn-success:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .btn-info {
+            background: linear-gradient(90deg, #38bdf8 70%, #2563eb 100%) !important;
+            border: none;
+            color: #fff !important;
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #f87171 70%, #ef4444 100%) !important;
+            border: none;
+            color: #fff !important;
+        }
+        .btn-warning {
+            background: linear-gradient(90deg, #fbbf24 70%, #f59e0b 100%) !important;
+            border: none;
+            color: #fff !important;
+        }
+        .btn-success {
+            background: linear-gradient(90deg, #34d399 70%, #10b981 100%) !important;
+            border: none;
+            color: #fff !important;
+        }
+        .btn.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .emoji {
+            font-size: 1.2em;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+        .form-select, .form-control {
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            padding: 10px 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-select:focus, .form-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+            outline: none;
+        }
+        .btn-outline-primary {
+            border-radius: 8px;
+            border-color: #2563eb;
+            color: #2563eb;
+            transition: all 0.2s;
+        }
+        .btn-outline-primary:hover {
+            background-color: #2563eb;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .messages-container .alert {
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInFromTop 0.5s forwards;
+            margin-bottom: 15px;
+        }
+        @keyframes slideInFromTop {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #34d399;
+        }
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .alert-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+        .text-muted {
+            color: #6b7280 !important;
+            font-style: italic;
+        }
+        @media (max-width: 992px) {
+            .manage-users-container {
+                padding: 30px 20px;
+                margin-top: 20px;
+            }
+            .manage-users-title {
+                font-size: 1.8rem;
+            }
+            .table thead th {
+                font-size: 0.95rem;
+                padding: 10px 6px;
+            }
+            .table td, .table th {
+                font-size: 0.9rem;
+            }
+            .btn-info, .btn-danger, .btn-warning, .btn-success {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .manage-users-container {
+                padding: 16px 4px;
+                margin-top: 15px;
+            }
+            .manage-users-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            .btn-info, .btn-danger, .btn-warning, .btn-success {
+                margin: 2px;
+            }
+            .row.g-2 > .col-md-4 {
+                width: 100%;
+            }
+            .messages-container .alert {
+                font-size: 0.95em;
+                padding: 12px 15px;
+            }
+        }
+        @media (max-width: 576px) {
+            .manage-users-title {
+                font-size: 1.3rem;
+            }
+            .badge {
+                font-size: 0.8em;
+                padding: 4px 8px;
+            }
+            .btn-sm {
+                font-size: 0.8em;
+                padding: 4px 8px;
+            }
+            .table td, .table th {
+                padding: 6px;
+            }
+        }
+    </style>
+  
+</head>
+<body>
+  <div class="container manage-users-container">
+    <h2 class="text-center mb-4 manage-users-title">
+      <span class="emoji">👥</span> Manage Users <span class="emoji">🛠️</span>
+    </h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="messages-container my-3" role="alert" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Filter and Search Form -->
+    <form method="GET" class="mb-4" role="search" aria-label="Filter and search users">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label for="role_filter" class="form-label">Filter by Role:</label>
+          <select id="role_filter" name="role" class="form-select" onchange="this.form.submit()" aria-controls="users-table">
+            <option value="">-- All Roles --</option>
+            <option value="admin" {% if request.args.get('role') == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="investor" {% if request.args.get('role') == 'investor' %}selected{% endif %}>Investor</option>
+            <option value="land_buyer" {% if request.args.get('role') == 'land_buyer' %}selected{% endif %}>Land Buyer</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="search" class="form-label">Search by Name or Email:</label>
+          <input type="search" id="search" name="search" value="{{ request.args.get('search', '') }}" class="form-control" placeholder="e.g. John or john@example.com" aria-describedby="searchHelp" />
+          <div id="searchHelp" class="form-text">Search users by full name or email address.</div>
+        </div>
+        <div class="col-md-4 d-grid">
+          <button type="submit" class="btn btn-outline-primary">Apply Filters</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Export CSV Button -->
+    <div class="mb-3 text-end">
+      <a href="{{ url_for('main.export_users_csv') }}" class="btn btn-sm btn-success" role="button">
+        <span class="emoji" aria-hidden="true">📤</span> Export to CSV
+      </a>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive" id="users-table">
+          <table class="table table-striped table-hover align-middle">
+            <thead>
+              <tr>
+                <th scope="col">🆔 ID</th>
+                <th scope="col">👤 Full Name</th>
+                <th scope="col">📧 Email</th>
+                <th scope="col">🎖️ Role</th>
+                <th scope="col">📱 Phone</th>
+                <th scope="col">🌐 Source</th>
+                <th scope="col">⚙️ Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.full_name or 'N/A' }}</td>
+                <td>{{ user.email or 'N/A' }}</td>
+                <td>
+                  <span class="badge bg-primary text-light">
+                    <span class="emoji" aria-hidden="true">🎖️</span> {{ user.role|capitalize }}
+                  </span>
+                </td>
+                <td>{{ user.phone_number or 'N/A' }}</td>
+                <td>
+                  <span class="badge bg-secondary">{{ user.source|capitalize }}</span>
+                </td>
+                <td>
+                  <a href="{{ url_for('main.edit_user', source=user.source, user_id=user.id) }}"
+                     class="btn btn-sm btn-info {% if user.id|string == session.user_id|string %}disabled{% endif %}"
+                     title="{% if user.id|string == session.user_id|string %}Cannot edit your own account here{% else %}Edit User{% endif %}"
+                     aria-disabled="{% if user.id|string == session.user_id|string %}true{% else %}false{% endif %}">
+                    <span class="emoji" aria-hidden="true">✏️</span> Edit
+                  </a>
+                  {% if user.source == 'firebase' %}
+                  <a href="{{ url_for('main.reset_firebase_password', user_id=user.id) }}"
+                     class="btn btn-sm btn-warning ms-1"
+                     onclick="return confirm('Send password reset email to {{ user.email }}?');"
+                     role="button">
+                    <span class="emoji" aria-hidden="true">🔁</span> Reset Password
+                  </a>
+                  {% endif %}
+                  <form action="{{ url_for('main.delete_user', source=user.source, user_id=user.id) }}"
+                        method="POST"
+                        style="display:inline;"
+                        onsubmit="return confirm('Are you sure you want to delete {{ user.full_name }}?');">
+                    <button type="submit"
+                            class="btn btn-sm btn-danger {% if user.id|string == session.user_id|string %}disabled{% endif %}"
+                            {% if user.id|string == session.user_id|string %}disabled aria-disabled="true"{% endif %}
+                            title="{% if user.id|string == session.user_id|string %}Cannot delete your own account{% else %}Delete User{% endif %}">
+                      <span class="emoji" aria-hidden="true">🗑️</span> Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if not users %}
+        <p class="text-center mt-4 text-muted" style="font-size:1.1em; animation: fadeIn 1.2s;">
+          <span class="emoji" aria-hidden="true">😕</span> No users registered yet.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

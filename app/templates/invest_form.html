@@ -1,0 +1,769 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --bg-light: #f4f6fb;
+        --bg-dark: #181c2f;
+        --text-light: #232946;
+        --text-dark: #f4f6fb;
+        --card-bg-light: #fff;
+        --card-bg-dark: #232946;
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --accent: #16a085;
+        --border-radius: 1.25rem;
+        --shadow: 0 8px 32px rgba(44,62,80,0.10);
+        --input-bg: #f8fafc;
+        --input-bg-dark: #232946;
+        --input-border: #d1d5db;
+        --input-border-dark: #3b4252;
+        --alert-bg: #e0e7ff;
+        --alert-bg-dark: #373a53;
+        --alert-text: #3730a3;
+        --alert-text-dark: #a5b4fc;
+    }
+    body {
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+    }
+    .center-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(120deg, #e0e7ff 0%, #f4f6fb 100%);
+    }
+    body.dark-mode .center-wrapper {
+        background: linear-gradient(120deg, #232946 0%, #181c2f 100%);
+    }
+    .invest-card {
+        background: var(--card-bg-light);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        max-width: 440px;
+        width: 100%;
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        transition: background 0.3s, color 0.3s;
+        border: 1.5px solid #e5e7eb;
+        position: relative;
+        overflow: hidden;
+    }
+    body.dark-mode .invest-card {
+        background: var(--card-bg-dark);
+        border-color: #2e335a;
+    }
+    .invest-card::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(135deg, var(--primary-color) 60%, var(--accent) 100%);
+        opacity: 0.12;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    h2 {
+        color: var(--primary-color);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+        z-index: 1;
+        position: relative;
+    }
+    .info-text {
+        font-size: 1rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        z-index: 1;
+        position: relative;
+    }
+    body.dark-mode .info-text {
+        color: #cbd5e1;
+    }
+    label {
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        display: block;
+        color: var(--primary-color);
+        letter-spacing: 0.01em;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        margin-top: 0.2rem;
+        margin-bottom: 1.1rem;
+        border-radius: 0.7rem;
+        border: 1.5px solid var(--input-border);
+        background: var(--input-bg);
+        font-size: 1rem;
+        color: var(--text-light);
+        transition: border-color 0.3s, background 0.3s, color 0.3s;
+        box-sizing: border-box;
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: #eef2ff;
+    }
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+        background: var(--input-bg-dark);
+        color: var(--text-dark);
+        border-color: var(--input-border-dark);
+    }
+    body.dark-mode input:focus,
+    body.dark-mode select:focus,
+    body.dark-mode textarea:focus {
+        background: #232946;
+    }
+    button.btn-primary {
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent) 100%);
+        border: none;
+        border-radius: 0.9rem;
+        padding: 0.9rem 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+        transition: background 0.3s, transform 0.2s;
+        margin-top: 0.5rem;
+        letter-spacing: 0.01em;
+    }
+    button.btn-primary:hover {
+        background: linear-gradient(90deg, var(--primary-dark) 0%, #11998e 100%);
+        transform: translateY(-2px) scale(1.01);
+    }
+    .alert {
+        background: var(--alert-bg);
+        color: var(--alert-text);
+        border-radius: 0.7rem;
+        padding: 0.8rem 1.2rem;
+        margin-bottom: 1.1rem;
+        font-size: 1rem;
+        border: none;
+        box-shadow: 0 1px 4px rgba(99,102,241,0.07);
+        position: relative;
+        z-index: 2;
+    }
+    .alert-success { background: #d1fae5; color: #065f46; }
+    .alert-danger { background: #fee2e2; color: #991b1b; }
+    .alert-warning { background: #fef9c3; color: #92400e; }
+    .alert-info { background: #e0e7ff; color: #3730a3; }
+    body.dark-mode .alert {
+        background: var(--alert-bg-dark);
+        color: var(--alert-text-dark);
+    }
+    body.dark-mode .alert-success { background: #134e4a; color: #6ee7b7; }
+    body.dark-mode .alert-danger { background: #7f1d1d; color: #fecaca; }
+    body.dark-mode .alert-warning { background: #78350f; color: #fde68a; }
+    body.dark-mode .alert-info { background: #373a53; color: #a5b4fc; }
+    .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #64748b;
+        position: absolute;
+        top: 0.7rem;
+        right: 1rem;
+        cursor: pointer;
+        z-index: 3;
+    }
+    @media (max-width: 600px) {
+        .invest-card {
+            padding: 1.2rem 0.7rem 1rem 0.7rem;
+            max-width: 98vw;
+        }
+        .center-wrapper {
+            padding: 0.5rem;
+        }
+    }
+
+    /* Styles for loading spinner */
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #6366f1;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    .modal-content {
+        background-color: white;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        position: relative;
+        transform: translateY(-20px);
+        transition: transform 0.3s ease;
+    }
+    .modal-overlay.show .modal-content {
+        transform: translateY(0);
+    }
+    body.dark-mode .modal-content {
+        background-color: var(--card-bg-dark);
+        color: var(--text-dark);
+    }
+    .modal-content h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    .modal-content p {
+        font-size: 1.1rem;
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+    }
+    body.dark-mode .modal-content p {
+        color: #cbd5e1;
+    }
+    .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .modal-buttons button {
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+    .modal-buttons .btn-confirm {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+    .modal-buttons .btn-confirm:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+    .modal-buttons .btn-cancel {
+        background-color: #e2e8f0;
+        color: #4a5568;
+        border: 1px solid #cbd5e1;
+    }
+    body.dark-mode .modal-buttons .btn-cancel {
+        background-color: #3b4252;
+        color: var(--text-dark);
+        border-color: #4a5568;
+    }
+    .modal-buttons .btn-cancel:hover {
+        background-color: #cbd5e1;
+        transform: translateY(-1px);
+    }
+
+    /* Terms Modal Specific Styles */
+    #termsModal .modal-content {
+        max-height: 90vh; 
+        display: flex; 
+        flex-direction: column;
+        max-width: 500px; /* Adjust as needed for terms */
+    }
+    #termsModal .modal-content .close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    #termsModal .modal-content h2 {
+        font-size: 1.3rem; 
+        margin-bottom: 1rem;
+        color: var(--primary-color); /* Ensure terms title matches theme */
+    }
+    #termsModal .terms-scrollable-content {
+        flex: 1 1 auto; 
+        overflow-y: auto; 
+        font-size: 0.92rem; 
+        color: #333; 
+        line-height: 1.6; 
+        padding-right: 0.5rem; 
+        border-radius: 0.5rem; 
+        border: 1px solid #eee; 
+        background: #fafbfc;
+        text-align: left; /* Ensure text aligns left in scrollable area */
+    }
+    body.dark-mode #termsModal .terms-scrollable-content {
+        color: var(--text-dark);
+        background: #0f1c13;
+        border-color: var(--input-border-dark);
+    }
+    #termsModal .modal-footer-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        margin-top: 1.2rem;
+    }
+    #termsModal label {
+        margin-bottom: 0; /* Override default label margin */
+        color: var(--text-light); /* Ensure label color is correct */
+    }
+    body.dark-mode #termsModal label {
+        color: var(--text-dark);
+    }
+    #termsModal input[type="checkbox"] {
+        width: auto;
+        margin-bottom: 0;
+        margin-right: 0.5rem; /* Space between checkbox and text */
+    }
+
+</style>
+
+<div class="center-wrapper">
+    <div class="invest-card">
+        <h2>Investment Form</h2>
+        <p class="info-text">You have selected the <strong>{{ tier }}</strong> investment tier. Please fill out the details below to proceed.</p>
+
+        <!-- Flash Messages (still useful for initial load or server-side redirects) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" aria-label="Close">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Client-side messages for AJAX responses -->
+        <div id="ajax-messages" class="mb-6"></div>
+
+        <form id="investmentForm" method="post"> 
+            
+{# Removed action as it's set dynamically #}
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required autocomplete="name" value="{{ user.full_name if user else '' }}">
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" value="{{ user.email if user else '' }}">
+
+            <label for="amount">Investment Amount (KES)</label>
+            <input type="number" id="amount" name="amount" step="any" min="0"
+                   {% if tier == 'Starter' %}value="3000" readonly{% elif tier == 'Growth' %}value="10000" readonly{% elif tier == 'Premium' %}value="50000" readonly{% endif %}
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                   {% if tier != 'Custom' %}bg-gray-50 text-gray-600 cursor-not-allowed{% endif %}"
+                   required>
+            {% if tier != 'Custom' %}
+                <p style="font-size: 0.9rem; color: #64748b; margin-top: -0.8rem; margin-bottom: 1.1rem;">This amount is fixed for the {{ tier }} tier.</p>
+            {% endif %}
+
+            <label for="target_amount">Target Investment Goal (Optional KES)</label>
+            <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount" placeholder="e.g., 500000 (your overall goal)">
+            <small class="form-text text-muted">Set a goal for your total investment over time.</small>
+
+            <label for="investment_purpose">Investment Purpose / Notes</label>
+            <textarea id="investment_purpose" name="investment_purpose" rows="3" placeholder="Describe your investment goals (optional)"></textarea>
+
+            <button type="submit" class="btn-primary" id="submitButton">
+                <span id="buttonText">Proceed to Pay</span>
+                <span id="loadingSpinner" class="spinner hidden"></span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Terms and Conditions Modal (NEW LOCATION) -->
+<div id="termsModal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close" role="button" aria-label="Close modal">&times;</span>
+    <h2 id="modal-title" style="font-size: 1.3rem; margin-bottom: 1rem;">📄 Investment Terms and Conditions</h2>
+    <div class="terms-scrollable-content">
+      <ol style="text-align:left; margin: 0; padding-left: 1.2rem;">
+        <li>
+          <strong>Introduction:</strong> These Terms and Conditions ("Terms") govern the use of the services provided by Amsa Group Limited, including land sales (cash and installment basis), interest-paying investment services, and related property and other financial offerings. Use of our services implies full acceptance of these binding Terms, our Privacy Policy, and any signed agreements.
+        </li>
+        <li>
+          <strong>Eligibility:</strong> To access our services, you must:
+          <ol type="a">
+            <li>Be at least 18 years old.</li>
+            <li>Have legal capacity to enter contracts.</li>
+            <li>Be a Kenyan citizen or authorized to transact in Kenya.</li>
+          </ol>
+        </li>
+        <li>
+          <strong>Our Services:</strong> We offer the following:
+          <ol type="a">
+            <li>Land Sales: Sale of land with flexible cash or installment options.</li>
+            <li>Investment Plans: Structured short- and long-term investment opportunities with fixed interest.</li>
+            <li>Interest-Paying Services: Fixed-return plans with monthly, quarterly, or lump-sum payouts.</li>
+          </ol>
+        </li>
+        <li>
+          <strong>Land Sale Terms</strong>
+          <ol type="a">
+            <li>
+              <strong>Purchase Options:</strong>
+              <ol type="i">
+                <li>Land may be purchased outright (cash) or via an agreed daily installment plan for as low as KES 500.</li>
+                <li>A non-refundable commitment fee (booking fee) of KES 7,500 is required to reserve a plot.</li>
+              </ol>
+            </li>
+            <li>
+              <strong>Title and Transfer:</strong>
+              <ol type="i">
+                <li>Title Deed processing begins only after full payment is received.</li>
+                <li>All legal and statutory costs (stamp duty, registration, survey, etc.) are borne by the buyer unless otherwise stated.</li>
+              </ol>
+            </li>
+            <li>
+              <strong>Default on Installments:</strong>
+              <ol type="i">
+                <li>Payment will be as per the schedule selected by the buyer. Late payments for a period exceeding a month will attract a penalty of 5% per month on the overdue amount or as per agreement.</li>
+                <li>Failure to complete payment as per selected schedule for two consecutive months may result in reversal of reservation and forfeiture of prior payments (subject to refund clause).</li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <strong>Investment &amp; Interest Terms</strong>
+          <ol type="a">
+            <li>
+              <strong>Investment Agreement:</strong> Each investment is governed by a signed contract outlining:
+              <ul>
+                <li>Principal amount</li>
+                <li>Interest rate 0.5% per day</li>
+                <li>Tenure (3, 6, 12, 24, 36, 48 months)</li>
+                <li>Payout schedule (weekly, monthly, quarterly, at maturity)</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Interest Payments:</strong>
+              <ol type="i">
+                <li>Interest is paid via bank or mobile money according to agreed schedules.</li>
+                <li>In case of delayed payments due to technical or business constraints, clients will be informed and payments updated as per agreement.</li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <strong>Principal Refund Policy</strong>
+          <ol type="a">
+            <li>
+              <strong>Voluntary Exit:</strong> Investors may request an early exit before maturity, subject to:
+              <ol type="i">
+                <li>30-day written notice.</li>
+                <li>A penalty deduction of 10% on capital if withdrawn early.</li>
+              </ol>
+            </li>
+            <li>
+              <strong>Non-Performance:</strong> If the Company fails to meet investment terms (e.g., interest or capital repayment), the principal shall be refunded in full within 60 days, unless force majeure applies.
+            </li>
+            <li>
+              <strong>Refund on Land Purchases:</strong> Refunds are only issued if:
+              <ol type="i">
+                <li>The Company cannot deliver title or ownership due to legal or administrative issues.</li>
+                <li>A client cancels within 7 working days of booking and has not signed the sale agreement. Refunds exclude non-refundable booking fees and any processing charges incurred.</li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+        <li>
+          <strong>Payment Channels:</strong> All payments must be made through:
+          <ul>
+            <li>Bank transfers to our official accounts</li>
+            <li>Mobile money (M-PESA till/paybill)</li>
+            <li>Receipts must be retained as proof of payment.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>KYC and Compliance:</strong> You are required to provide:
+          <ul>
+            <li>Photo of National ID or Passport</li>
+            <li>KRA PIN certificate</li>
+            <li>Phone number</li>
+            <li>Alternative phone number</li>
+            <li>Next of kin and their contact details</li>
+          </ul>
+          We reserve the right to reject or suspend service for non-compliance or suspected fraud.
+        </li>
+        <li>
+          <strong>Risk Acknowledgment/Disclosure:</strong>
+          <ol type="a">
+            <li>All investment involves risk. While we strive to ensure capital protection and returns, no investment is 100% guaranteed unless specified in writing.</li>
+            <li>You agree not to hold the Company liable for market-related fluctuations or regulatory delays.</li>
+          </ol>
+        </li>
+        <li>
+          <strong>Force Majeure:</strong> The Company is not liable for delays or failure in performance due to circumstances beyond our control, including but not limited to natural disasters, government actions, or financial market collapse.
+        </li>
+        <li>
+          <strong>Dispute Resolution:</strong>
+          <ol type="a">
+            <li>All disputes will first be addressed amicably within 14 days.</li>
+            <li>If unresolved, parties may proceed to mediation/arbitration as per the Arbitration Act of Kenya (1995).</li>
+            <li>The Courts of Kenya shall have final jurisdiction.</li>
+          </ol>
+        </li>
+        <li>
+          <strong>Amendments:</strong> We reserve the right to update or change these Terms. Clients will be informed in writing or via official channels. Continued use of our services constitutes acceptance of any revisions.
+        </li>
+        <li>
+          <strong>Governing Law:</strong> These Terms shall be governed and interpreted under the laws of the Republic of Kenya, including but not limited to:
+          <ul>
+            <li>The Land Registration Act</li>
+            <li>The Investment Promotion Act</li>
+            <li>The Data Protection Act (2019)</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+    <div class="modal-footer-controls">
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.98rem;">
+            <input type="checkbox" id="agreeCheckbox" style="accent-color: #28a745;">
+            <span>I have read and agree to the <strong>Terms and Conditions</strong>.</span>
+        </label>
+        <div class="modal-buttons">
+            <button id="continueTermsBtn" class="btn-confirm" disabled>Continue</button>
+            <button id="cancelTermsBtn" class="btn-cancel">Cancel</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Confirmation Modal (Existing for M-Pesa STK Push) -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Payment Initiated!</h3>
+        <p id="modal-phone-message">Please check your phone ({{ user.phone_number if user else 'your registered number' }}) for the M-Pesa PIN prompt. Complete the payment on your phone to proceed.</p>
+        <div class="modal-buttons">
+            <button id="confirmPaymentBtn" class="btn-confirm">
+                <span id="confirmButtonText">I have paid</span>
+                <span id="confirmSpinner" class="spinner hidden"></span>
+            </button>
+            <button id="cancelPaymentBtn" class="btn-cancel">Cancel</button>
+        </div>
+        <div id="modal-messages" class="mt-4 text-sm"></div>
+    </div>
+</div>
+
+<script>
+    if (localStorage.getItem('dark-mode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+
+    const form = document.getElementById('investmentForm');
+    const formFields = form.querySelectorAll('input, select, textarea');
+    const submitButton = document.getElementById('submitButton');
+    const buttonText = document.getElementById('buttonText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const ajaxMessagesDiv = document.getElementById('ajax-messages');
+
+    const termsModal = document.getElementById('termsModal');
+    const closeTermsBtn = termsModal.querySelector('.close');
+    const agreeCheckbox = document.getElementById('agreeCheckbox');
+    const continueTermsBtn = document.getElementById('continueTermsBtn');
+    const cancelTermsBtn = document.getElementById('cancelTermsBtn');
+
+    const paymentModal = document.getElementById('paymentModal');
+    const modalPhoneMessage = document.getElementById('modal-phone-message');
+    const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+    const confirmButtonText = document.getElementById('confirmButtonText');
+    const confirmSpinner = document.getElementById('confirmSpinner');
+    const cancelPaymentBtn = document.getElementById('cancelPaymentBtn');
+    const modalMessagesDiv = document.getElementById('modal-messages');
+
+    let currentTransactionId = null;
+
+    function displayMessage(message, type, targetDiv = ajaxMessagesDiv) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.setAttribute('role', 'alert');
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" aria-label="Close">&times;</button>
+        `;
+        targetDiv.appendChild(alertDiv);
+
+        alertDiv.querySelector('.btn-close').addEventListener('click', function () {
+            alertDiv.style.display = 'none';
+        });
+    }
+
+    function toggleFormFields(disabled) {
+        formFields.forEach(el => {
+            el.disabled = disabled;
+        });
+        submitButton.disabled = disabled;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        termsModal.classList.add('show');
+        toggleFormFields(true);
+
+        agreeCheckbox.onchange = () => {
+            continueTermsBtn.disabled = !agreeCheckbox.checked;
+        };
+
+        closeTermsBtn.onclick = () => {
+            window.location.href = "{{ url_for('main.invest_form') }}";
+        };
+
+        cancelTermsBtn.onclick = () => {
+            window.location.href = "{{ url_for('main.invest_form') }}";
+        };
+
+        continueTermsBtn.onclick = () => {
+            termsModal.classList.remove('show');
+            toggleFormFields(false);
+            displayMessage('Terms and Conditions accepted. You can now proceed with your investment details.', 'success');
+        };
+
+        termsModal.addEventListener('click', (e) => {
+            if (e.target === termsModal) {
+                window.location.href = "{{ url_for('main.invest_form') }}";
+            }
+        });
+    });
+
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        ajaxMessagesDiv.innerHTML = '';
+        modalMessagesDiv.innerHTML = '';
+
+        submitButton.disabled = true;
+        buttonText.textContent = 'Initiating...';
+        loadingSpinner.classList.remove('hidden');
+
+        const formData = new FormData(form);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        data['tier'] = "{{ tier }}";
+
+        try {
+            const actionUrl = "{{ url_for('main.invest_form') }}";
+            const response = await fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.status === 'success') {
+                    currentTransactionId = result.transaction_id;
+                    modalPhoneMessage.textContent = `Please check your phone ({{ user.phone_number if user else 'your registered number' }}) for the M-Pesa PIN prompt. Complete the payment on your phone to proceed.`;
+                    paymentModal.classList.add('show');
+                    toggleFormFields(true);
+                } else {
+                    displayMessage(result.message || 'An unknown error occurred.', 'danger');
+                }
+            } else {
+                displayMessage(result.error || result.message || 'Server error occurred.', 'danger');
+            }
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+            displayMessage('Network error. Please try again.', 'danger');
+        } finally {
+            submitButton.disabled = false;
+            buttonText.textContent = 'Proceed to Pay';
+            loadingSpinner.classList.add('hidden');
+        }
+    });
+
+    confirmPaymentBtn.addEventListener('click', async function () {
+        if (!currentTransactionId) {
+            displayMessage('No active payment to confirm.', 'danger', modalMessagesDiv);
+            return;
+        }
+
+        modalMessagesDiv.innerHTML = '';
+
+        confirmPaymentBtn.disabled = true;
+        confirmButtonText.textContent = 'Checking...';
+        confirmSpinner.classList.remove('hidden');
+
+        try {
+            const response = await fetch(`/check_payment_status/${currentTransactionId}`);
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.status === 'COMPLETED') {
+                    displayMessage('Payment confirmed successfully! Redirecting to dashboard...', 'success', modalMessagesDiv);
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('main.dashboard') }}";
+                    }, 2000);
+                } else if (result.status === 'PENDING') {
+                    displayMessage('Payment is still pending. Please wait a moment and try again if the M-Pesa prompt hasn\'t appeared or completed.', 'warning', modalMessagesDiv);
+                } else {
+                    displayMessage(`Payment status: ${result.status}. Please check your M-Pesa messages or contact support if issue persists.`, 'danger', modalMessagesDiv);
+                }
+            } else {
+                displayMessage(result.message || 'Error checking payment status.', 'danger', modalMessagesDiv);
+            }
+        } catch (error) {
+            console.error('Error checking payment status:', error);
+            displayMessage('Network error while checking status. Please try again.', 'danger', modalMessagesDiv);
+        } finally {
+            confirmPaymentBtn.disabled = false;
+            confirmButtonText.textContent = 'I have paid';
+            confirmSpinner.classList.add('hidden');
+        }
+    });
+
+    cancelPaymentBtn.addEventListener('click', () => {
+        paymentModal.classList.remove('show');
+        toggleFormFields(false);
+        displayMessage('Payment initiation cancelled.', 'info');
+        currentTransactionId = null;
+    });
+</script>
+
+{% endblock %}
