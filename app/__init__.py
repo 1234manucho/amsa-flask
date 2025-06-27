@@ -2,6 +2,7 @@ import os
 import traceback
 import logging
 import locale
+import json # <--- Ensure this import is present
 
 from flask import Flask, flash
 from dotenv import load_dotenv
@@ -10,7 +11,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from firebase_admin import exceptions as fb_exceptions
 from werkzeug.security import generate_password_hash
-# from flask_wtf.csrf import CSRFProtect  # ✅ Import CSRF
+# from flask_wtf.csrf import CSRFProtect  # ✅ Import CSRF
 
 # Load environment variables from .env file
 load_dotenv()
@@ -21,9 +22,6 @@ logger = logging.getLogger(__name__)
 
 # --- Import DB and Migrate from extensions ---
 from .extensions import db, migrate
-
-# --- Firebase Key Path from .env ---
-FIREBASE_SERVICE_ACCOUNT_KEY_PATH = os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY_PATH")
 
 # --- Custom Jinja2 Filter: intcomma ---
 def intcomma_filter(value):
@@ -55,8 +53,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///database.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-   
-
     # --- M-Pesa Configuration ---
     app.config['MPESA_CONSUMER_KEY'] = os.getenv('MPESA_CONSUMER_KEY')
     app.config['MPESA_CONSUMER_SECRET'] = os.getenv('MPESA_CONSUMER_SECRET')
@@ -65,7 +61,7 @@ def create_app():
     app.config['MPESA_PASSKEY'] = os.getenv('MPESA_PASSKEY')
     app.config['MPESA_CALLBACK_URL'] = os.getenv('MPESA_CALLBACK_URL')
 
-    # --- Firebase Configuration ---
+    # --- Firebase Configuration (for client-side/web API) ---
     app.config['FIREBASE_WEB_API_KEY'] = os.getenv('FIREBASE_WEB_API_KEY')
 
     # --- File Upload Config ---
@@ -88,19 +84,39 @@ def create_app():
     migrate.init_app(app, db)
 
     # --- Firebase Admin SDK Init ---
+    # Retrieve the entire JSON content from the environment variable
+    firebase_service_account_json_str = os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON') # <--- NEW VARIABLE NAME
+
     try:
+        # Check if Firebase Admin SDK is already initialized (e.g., in a development environment)
         try:
             firebase_admin.get_app()
             logger.info("ℹ️ Firebase Admin SDK already initialized.")
         except ValueError:
-            if FIREBASE_SERVICE_ACCOUNT_KEY_PATH and os.path.exists(FIREBASE_SERVICE_ACCOUNT_KEY_PATH):
-                cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_KEY_PATH)
-                firebase_admin.initialize_app(cred)
-                logger.info("✅ Firebase Admin SDK initialized.")
+            # If not initialized, proceed to initialize it
+            if firebase_service_account_json_str: # <--- CHECK IF ENV VAR IS SET
+                try:
+                    # Parse the JSON string into a dictionary
+                    cred_dict = json.loads(firebase_service_account_json_str)
+                    cred = credentials.Certificate(cred_dict) # <--- Initialize with dictionary
+                    firebase_admin.initialize_app(cred)
+                    logger.info("✅ Firebase Admin SDK initialized from environment variable.")
+                except json.JSONDecodeError as e:
+                    logger.error(f"❌ Error decoding Firebase service account JSON from environment variable: {e}")
+                    flash("Firebase service account JSON is malformed.", "error")
+                except Exception as e:
+                    logger.error(f"❌ Firebase Admin SDK initialization failed with provided JSON: {e}")
+                    flash("Firebase service account could not be initialized from provided data.", "error")
             else:
-                logger.error(f"❌ Firebase key missing or invalid: '{FIREBASE_SERVICE_ACCOUNT_KEY_PATH}'")
+                logger.error("❌ FIREBASE_SERVICE_ACCOUNT_JSON environment variable is missing. Firebase Admin SDK will not be initialized.")
+                flash("Firebase service account key is not configured.", "error")
+
+        # After initialization (or if already initialized), get clients
+        # These lines MUST be after firebase_admin.initialize_app()
         app.firebase_db = firestore.client()
         app.firebase_auth = auth
+        logger.info("Firebase Firestore and Auth clients assigned to app.")
+
     except Exception as e:
         logger.exception(f"🔥 Firebase init error: {e}")
         app.firebase_db = None
