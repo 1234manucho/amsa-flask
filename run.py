@@ -1,4 +1,6 @@
-from werkzeug.utils import secure_filename  # ✅ this line fixes the error
+from werkzeug.utils import secure_filename # ✅ this line fixes the error
+
+# The rest of your code remains exactly the same as you provided it in the last snippet.
 import base64
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -14,64 +16,61 @@ from flask.cli import with_appcontext
 from fpdf import FPDF
 from app import create_app, db
 from app.models import Investment, Transaction
-from app.decorators import login_required, redirect_by_role, role_required  # factory method & db instance
-
-# IMPORTANT: Remove this line if it was originally present here, as previously instructed.
-# from main import main as main_blueprint # <--- This line should NOT be here in run.py
+from app.decorators import login_required, redirect_by_role, role_required
 
 # --- Create Flask App ---
 app = create_app()
-main = app  # For Firebase Cloud Function
+main = app  # For Firebase Cloud Function
 
 # --- Firebase Admin User Setup ---
 with app.app_context():
-    print("--- Firebase Admin Setup ---")
+    print("--- Firebase Admin Setup ---")
 
-    admin_email = os.getenv('FIREBASE_ADMIN_EMAIL')
-    admin_password = os.getenv('FIREBASE_ADMIN_PASSWORD')
-    admin_full_name = os.getenv('FIREBASE_ADMIN_FULL_NAME')
-    admin_id = os.getenv('FIREBASE_ADMIN_ID')
-    firestore_users = app.firebase_db.collection('users') if app.firebase_db else None
+    admin_email = os.getenv('FIREBASE_ADMIN_EMAIL')
+    admin_password = os.getenv('FIREBASE_ADMIN_PASSWORD')
+    admin_full_name = os.getenv('FIREBASE_ADMIN_FULL_NAME')
+    admin_id = os.getenv('FIREBASE_ADMIN_ID')
+    firestore_users = app.firebase_db.collection('users') if app.firebase_db else None
 
-    try:
-        if not admin_email or not admin_password:
-            raise ValueError("Missing Firebase admin credentials.")
+    try:
+        if not admin_email or not admin_password:
+            raise ValueError("Missing Firebase admin credentials.")
 
-        if app.firebase_auth is None:
-            raise Exception("Firebase Auth not initialized")
+        if app.firebase_auth is None:
+            raise Exception("Firebase Auth not initialized")
 
-        try:
-            existing_user = auth.get_user_by_email(admin_email)
-            print(f"✅ Firebase Auth user exists: {admin_email}")
-        except auth.UserNotFoundError:
-            print("⚠️ Admin not found. Creating...")
-            existing_user = auth.create_user(
-                email=admin_email,
-                password=admin_password,
-                display_name=admin_full_name or "Admin User"
-            )
-            print(f"✅ Firebase Admin created: {admin_email}")
+        try:
+            existing_user = auth.get_user_by_email(admin_email)
+            print(f"✅ Firebase Auth user exists: {admin_email}")
+        except auth.UserNotFoundError:
+            print("⚠️ Admin not found. Creating...")
+            existing_user = auth.create_user(
+                email=admin_email,
+                password=admin_password,
+                display_name=admin_full_name or "Admin User"
+            )
+            print(f"✅ Firebase Admin created: {admin_email}")
 
-        if firestore_users:
-            user_doc_ref = firestore_users.document(existing_user.uid)
-            if not user_doc_ref.get().exists:
-                user_doc_ref.set({
-                    "full_name": admin_full_name,
-                    "email": admin_email,
-                    "id_number": admin_id,
-                    "role": "admin",
-                    "created_at": firestore.SERVER_TIMESTAMP
-                })
-                print("✅ Admin Firestore doc created.")
-            else:
-                print("ℹ️ Admin Firestore doc already exists.")
-        else:
-            print("⚠️ Firestore not initialized. Skipping user doc.")
-    except Exception as e:
-        print(f"❌ Firebase setup error: {e}")
-        traceback.print_exc()
+        if firestore_users:
+            user_doc_ref = firestore_users.document(existing_user.uid)
+            if not user_doc_ref.get().exists:
+                user_doc_ref.set({
+                    "full_name": admin_full_name,
+                    "email": admin_email,
+                    "id_number": admin_id,
+                    "role": "admin",
+                    "created_at": firestore.SERVER_TIMESTAMP
+                })
+                print("✅ Admin Firestore doc created.")
+            else:
+                print("ℹ️ Admin Firestore doc already exists.")
+        else:
+            print("⚠️ Firestore not initialized. Skipping user doc.")
+    except Exception as e:
+        print(f"❌ Firebase setup error: {e}")
+        traceback.print_exc()
 
-    print("--- Firebase Admin Setup Complete ---")
+    print("--- Firebase Admin Setup Complete ---")
 
 # --- M-PESA Config ---
 app.config['MPESA_CONSUMER_KEY'] = os.environ.get('MPESA_CONSUMER_KEY')
@@ -81,9 +80,9 @@ app.config['MPESA_PASSKEY'] = os.environ.get('MPESA_PASSKEY')
 app.config['MPESA_ENV'] = os.environ.get('MPESA_ENV')
 app.config['MPESA_CALLBACK_URL'] = os.environ.get('MPESA_CALLBACK_URL')
 app.config['MPESA_API_BASE_URL'] = (
-    'https://sandbox.safaricom.co.ke'
-    if app.config['MPESA_ENV'] == 'sandbox'
-    else 'https://api.safaricom.co.ke'
+    'https://sandbox.safaricom.co.ke'
+    if app.config['MPESA_ENV'] == 'sandbox'
+    else 'https://api.safaricom.co.ke'
 )
 MPESA_PAYBILL = os.getenv("MPESA_PAYBILL")
 MPESA_ACCOUNT = os.getenv("MPESA_ACCOUNT")
@@ -103,15 +102,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
-app.allowed_file = allowed_file  # attach utility
+app.allowed_file = allowed_file  # attach utility
 
 # --- Firebase API Key for Client SDK ---
 app.config['FIREBASE_WEB_API_KEY'] = os.getenv('FIREBASE_WEB_API_KEY')
-
 
 
 @app.route('/')
