@@ -9,10 +9,10 @@ Flask-Mail==0.9.1
 firebase-admin==6.9.0
 
 # Environment Variable Support
-python-dotenv==1.1.1    # <--- **FIXED VERSION HERE**
+python-dotenv==1.1.1
 
 # PDF Generation (using fpdf2, the actively maintained fork)
-fpdf2==2.8.0
+fpdf2==2.8.3    # <--- **FIXED VERSION HERE**
 
 # Other Utilities
 click==8.1.7
