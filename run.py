@@ -13,8 +13,8 @@ from firebase_admin import auth, firestore
 from flask.cli import with_appcontext
 from fpdf import FPDF
 from app import create_app, db
-from functions.app.models import Investment, Transaction
-from functions.decorators import login_required, redirect_by_role, role_required  # factory method & db instance
+from app.models import Investment, Transaction
+from app.decorators import login_required, redirect_by_role, role_required  # factory method & db instance
 
 # --- Create Flask App ---
 app = create_app()

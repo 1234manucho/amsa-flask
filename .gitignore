@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/                  # Python virtual environment folder (if named 'env')
+venv/                 # Python virtual environment folder (if named 'venv')
+.env                  # For python-dotenv (sensitive environment variables)
+
+# Specific secret file you had
+app/config/service_account.json
+
+# Database (if you're using SQLite directly in your project)
+*.sqlite3
+*.db
+
+# Flask/Web specific
+/instance/            # Flask's instance folder often contains sensitive config or temporary data
+.flaskenv             # Flask's environment variable file
+
+# Editor/OS specific
+.DS_Store             # macOS system files
+.vscode/              # VS Code settings (optional, if you want to share)
+*.log
+*.swp
+
+# Render specific (if you have local files)
+.render/
