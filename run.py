@@ -15,7 +15,7 @@ from fpdf import FPDF
 from app import create_app, db
 from app.models import Investment, Transaction
 from app.decorators import login_required, redirect_by_role, role_required  # factory method & db instance
-
+from main import main as main_blueprint
 # --- Create Flask App ---
 app = create_app()
 main = app  # For Firebase Cloud Function
