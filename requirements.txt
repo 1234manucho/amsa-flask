@@ -1,22 +1,19 @@
-firebase_functions~=0.1.0
 # Flask & Extensions
 Flask==2.3.3
-Flask-WTF==1.1.1
+Flask-WTF==1.2.1
 Flask-SQLAlchemy==3.1.1
 Flask-Migrate==4.0.5
 
 # Firebase Admin SDK
-firebase-admin==6.2.0
-
-# Firebase Functions SDK for Python
-firebase-functions==0.1.4
+firebase-admin==13.0.0
 
 # Environment Variable Support
-python-dotenv==1.0.1
+python-dotenv==1.0.2
 
-# PDF Generation
-fpdf==1.7.2
+# PDF Generation (using fpdf2, the actively maintained fork)
+fpdf2==2.8.0
 
 # Other Utilities
 click==8.1.7
 Werkzeug==2.3.8
+gunicorn==21.2.0
