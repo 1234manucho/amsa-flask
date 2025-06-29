@@ -3,33 +3,65 @@
 
 {% block content %}
 <style>
-  /* --- Basic Body/HTML setup (you might have this in base.html) --- */
+  /* --- Basic Body/HTML setup --- */
   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f4f7f6; /* A light background for the page */
+    background-color: #f4f7f6;
     color: #333;
+  }
+
+  /* --- Navbar Styles --- */
+  .navbar {
+    background-color: #0A4F32;
+    padding: 15px 20px;
+  }
+
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;            /* keeps horizontal layout */
+    justify-content: center;
+    flex-wrap: wrap;          /* wrap if too many items */
+    gap: 20px;
+  }
+
+  .nav-links li {
+    display: inline;
+  }
+
+  .nav-links a {
+    color: #E0FFE9;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #fff;
   }
 
   /* --- Hero Section Styles --- */
   .hero {
-    background: linear-gradient(135deg, #e0ffe9 0%, #a7eed3 100%); /* Light green gradient */
-    color: #1A5E44; /* Darker green text for contrast */
+    background: linear-gradient(135deg, #e0ffe9 0%, #a7eed3 100%);
+    color: #1A5E44;
     text-align: center;
     padding: 100px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 60vh; /* Make hero section take at least 60% of viewport height */
+    min-height: 60vh;
     overflow: hidden;
     position: relative;
   }
 
   .hero-content {
     max-width: 800px;
-    z-index: 2; /* Ensure content is above any background elements */
+    z-index: 2;
   }
 
   .hero h1 {
@@ -37,7 +69,7 @@
     margin-bottom: 20px;
     line-height: 1.2;
     font-weight: bold;
-    color: #0A4F32; /* Even darker green for the main heading */
+    color: #0A4F32;
   }
 
   .hero p {
@@ -57,21 +89,21 @@
 
   .cta-btn {
     display: inline-block;
-    background-color: #0A4F32; /* A darker shade of green */
-    color: #E0FFE9; /* A lighter, complementary green for text */
+    background-color: #0A4F32;
+    color: #E0FFE9;
     text-decoration: none;
-    padding: 10px 20px; /* Smaller padding */
-    font-size: 0.9rem; /* Slightly smaller font size */
+    padding: 10px 20px;
+    font-size: 0.9rem;
     font-weight: 600;
     border-radius: 8px;
-    min-width: 160px; /* Reduced minimum width */
+    min-width: 160px;
     text-align: center;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Slightly adjusted shadow */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
 
   .cta-btn:hover {
-    background-color: #073C26; /* Even darker on hover */
+    background-color: #073C26;
     transform: scale(1.02);
   }
 
@@ -98,45 +130,25 @@
   }
 
   .feature-card {
-    background-color: #F8FDF9; /* Very light green background */
+    background-color: #F8FDF9;
     border: 1px solid #D5EEDD;
     border-radius: 10px;
     padding: 25px;
     font-size: 1.1em;
     font-weight: 600;
-    color: #0E7C48; /* Green text */
+    color: #0E7C48;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100px; /* Ensure cards have a consistent height */
+    min-height: 100px;
   }
 
   .feature-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
-
-  /* --- Animations (if you have them defined elsewhere, they should be included) --- */
-  /* Example:
-  .animate {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInSlideUp 0.8s forwards;
-  }
-
-  .animate.delay {
-    animation-delay: 0.3s;
-  }
-
-  @keyframes fadeInSlideUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  */
 
   /* --- Responsive Design --- */
   @media (max-width: 768px) {
@@ -153,16 +165,26 @@
     }
 
     .features-grid {
-      grid-template-columns: 1fr; /* Stack cards on smaller screens */
+      grid-template-columns: 1fr;
     }
 
     .cta-buttons {
-      flex-direction: column; /* Stack buttons vertically on small screens */
+      flex-direction: column;
       align-items: center;
     }
 
     .cta-btn {
-      min-width: 80%; /* Make buttons wider on small screens */
+      min-width: 80%;
+    }
+
+    .nav-links {
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      padding: 8px;
     }
   }
 
@@ -188,22 +210,34 @@
 <section class="hero">
   <div class="hero-content">
     <h1 class="animate">🌍 Invest in Your Future</h1>
-    <p class="animate delay">Secure land. Grow wealth. One trusted platform.</p>
-   <div class="cta-buttons">
-  <a href="/invest" class="cta-btn">💰 Start Investing</a>
-  <a href="/buy-land" class="cta-btn">🏞 Own Your Land</a>
-</div>
-
+    <p class="animate delay">
+      Earn up to <strong>29% annual returns</strong> with compounded growth, backed by audited and transparent investment plans.
+    </p>
+    <p class="animate delay">
+      Your capital enjoys a secure <strong>6-month lock-in period</strong> and benefits from a diversified asset portfolio for stability and peace of mind.
+    </p>
+    <p class="animate delay">
+      Get quarterly statements, and invest with confidence knowing we undergo annual and semi-annual audits.
+    </p>
+    <p class="animate delay">
+      Grow wealth on one trusted platform.
+    </p>
+   
 
   </div>
 </section>
+
 <section class="features">
   <h2>✨ Why Choose Amsa?</h2>
   <div class="features-grid">
-    <div class="feature-card">🔒 Instant Principal Return</div>
-    <div class="feature-card">📅 Flexible Land Payments</div>
-    <div class="feature-card">📈 Low-Risk, High Trust</div>
-    <div class="feature-card">🌐 Built for Modern Investors</div>
+    <div class="feature-card">🔒 Secure 6-Month Lock-In</div>
+    <div class="feature-card">💸 Up to 29% Annual Returns</div>
+    <div class="feature-card">📊 Audited Twice Per Year</div>
+    <div class="feature-card">🌐 Transparent Quarterly Statements</div>
   </div>
+  <div class="cta-buttons">
+  <a href="/register" class="cta-btn">Register</a>
+  <a href="/login" class="cta-btn">Login</a>
+</div>
 </section>
 {% endblock %}
