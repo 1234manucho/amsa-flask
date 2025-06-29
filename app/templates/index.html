@@ -3,7 +3,6 @@
 
 {% block content %}
 <style>
-  /* --- Basic Body/HTML setup --- */
   body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -13,7 +12,6 @@
     color: #333;
   }
 
-  /* --- Navbar Styles --- */
   .navbar {
     background-color: #0A4F32;
     padding: 15px 20px;
@@ -23,9 +21,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;            /* keeps horizontal layout */
+    display: flex;
     justify-content: center;
-    flex-wrap: wrap;          /* wrap if too many items */
+    flex-wrap: wrap;
     gap: 20px;
   }
 
@@ -45,7 +43,6 @@
     color: #fff;
   }
 
-  /* --- Hero Section Styles --- */
   .hero {
     background: linear-gradient(135deg, #e0ffe9 0%, #a7eed3 100%);
     color: #1A5E44;
@@ -66,19 +63,41 @@
 
   .hero h1 {
     font-size: 3.5em;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     line-height: 1.2;
     font-weight: bold;
     color: #0A4F32;
   }
 
-  .hero p {
-    font-size: 1.5em;
-    margin-bottom: 30px;
-    color: #1A5E44;
+  /* New list styles for hero */
+  .hero-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 40px auto;
+    text-align: left;
+    max-width: 700px;
   }
 
-  /* CTA Buttons */
+  .hero-list li {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    color: #1A5E44;
+    line-height: 1.5;
+  }
+
+  .hero-list li::before {
+    content: "\f00c"; /* FontAwesome checkmark */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color: #0A4F32;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.2em;
+  }
+
   .cta-buttons {
     display: flex;
     gap: 16px;
@@ -107,7 +126,6 @@
     transform: scale(1.02);
   }
 
-  /* --- Features Section Styles --- */
   .features {
     background-color: #ffffff;
     padding: 60px 20px;
@@ -150,14 +168,13 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
 
-  /* --- Responsive Design --- */
   @media (max-width: 768px) {
     .hero h1 {
       font-size: 2.5em;
     }
 
-    .hero p {
-      font-size: 1.2em;
+    .hero-list li {
+      font-size: 1.1em;
     }
 
     .features h2 {
@@ -193,7 +210,7 @@
       font-size: 2em;
     }
 
-    .hero p {
+    .hero-list li {
       font-size: 1em;
     }
 
@@ -210,23 +227,16 @@
 <section class="hero">
   <div class="hero-content">
     <h1 class="animate">🌍 Invest in Your Future</h1>
-    <p class="animate delay">
-      Earn up to <strong>29% annual returns</strong> with compounded growth, backed by audited and transparent investment plans.
-    </p>
-    <p class="animate delay">
-      Your capital enjoys a secure <strong>6-month lock-in period</strong> and benefits from a diversified asset portfolio for stability and peace of mind.
-    </p>
-    <p class="animate delay">
-      Get quarterly statements, and invest with confidence knowing we undergo annual and semi-annual audits.
-    </p>
-    <p class="animate delay">
-      Grow wealth on one trusted platform.
-    </p>
-     <div class="cta-buttons">
-  <a href="/register" class="cta-btn">Register</a>
-  <a href="/login" class="cta-btn">Login</a>
-</div>
-
+    <ul class="hero-list animate delay">
+      <li>Earn up to <strong>29% annual returns</strong> with compounded growth, backed by audited and transparent investment plans.</li>
+      <li>Your capital enjoys a secure <strong>6-month lock-in period</strong> and benefits from a diversified asset portfolio for stability and peace of mind.</li>
+      <li>Get quarterly statements, and invest with confidence knowing we undergo annual and semi-annual audits.</li>
+      <li>Grow wealth on one trusted platform.</li>
+    </ul>
+    <div class="cta-buttons">
+      <a href="/register" class="cta-btn">Register</a>
+      <a href="/login" class="cta-btn">Login</a>
+    </div>
   </div>
 </section>
 
@@ -238,6 +248,5 @@
     <div class="feature-card">📊 Audited Twice Per Year</div>
     <div class="feature-card">🌐 Transparent Quarterly Statements</div>
   </div>
-
 </section>
 {% endblock %}
