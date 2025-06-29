@@ -11,20 +11,7 @@
 </head>
 <body>
 
-<!-- Loader Start -->
-<div id="loader-wrapper">
-  <div id="loader">
-    <div class="emoji-sequence animate__animated animate__pulse animate__infinite">
-      <span class="emoji">💰</span>
-      <span class="emoji">💹</span>
-      <span class="emoji">💸</span>
-    </div>
-    <div class="loader-text animate__animated animate__fadeInUp">
-      <span id="loader-message">Loading Amsa Group...</span>
-    </div>
-  </div>
-</div>
-<!-- Loader End -->
+
 
 <!-- Navbar -->
 <header>
@@ -96,36 +83,6 @@
     &copy; 2025 <span style="color: #2ecc71;">Amsa Developers Limited</span>. All rights reserved.
   </div>
 </footer>
-
-<!-- Loader Script -->
-<script>
-  const loaderMessages = [
-    "Empowering Investment...",
-    "Securing Your Future...",
-    "Microfinance Made Easy...",
-    "Building Dreams with Amsa..."
-  ];
-
-  let currentIndex = 0;
-  const loaderText = document.getElementById("loader-message");
-
-  setInterval(() => {
-    loaderText.textContent = loaderMessages[currentIndex];
-    currentIndex = (currentIndex + 1) % loaderMessages.length;
-  }, 1500);
-
-  window.addEventListener('load', function () {
-    const loader = document.getElementById('loader-wrapper');
-    loader.style.transition = 'opacity 1s ease';
-    setTimeout(() => {
-      loader.style.opacity = 0;
-      setTimeout(() => {
-        loader.style.display = 'none';
-      }, 0);
-    }, 00);
-  });
-</script>
-
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
