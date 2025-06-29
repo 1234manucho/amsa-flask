@@ -1,4 +1,6 @@
-{% extends 'base.html' %}
+
+ {% extends 'base.html' %}
+{% block title %}Register - AMSA Developers{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -267,23 +269,102 @@
         color: #ff6b6b !important; /* Slightly brighter red for dark mode */
     }
 </style>
+<div class="center-container position-relative">
+    <i id="toggleTheme" class="bi bi-circle-half theme-toggle" title="Toggle Dark/Light Mode"></i>
+    <div class="card shadow-lg">
+        <div class="card-body px-4 py-5 p-md-5">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-1" style="letter-spacing:0.01em;">Create Account</h2>
+                <p class="text-muted mb-0">Join <span class="text-secondary fw-bold">AMSA Group</span> today</p>
+            </div>
+
+            <form id="registrationForm">
+                <div class="row g-3">
+                    <div class="col-12 position-relative mb-3">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <i class="bi bi-person-fill input-icon"></i>
+                        <input type="text" class="form-control form-control-lg" id="full_name" name="full_name" placeholder="Your full name" required>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <i class="bi bi-envelope-fill input-icon"></i>
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Your email" required>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <i class="bi bi-lock-fill input-icon"></i>
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create a password" required>
+                        <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="top: 50%; right: 1rem; cursor: pointer; transform: translateY(-50%);"></i>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <i class="bi bi-lock-fill input-icon"></i>
+                        <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                        <i class="bi bi-eye-slash position-absolute" id="toggleConfirmPassword" style="top: 50%; right: 1rem; cursor: pointer; transform: translateY(-50%);"></i>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select form-select-lg" id="role" name="role" required>
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="investor">Investor</option>
+                            <option value="landbuyer">Land Buyer</option>
+                            <!-- Add other roles if needed -->
+                        </select>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="id_number" class="form-label">ID Number</label>
+                        <i class="bi bi-card-heading input-icon"></i>
+                        <input type="text" class="form-control form-control-lg" id="id_number" name="id_number" placeholder="National ID or Passport" required>
+                    </div>
+
+                    <div class="col-12 position-relative mb-3">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <i class="bi bi-telephone-fill input-icon"></i>
+                        <input type="tel" class="form-control form-control-lg" id="phone_number" name="phone_number" placeholder="07XXXXXXXX" required>
+                    </div>
+                </div>
+
+                <hr class="divider" />
+
+                <div class="form-section-title">Next of Kin Details <span class="fw-normal text-muted">(Optional)</span></div>
+
+                <div class="mb-3 position-relative">
+                    <label for="next_of_kin_name" class="form-label">Next of Kin Name</label>
+                    <i class="bi bi-person-bounding-box input-icon"></i>
+                    <input type="text" class="form-control form-control-lg" id="next_of_kin_name" name="next_of_kin_name" placeholder="Full name of next of kin">
+                </div>
+
+                <div class="mb-4 position-relative">
+                    <label for="next_of_kin_phone" class="form-label">Next of Kin Phone</label>
+                    <i class="bi bi-telephone input-icon"></i>
+                    <input type="tel" class="form-control form-control-lg" id="next_of_kin_phone" name="next_of_kin_phone" placeholder="07XXXXXXXX">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">Register</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">Already have an account?
+                    <a href="{{ url_for('main.login') }}" class="text-primary fw-bold">Log In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const prefersDark = localStorage.getItem('theme') === 'dark';
-    if (prefersDark) document.body.classList.add('dark');
-
-    const toggleBtn = document.getElementById('toggleTheme');
-    toggleBtn?.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-    });
-
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
     togglePassword?.addEventListener('click', () => {
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
         togglePassword.classList.toggle('bi-eye');
         togglePassword.classList.toggle('bi-eye-slash');
     });
@@ -291,82 +372,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
     const confirmPasswordInput = document.getElementById('confirm_password');
     toggleConfirmPassword?.addEventListener('click', () => {
-        const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
-        confirmPasswordInput.type = type;
+        confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
         toggleConfirmPassword.classList.toggle('bi-eye');
         toggleConfirmPassword.classList.toggle('bi-eye-slash');
     });
 
-    const roleSelect = document.getElementById('role');
-    const investorDetails = document.getElementById('investorDetails');
-    const landbuyerDetails = document.getElementById('landbuyerDetails');
-
-    function hideAllSections() {
-        investorDetails.style.display = 'none';
-        landbuyerDetails.style.display = 'none';
-    }
-
-    function setRequired(elements, isRequired) {
-        elements.forEach(el => {
-            if (el) el.required = isRequired;
-        });
-    }
-
-    const investorInputs = [
-        document.getElementById('investmentAmount'),
-        document.getElementById('tenure'),
-        document.getElementById('payout'),
-        document.getElementById('paymentModeInvestor')
-    ];
-
-    const landbuyerInputs = [
-        document.getElementById('plotReference'),
-        document.getElementById('location'),
-        document.getElementById('clientName'),
-        document.getElementById('clientID'),
-        document.getElementById('clientPhone'),
-        document.getElementById('clientEmail')
-    ];
-
-    roleSelect.addEventListener('change', function () {
-        hideAllSections();
-        setRequired(investorInputs, false);
-        setRequired(landbuyerInputs, false);
-
-        if (this.value === 'investor') {
-            investorDetails.style.display = 'block';
-            setRequired(investorInputs, true);
-        } else if (this.value === 'landbuyer') {
-            landbuyerDetails.style.display = 'block';
-            setRequired(landbuyerInputs, true);
-        }
-    });
-
-    hideAllSections(); // Initial hide
-
     const registrationForm = document.getElementById('registrationForm');
+    registrationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    function showAlert(message, type) {
-        const alertPlaceholder = document.createElement('div');
-        alertPlaceholder.innerHTML = `
-            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>`;
-        document.querySelector('.card-body').prepend(alertPlaceholder);
-        setTimeout(() => {
-            const alert = alertPlaceholder.querySelector('.alert');
-            if (alert) new bootstrap.Alert(alert).close();
-        }, 5000);
-    }
-
-    registrationForm.addEventListener('submit', async function (event) {
-        event.preventDefault();
-
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        if (password !== confirmPassword) {
+        if (passwordInput.value !== confirmPasswordInput.value) {
             confirmPasswordInput.setCustomValidity('Passwords do not match.');
         } else {
             confirmPasswordInput.setCustomValidity('');
@@ -377,171 +392,45 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        registrationForm.classList.remove('was-validated');
+        const requestBody = {
+            full_name: document.getElementById('full_name').value,
+            email: document.getElementById('email').value,
+            password: passwordInput.value,
+            id_number: document.getElementById('id_number').value,
+            phone_number: document.getElementById('phone_number').value,
+            role: document.getElementById('role').value,
+            next_of_kin_name: document.getElementById('next_of_kin_name').value,
+            next_of_kin_phone: document.getElementById('next_of_kin_phone').value
+        };
 
-        const submitButton = registrationForm.querySelector('button[type="submit"]');
-        const originalText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.textContent = 'Registering...';
+        const btn = registrationForm.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Registering...';
 
         try {
-            const requestBody = {
-                full_name: document.getElementById('full_name').value,
-                email: document.getElementById('email').value,
-                password: password,
-                id_number: document.getElementById('id_number').value,
-                phone_number: document.getElementById('phone_number').value,
-                role: roleSelect.value,
-                next_of_kin_name: document.getElementById('next_of_kin_name').value,
-                next_of_kin_phone: document.getElementById('next_of_kin_phone').value
-            };
-
-            if (roleSelect.value === 'investor') {
-                requestBody.investmentAmount = parseFloat(document.getElementById('investmentAmount').value);
-                requestBody.tenure = document.getElementById('tenure').value;
-                requestBody.payout = document.getElementById('payout').value;
-                requestBody.paymentModeInvestor = document.getElementById('paymentModeInvestor').value;
-            } else if (roleSelect.value === 'landbuyer') {
-                requestBody.plotReference = document.getElementById('plotReference').value;
-                requestBody.location = document.getElementById('location').value;
-                requestBody.clientName = document.getElementById('clientName').value;
-                requestBody.clientID = document.getElementById('clientID').value;
-                requestBody.clientPhone = document.getElementById('clientPhone').value;
-                requestBody.clientEmail = document.getElementById('clientEmail').value;
-            }
-
             const response = await fetch('/api/signup', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody)
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                showAlert(data.message || 'Registration successful! Redirecting...', 'success');
-                setTimeout(() => {
-                    window.location.href = "{{ url_for('main.login') }}";
-                }, 2000);
+                alert(data.message || 'Registration successful!');
+                window.location.href = "{{ url_for('main.login') }}";
             } else {
-                showAlert(data.message || 'Registration failed. Please try again.', 'danger');
+                alert(data.message || 'Registration failed.');
             }
         } catch (error) {
-            console.error('Registration error:', error);
-            showAlert('An unexpected error occurred. Please check your network connection.', 'danger');
+            console.error(error);
+            alert('An error occurred. Please try again.');
         } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
+            btn.disabled = false;
+            btn.textContent = originalText;
         }
     });
 });
 </script>
-
-
-
-<div class="center-container position-relative">
-    <i id="toggleTheme" class="bi bi-circle-half theme-toggle" title="Toggle Dark/Light Mode"></i>
-    <div class="card shadow-lg">
-        <div class="card-body px-4 py-5 p-md-5">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold mb-1" style="letter-spacing:0.01em;">Create Account</h2>
-                <p class="text-muted mb-0">Join <span class="text-secondary fw-bold">AMSA Group</span> today</p>
-            </div>
-
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-${category} alert-dismissible fade show" role="alert">
-                            ${message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-           <form id="registrationForm">
-
-                <div class="row g-3">
-                    <div class="col-12 position-relative mb-3">
-                        <label for="full_name" class="form-label">Full Name</label>
-                        <i class="bi bi-person-fill input-icon"></i>
-                        <input type="text" class="form-control form-control-lg" id="full_name" name="full_name" placeholder="Your full name" required>
-                        <div class="invalid-feedback">Please enter your full name.</div>
-                    </div>
-                    <div class="col-12 position-relative mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <i class="bi bi-envelope-fill input-icon"></i>
-                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Your email" required>
-                        <div class="invalid-feedback">Please enter a valid email address.</div>
-                    </div>
-                    <div class="col-12 position-relative mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <i class="bi bi-lock-fill input-icon"></i>
-                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create a password" required>
-                        <i class="bi bi-eye-slash position-absolute" id="togglePassword" style="top: 50%; right: 1rem; cursor: pointer; transform: translateY(-50%);"></i>
-                        <div class="invalid-feedback">Please create a password.</div>
-                    </div>
-
-                    {# START OF CORRECTION: ADDED CONFIRM PASSWORD FIELD #}
-                    <div class="col-12 position-relative mb-3">
-                        <label for="confirm_password" class="form-label">Confirm Password</label>
-                        <i class="bi bi-lock-fill input-icon"></i>
-                        <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
-                        <i class="bi bi-eye-slash position-absolute" id="toggleConfirmPassword" style="top: 50%; right: 1rem; cursor: pointer; transform: translateY(-50%);"></i>
-                        <div class="invalid-feedback">Passwords do not match.</div>
-                    </div>
-                    {# END OF CORRECTION #}
-
-                    <div class="col-12 position-relative mb-3">
-                        <label for="role" class="form-label">I am registering as:</label>
-                        <select class="form-select form-select-lg" id="role" name="role" required>
-                            <option value="" disabled selected>Select Role</option>
-                            <option value="investor">Investor</option>
-                            
-                        </select>
-                        <div class="invalid-feedback">Please select a role.</div>
-                    </div>
-                    <div class="col-12 position-relative mb-3">
-                        <label for="id_number" class="form-label">ID Number</label>
-                        <i class="bi bi-card-heading input-icon"></i>
-                        <input type="text" class="form-control form-control-lg" id="id_number" name="id_number" placeholder="National ID or Passport" required>
-                        <div class="invalid-feedback">Please enter your ID number.</div>
-                    </div>
-                    <div class="col-12 position-relative mb-3">
-                        <label for="phone_number" class="form-label">Phone Number</label>
-                        <i class="bi bi-telephone-fill input-icon"></i>
-                        <input type="tel" class="form-control form-control-lg" id="phone_number" name="phone_number" placeholder="07XXXXXXXX" required>
-                        <div class="invalid-feedback">Please enter your phone number.</div>
-                    </div>
-                </div>
-
-                <hr class="divider" />
-
-                <div class="form-section-title" data-bs-toggle="tooltip" title="Not required to continue">Next of Kin Details <span class="fw-normal text-muted">(Optional)</span></div>
-                <div class="mb-3 position-relative">
-                    <label for="next_of_kin_name" class="form-label">Next of Kin Name</label>
-                    <i class="bi bi-person-bounding-box input-icon"></i>
-                    <input type="text" class="form-control form-control-lg" id="next_of_kin_name" name="next_of_kin_name" placeholder="Full name of next of kin">
-                </div>
-                <div class="mb-4 position-relative">
-                    <label for="next_of_kin_phone" class="form-label">Next of Kin Phone Number</label>
-                    <i class="bi bi-telephone input-icon"></i>
-                    <input type="tel" class="form-control form-control-lg" id="next_of_kin_phone" name="next_of_kin_phone" placeholder="07XXXXXXXX" data-bs-toggle="tooltip" title="e.g., +2547XXXXXXXX">
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm">Register</button>
-                </div>
-            </form>
-
-            <div class="text-center mt-4">
-                <p class="text-muted small">Already have an account?
-                    <a href="{{ url_for('main.login') }}" class="font-medium text-blue-600 hover:text-blue-500">
-                        Log In
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
