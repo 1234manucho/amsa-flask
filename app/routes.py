@@ -83,13 +83,13 @@ def index():
 @main.route('/register')
 def register():
     return render_template('register.html')
-
 @main.route('/api/signup', methods=['POST'])
 def signup_api():
     if not current_app.firebase_db or not current_app.firebase_auth:
-        return jsonify({"status": "error", "message": "Backend service not ready. Please contact support."}), 500
+        return jsonify({"status": "error", "message": "Backend service not ready."}), 500
 
     data = request.get_json()
+
     full_name = data.get('full_name')
     email = data.get('email')
     password = data.get('password')
@@ -99,13 +99,10 @@ def signup_api():
     next_of_kin_name = data.get('next_of_kin_name')
     next_of_kin_phone = data.get('next_of_kin_phone')
 
+    # Validate required fields
     required_fields = {
-        'Full name': full_name,
-        'Email': email,
-        'Password': password,
-        'ID number': id_number,
-        'Phone number': phone_number,
-        'Role': role_str
+        'Full name': full_name, 'Email': email, 'Password': password,
+        'ID number': id_number, 'Phone number': phone_number, 'Role': role_str
     }
 
     for field, value in required_fields.items():
@@ -115,55 +112,40 @@ def signup_api():
     if len(password) < 6:
         return jsonify({"status": "error", "message": "Password must be at least 6 characters."}), 400
 
+    # Parse and validate role
     try:
         user_role = UserRole(role_str)
     except ValueError:
         return jsonify({"status": "error", "message": f"Invalid user role: {role_str}"}), 400
 
+    # Format phone number
     def format_phone_local(phone):
-        if phone:
-            phone = phone.strip()
-            if not phone.startswith('+'):
-                if phone.startswith('07'):
-                    phone = '+254' + phone[1:]
-                elif phone.startswith('254'):
-                    phone = '+' + phone
-                else:
-                    return None
-            if len(phone) >= 10:
-                return phone
-        return None
+        phone = phone.strip()
+        if not phone.startswith('+'):
+            if phone.startswith('07'):
+                phone = '+254' + phone[1:]
+            elif phone.startswith('254'):
+                phone = '+' + phone
+            else:
+                return None
+        return phone if len(phone) >= 10 else None
 
     formatted_phone = format_phone_local(phone_number)
     if not formatted_phone:
-        return jsonify({"status": "error", "message": "Invalid or missing primary phone number."}), 400
+        return jsonify({"status": "error", "message": "Invalid phone number format."}), 400
 
     formatted_nok_phone = format_phone_local(next_of_kin_phone) if next_of_kin_phone else None
 
-    user_data = {
-        'full_name': full_name,
-        'email': email,
-        'id_number': id_number,
-        'phone_number': formatted_phone,
-        'role': user_role.value,
-        'created_at': firestore.SERVER_TIMESTAMP,
-        'next_of_kin': {
-            'name': next_of_kin_name or None,
-            'phone': formatted_nok_phone or None
-        }
-    }
+    # Check if ID already registered in Firestore
+    existing = current_app.firebase_db.collection('users')\
+        .where(filter=firestore.FieldFilter('id_number', '==', id_number))\
+        .limit(1).get()
 
-    if not any(user_data['next_of_kin'].values()):
-        user_data['next_of_kin'] = None
+    if existing:
+        return jsonify({"status": "error", "message": "This ID Number is already registered."}), 409
 
     try:
-        existing = current_app.firebase_db.collection('users')\
-            .where(filter=firestore.FieldFilter('id_number', '==', id_number))\
-            .limit(1).get()
-
-        if existing:
-            return jsonify({"status": "error", "message": "This ID Number is already registered."}), 409
-
+        # Create Firebase user
         user_record = current_app.firebase_auth.create_user(
             email=email,
             password=password,
@@ -172,22 +154,29 @@ def signup_api():
             disabled=False
         )
         uid = user_record.uid
-        user_data['id'] = uid
-        user_data['firebase_uid'] = uid
 
+        # Prepare Firestore user profile
+        user_data = {
+            'id': uid,
+            'firebase_uid': uid,
+            'full_name': full_name,
+            'email': email,
+            'id_number': id_number,
+            'phone_number': formatted_phone,
+            'role': user_role.value,
+            'created_at': firestore.SERVER_TIMESTAMP,
+        }
+
+        if next_of_kin_name or formatted_nok_phone:
+            user_data['next_of_kin'] = {
+                'name': next_of_kin_name or None,
+                'phone': formatted_nok_phone or None
+            }
+
+        # Save to Firestore
         current_app.firebase_db.collection('users').document(uid).set(user_data)
 
-        new_user = User(
-            full_name=full_name,
-            email=email,
-            password=generate_password_hash(password),
-            id_number=id_number,
-            phone_number=formatted_phone,
-            role=user_role
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
+        # Login user (optional)
         session['user_id'] = uid
         session['user_role'] = user_role.value
 
@@ -199,7 +188,8 @@ def signup_api():
         return jsonify({"status": "error", "message": "Phone number already in use."}), 409
     except Exception as e:
         current_app.logger.exception("Registration failed:")
-        return jsonify({"status": "error", "message": f"Registration failed: {str(e)}"}), 500
+        return jsonify({"status": "error", "message": f"Error creating user: {str(e)}"}), 500
+
 
 
 
