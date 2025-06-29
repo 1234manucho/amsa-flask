@@ -84,7 +84,6 @@ def index():
 def register():
     return render_template('register.html')
 
-
 @main.route('/api/signup', methods=['POST'])
 def signup_api():
     if not current_app.firebase_db or not current_app.firebase_auth:
@@ -101,8 +100,12 @@ def signup_api():
     next_of_kin_phone = data.get('next_of_kin_phone')
 
     required_fields = {
-        'Full name': full_name, 'Email': email, 'Password': password,
-        'ID number': id_number, 'Phone number': phone_number, 'Role': role_str
+        'Full name': full_name,
+        'Email': email,
+        'Password': password,
+        'ID number': id_number,
+        'Phone number': phone_number,
+        'Role': role_str
     }
 
     for field, value in required_fields.items():
@@ -152,47 +155,6 @@ def signup_api():
 
     if not any(user_data['next_of_kin'].values()):
         user_data['next_of_kin'] = None
-
-    if user_role == UserRole.INVESTOR:
-        try:
-            investment_amount = float(data.get('investmentAmount', 0))
-            if investment_amount < 0:
-                raise ValueError
-        except (TypeError, ValueError):
-            return jsonify({"status": "error", "message": "Invalid investment amount."}), 400
-
-        tenure = data.get('tenure')
-        payout = data.get('payout')
-        payment_mode = data.get('paymentModeInvestor')
-
-        if not all([tenure, payout, payment_mode]):
-            return jsonify({"status": "error", "message": "Missing investor details."}), 400
-
-        user_data['investor_details'] = {
-            'investment_amount': investment_amount,
-            'tenure': tenure,
-            'payout_frequency': payout,
-            'payment_mode': payment_mode
-        }
-
-    elif user_role == UserRole.LANDBUYER:
-        location = data.get('location')
-        client_name = data.get('clientName')
-        client_id = data.get('clientID')
-        client_phone = data.get('clientPhone')
-        client_email = data.get('clientEmail')
-
-        if not all([location, client_name, client_id, client_phone, client_email]):
-            return jsonify({"status": "error", "message": "Missing land buyer contact info."}), 400
-
-        user_data['landbuyer_details'] = {
-            'plot_reference': data.get('plotReference') or None,
-            'desired_location': location,
-            'client_inquiry_name': client_name,
-            'client_inquiry_id': client_id,
-            'client_inquiry_phone': client_phone,
-            'client_inquiry_email': client_email
-        }
 
     try:
         existing = current_app.firebase_db.collection('users')\
