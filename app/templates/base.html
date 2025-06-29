@@ -35,9 +35,10 @@
     <div class="logo">💰 <strong>Amsa</strong> Group</div>
     <ul class="nav-links">
       <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
+      <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
       <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-      <li><a href="/buy-land"><i class="fa fa-map-marked-alt"></i> Buy Land</a></li>
-      <li><a href="/microfinance"><i class="fa fa-piggy-bank"></i> MicroInvest</a></li>
+        
       <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
       <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
       {% if session.get('user_id') %}
@@ -48,14 +49,14 @@
           <a href="#"><i class="fa fa-tachometer-alt"></i> Dashboard <i class="fa fa-caret-down"></i></a>
           <ul class="dropdown-menu">
             <li><a href="/dashboard/investor"><i class="fa fa-coins"></i> Investor</a></li>
-            <li><a href="/dashboard/landbuyer"><i class="fa fa-landmark"></i> Land Buyer</a></li>
+           
           </ul>
         </li>
         <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
         <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
       {% else %}
-        <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
-        <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
+        
+      
       {% endif %}
     </ul>
   </nav>
@@ -71,18 +72,18 @@
   <div class="footer-content" style="display: flex; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; justify-content: space-between; gap: 48px;">
     <div class="footer-section about" style="flex: 1 1 260px; min-width: 220px;">
       <h3 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.5em;">Amsa Group</h3>
-      <p style="font-size: 1em; line-height: 1.6;">Empowering microfinance &amp; land ownership in Kenya and beyond.</p>
+      <p style="font-size: 1em; line-height: 1.6;">Empowering microfinance &amp;  Kenya and beyond.</p>
     </div>
     <div class="footer-section links" style="flex: 1 1 180px; min-width: 180px;">
       <h4 style="color: #2ecc71; margin-bottom: 10px;">Quick Links</h4>
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li style="margin-bottom: 8px;"><a href="/invest" style="color: #f4f4f4;">Invest</a></li>
-        <li style="margin-bottom: 8px;"><a href="/buy-land" style="color: #f4f4f4;">Buy Land</a></li>
         
-        <li style="margin-bottom: 8px;"><a href="/microfinance" style="color: #f4f4f4;">MicroInvest</a></li>
+        
+
         <li style="margin-bottom: 8px;"><a href="/dashboard/investor" style="color: #f4f4f4;">Investor Dashboard</a></li>
         
-        <li><a href="/dashboard/landbuyer" style="color: #f4f4f4;">Land Buyer Dashboard</a></li>
+        
         <li style="margin-bottom: 8px;"><a href="/invest_land" style="color: #f4f4f4;"></a></li>
       </ul>
     </div>
@@ -135,8 +136,8 @@
       loader.style.opacity = 0;
       setTimeout(() => {
         loader.style.display = 'none';
-      }, 250);
-    }, 2500);
+      }, 50);
+    }, 500);
   });
 </script>
 
