@@ -712,7 +712,7 @@ def invest_form():
     user_data = user_doc.to_dict()
     phone_number = user_data.get("phone_number", "").strip()
 
-    VALID_TIERS = ['Seed', 'Sprout', 'Harvest', 'Orchard', 'Legacy', 'Custom']
+    VALID_TIERS = ['Seed', 'Sprout', 'Harvest', 'Orchard', 'Legacy', 'Summit', 'Pinacle']
 
     if request.method == 'GET':
         tier = request.args.get('tier', '').strip()
