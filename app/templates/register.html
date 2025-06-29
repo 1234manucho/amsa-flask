@@ -460,9 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <form id="registrationForm"> {# Wrapped the entire form within the form tag #}
-                {# Removed CSRF hidden input field #}
-                {# <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}"> #}
+           <form id="registrationForm" action="/api/signup" method="POST">
 
                 <div class="row g-3">
                     <div class="col-12 position-relative mb-3">
@@ -517,111 +515,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="invalid-feedback">Please enter your phone number.</div>
                     </div>
                 </div>
-
-<!--                 <div id="investorDetails" class="dynamic-form-section">
-                    <h5 class="mb-3">Investment Details</h5>
-
-                    <div class="mb-3">
-                        <label for="investmentAmount" class="form-label">Desired Investment Amount (KES)</label>
-                        <input type="number" class="form-control form-control-lg" id="investmentAmount" name="investmentAmount"  min="0" step="any">
-                        <small class="form-text info-text">Enter the amount you are looking to invest.</small>
-                        <div class="invalid-feedback">Please enter a valid investment amount.</div>
-                    </div>
-
-                   
-
-                    <div class="mb-3">
-                        <label for="tenure" class="form-label">Preferred Tenure</label>
-                        <select class="form-select form-select-lg" id="tenure" name="tenure">
-                            <option value="" selected disabled>Choose Tenure</option>
-                            <option value="6months">6 Months</option>
-                            <option value="12months">12 Months</option>
-                            <option value="24months">24 Months</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a preferred tenure.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="payout" class="form-label">Preferred Payout Frequency</label>
-                        <select class="form-select form-select-lg" id="payout" name="payout">
-                            <option value="" selected disabled>Choose Payout</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="monthly">Monthly</option>
-                            <option value="quarterly">Quarterly</option>
-                            <option value="atmaternity">At Maturity</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a preferred payout frequency.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="paymentModeInvestor" class="form-label">Preferred Payment Mode</label>
-                        <select class="form-select form-select-lg" id="paymentModeInvestor" name="paymentModeInvestor">
-                            <option value="" selected disabled>Choose Payment Mode</option>
-                            <option value="bank">Bank Transfer</option>
-                            <option value="mpesa">M-PESA</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a preferred payment mode.</div>
-                    </div>
-                </div> -->
-
-<!--                 <div id="landbuyerDetails" class="dynamic-form-section">
-                    <h5 class="mb-3">Land Purchase Details</h5>
-
-                    <div class="mb-3">
-                        <label for="plotReference" class="form-label">Plot Reference (If known)</label>
-                        <input type="text" class="form-control form-control-lg" id="plotReference" name="plotReference" placeholder="e.g., PLOT-001, RUIRU-EX05">
-                        <small class="form-text info-text">Enter a specific plot reference if you have one, or leave blank to browse.</small>
-                        <div class="invalid-feedback">Please enter a plot reference or leave blank.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="location" class="form-label">Desired Location</label>
-                        <input type="text" class="form-control form-control-lg" id="location" name="location" placeholder="e.g., Kajiado, Isinya, Ruiru">
-                        <small class="form-text info-text">Which area are you interested in?</small>
-                        <div class="invalid-feedback">Please enter a desired location.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <p class="mb-1">**Typical Price Range:** <span class="fw-bold text-primary">KES [Amount]</span> (Varies by plot)</p>
-                        <p class="info-text">Specific plot prices will be provided upon inquiry or plot selection.</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <p class="mb-1">**Installment Plan Available:**</p>
-                        <p class="info-text">Flexible installment options are available. Detailed plans will be discussed based on your chosen plot.</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <p class="mb-1">**Booking Fee:** <span class="fw-bold text-danger">KES 7,500</span></p>
-                        <p class="info-text">This non-refundable fee secures your plot during the processing period.</p>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <h5 class="mb-3">Your Contact Information for Land Inquiry</h5>
-                    <div class="mb-3">
-                        <label for="clientName" class="form-label">Full Name (as per ID)</label>
-                        <input type="text" class="form-control form-control-lg" id="clientName" name="clientName" placeholder="John Doe">
-                        <div class="invalid-feedback">Please enter your full name.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientID" class="form-label">National ID No.</label>
-                        <input type="text" class="form-control form-control-lg" id="clientID" name="clientID" placeholder="e.g., 12345678">
-                        <div class="invalid-feedback">Please enter your National ID number.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientPhone" class="form-label">Phone Number</label>
-                        <i class="bi bi-telephone input-icon"></i>
-                        <input type="tel" class="form-control form-control-lg" id="clientPhone" name="clientPhone" placeholder="e.g., +2547XXXXXXXX">
-                        <div class="invalid-feedback">Please enter your phone number.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientEmail" class="form-label">Email Address</label>
-                        <i class="bi bi-envelope-fill input-icon"></i> {# Added missing icon #}
-                        <input type="email" class="form-control form-control-lg" id="clientEmail" name="clientEmail" placeholder="e.g., your@example.com">
-                        <div class="invalid-feedback">Please enter your email address.</div>
-                    </div>
-                </div> -->
 
                 <hr class="divider" />
 
