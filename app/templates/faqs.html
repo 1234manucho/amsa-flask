@@ -1,32 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}FAQs - AMSA Capital{% endblock %}
 
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<section class="how-to-invest">
-  <h2>How to Invest</h2>
-  <ol>
-    <li>Register or login to your account.</li>
-    <li>Choose your investment tier and amount.</li>
-    <li>Agree to the terms and confirm investment.</li>
-    <li>Make a payment via M-Pesa . bank transfer (coming soon).</li>
-    <li>Track your investment progress on your dashboard.</li>
-    <li>Receive your principal and interest on maturity.</li>
-  </ol>
-</section>
+<style>
+    body {
+        background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+        font-family: 'Inter', sans-serif;
+    }
 
-<section class="faqs">
-  <h2>Frequently Asked Questions</h2>
-  <div class="faq-list">
-    <div class="faq-item">
-      <h3>Is my principal guaranteed?</h3>
-      <p>Yes! Amsa guarantees the return of your principal investment.</p>
+    .page-header {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .page-header h1 {
+        font-weight: 700;
+        color: #4CAF50;
+        margin-bottom: 15px;
+    }
+
+    .page-header p {
+        color: #6c757d;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-weight: 600;
+        color: #4CAF50;
+        margin-bottom: 30px;
+        text-align: center;
+        letter-spacing: 0.5px;
+    }
+
+    .how-to-invest ol {
+        padding-left: 20px;
+        color: #1e293b;
+    }
+
+    .how-to-invest ol li {
+        margin-bottom: 10px;
+        font-size: 1.05rem;
+    }
+
+    .faq-item h3 {
+        font-size: 1.1rem;
+        color: #4CAF50;
+    }
+
+    .faq-item p {
+        color: #1e293b;
+        margin-bottom: 0;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+
+    .accordion-button {
+        font-weight: 600;
+        color: #4CAF50;
+    }
+
+    .accordion-body {
+        background: #ffffff;
+        color: #1e293b;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="page-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions and learn how to invest with AMSA Capital.</p>
     </div>
-    <div class="faq-item">
-      <h3>Can I withdraw before maturity?</h3>
-      <p>Currently, early withdrawal is not supported to protect investment stability.</p>
-    </div>
-    <div class="faq-item">
-      <h3>How do I track my investment?</h3>
-      <p>Simply log in and visit your investor dashboard to see real-time progress.</p>
-    </div>
-  </div>
-</section>
 
+    <section class="how-to-invest mb-5">
+        <h2 class="section-title">How to Invest</h2>
+        <ol class="list-group list-group-numbered">
+            <li class="list-group-item">Register or login to your account.</li>
+            <li class="list-group-item">Choose your investment tier and amount.</li>
+            <li class="list-group-item">Agree to the terms and confirm investment.</li>
+            <li class="list-group-item">Make a payment via M-Pesa (bank transfer coming soon).</li>
+            <li class="list-group-item">Track your investment progress on your dashboard.</li>
+            <li class="list-group-item">Receive your principal and interest on maturity.</li>
+        </ol>
+    </section>
+
+    <section class="faqs">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                        Is my principal guaranteed?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes! Amsa guarantees the return of your principal investment.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                        Can I withdraw before maturity?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Currently, early withdrawal is not supported to protect investment stability.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                        How do I track my investment?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Simply log in and visit your investor dashboard to see real-time progress.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
