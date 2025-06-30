@@ -671,7 +671,6 @@ def invest_form():
         if tier not in VALID_TIERS:
             flash('Invalid or missing investment tier selected.', 'danger')
             return redirect(url_for('main.invest_tiers_page'))
-        current_app.logger.info(f"[DEBUG] User {user_id} accessed tier: {tier}")
         return render_template('invest_form.html', user=user_data, tier=tier)
 
     if request.method == 'POST':
@@ -709,6 +708,7 @@ def invest_form():
             if not phone_number:
                 errors.append("No phone number found in your profile.")
             else:
+                # Convert phone number to Safaricom format (2547XXXXXXXX or 2541XXXXXXXX)
                 if phone_number.startswith('0'):
                     phone_number = '254' + phone_number[1:]
                 elif phone_number.startswith('+254'):
@@ -717,10 +717,10 @@ def invest_form():
                 if not (phone_number.startswith('2547') or phone_number.startswith('2541')) or len(phone_number) != 12:
                     errors.append("Invalid Safaricom phone number format. Must be 2547xxxxxxxxx or 2541xxxxxxxxx.")
 
-
             if errors:
                 return jsonify({'status': 'error', 'errors': errors}), 400
 
+            # Create investment record
             investment = Investment(
                 user_id=user_id,
                 amount=amount,
@@ -733,25 +733,32 @@ def invest_form():
             db.session.commit()
 
             def get_mpesa_token():
+                """
+                Generates an OAuth token from Safaricom production servers
+                """
                 try:
                     key = current_app.config['MPESA_CONSUMER_KEY']
                     secret = current_app.config['MPESA_CONSUMER_SECRET']
                     token_url = f"{current_app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
                     r = requests.get(token_url, auth=(key, secret))
                     r.raise_for_status()
-                    return r.json().get('access_token')
+                    token = r.json().get('access_token')
+                    return token
                 except Exception as e:
-                    current_app.logger.exception("[M-PESA ERROR] Token Fetch Failed:")
+                    current_app.logger.exception("[M-PESA ERROR] Token fetch failed:")
                     return None
 
             access_token = get_mpesa_token()
             if not access_token:
                 db.session.rollback()
-                return jsonify({'status': 'error', 'message': 'M-Pesa access token generation failed.'}), 500
+                return jsonify({'status': 'error', 'message': 'M-Pesa token generation failed.'}), 500
 
+            # Construct STK push
             timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
             shortcode = current_app.config['MPESA_BUSINESS_SHORTCODE']
             passkey = current_app.config['MPESA_PASSKEY']
+            account_number = current_app.config['MPESA_ACCOUNT_NUMBER']
+
             password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
 
             stk_url = f"{current_app.config['MPESA_API_BASE_URL']}/mpesa/stkpush/v1/processrequest"
@@ -769,9 +776,17 @@ def invest_form():
                 "PartyB": shortcode,
                 "PhoneNumber": phone_number,
                 "CallBackURL": current_app.config['MPESA_CALLBACK_URL'],
-                "AccountReference": f"AmsaInvest_{investment.id}",
+                "AccountReference": account_number,
                 "TransactionDesc": f"Investment for {tier}"
             }
+#             payload = {
+#     "BusinessShortCode": "542542",
+#     "PartyB": "542542",
+#     "AccountReference": "334455",
+#     ...
+# }
+
+            current_app.logger.info(f"Sending STK Push payload: {payload}")
 
             response = requests.post(stk_url, headers=headers, json=payload)
             response.raise_for_status()
@@ -800,7 +815,7 @@ def invest_form():
             else:
                 return jsonify({
                     'status': 'error',
-                    'message': stk_response.get('ResponseDescription', 'Unknown M-Pesa response.'),
+                    'message': stk_response.get('ResponseDescription', 'Unknown M-Pesa error.'),
                     'safaricom_response': stk_response
                 }), 500
 
@@ -808,6 +823,7 @@ def invest_form():
             current_app.logger.exception("Unexpected server error during investment:")
             db.session.rollback()
             return jsonify({'status': 'error', 'message': 'Unexpected server error during investment.'}), 500
+
 
 
 @main.route('/check_payment_status/<int:transaction_id>', methods=['GET'])
