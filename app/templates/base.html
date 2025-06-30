@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Amsa Group{% endblock %}</title>
+  <title>{% block title %}Amsa Capital{% endblock %}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -16,26 +16,41 @@
 <!-- Navbar -->
 <header>
   <nav class="navbar">
-    <div class="logo">💰 <strong>Amsa</strong> Group</div>
-    <ul class="nav-links">
-      <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+    <div class="logo">💰 <strong>Amsa</strong> Capital</div>
+   <ul class="nav-links">
+  <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+
+  {% if session.get('user_id') %}
+    {% if session.get('role') == 'admin' %}
       <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
       <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
       <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
       <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
       <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
-      {% if session.get('user_id') %}
-        {% if session.get('role') == 'admin' %}
-          <li><a href="/admin/dashboard"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
-        {% endif %}
-        <li class="dropdown">
-          <a href="#"><i class="fa fa-tachometer-alt"></i> Dashboard <i class="fa fa-caret-down"></i></a>
-          <ul class="dropdown-menu">
-            <li><a href="/dashboard/investor"><i class="fa fa-coins"></i> Investor</a></li>
-          </ul>
-        </li>
-        <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
-        <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+      <li><a href="/admin/dashboard"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
+      <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
+      <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+
+    {% elif session.get('role') == 'investor' %}
+      <li class="dropdown">
+        <a href="#"><i class="fa fa-tachometer-alt"></i> Dashboard <i class="fa fa-caret-down"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="/dashboard/investor"><i class="fa fa-coins"></i> Investor</a></li>
+        </ul>
+      </li>
+      <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
+      <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+    {% endif %}
+  
+  {% else %}
+    <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
+    <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
+    <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
+    <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
+    <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
+  {% endif %}
+</ul>
+
       {% endif %}
     </ul>
   </nav>
@@ -50,7 +65,7 @@
 <footer class="site-footer" style="background: #181d23; color: #f4f4f4; padding: 48px 0 0 0; font-family: 'Segoe UI', Arial, sans-serif; border-top: 4px solid #2ecc71;">
   <div class="footer-content" style="display: flex; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; justify-content: space-between; gap: 48px;">
     <div class="footer-section about" style="flex: 1 1 260px; min-width: 220px;">
-      <h3 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.5em;">Amsa Group</h3>
+      <h3 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.5em;">Amsa Capital</h3>
       <p style="font-size: 1em; line-height: 1.6;">Providing micro-investment solutions in Kenya and beyond.</p>
     </div>
     <div class="footer-section links" style="flex: 1 1 180px; min-width: 180px;">
