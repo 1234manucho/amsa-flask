@@ -31,14 +31,9 @@
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         {% elif session.get('role') == 'investor' %}
-          <li class="dropdown">
-            <a href="#"><i class="fa fa-tachometer-alt"></i> Dashboard <i class="fa fa-caret-down"></i></a>
-            <ul class="dropdown-menu">
-              <li><a href="/dashboard/investor"><i class="fa fa-coins"></i> Investor</a></li>
-            </ul>
-          </li>
+          <li><a href="/dashboard/investor"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
           <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-                <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
+          <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         {% endif %}
       {% else %}
@@ -51,6 +46,7 @@
     </ul>
   </nav>
 </header>
+
 
 
 <!-- Page Content -->
