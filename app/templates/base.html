@@ -3,46 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Amsa Capital{% endblock %}</title>
+  <title>{% block title %}Amsa Group{% endblock %}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
+
+<!-- Loader Start -->
+<div id="loader-wrapper">
+  <div id="loader">
+    <div class="emoji-sequence animate__animated animate__pulse animate__infinite">
+      <span class="emoji">💰</span>
+      <span class="emoji">💹</span>
+      <span class="emoji">💸</span>
+    </div>
+    <div class="loader-text animate__animated animate__fadeInUp">
+      <span id="loader-message">Loading Amsa Group...</span>
+    </div>
+  </div>
+</div>
+<!-- Loader End -->
+
 <!-- Navbar -->
 <header>
   <nav class="navbar">
-    <div class="logo">💰 <strong>Amsa</strong> Capital</div>
+    <div class="logo">💰 <strong>Amsa</strong> Group</div>
     <ul class="nav-links">
       <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
-
+      <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
+      <li><a href="/buy-land"><i class="fa fa-map-marked-alt"></i> Buy Land</a></li>
+      <li><a href="/microfinance"><i class="fa fa-piggy-bank"></i> MicroInvest</a></li>
+      <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
       {% if session.get('user_id') %}
         {% if session.get('role') == 'admin' %}
-          <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
-          <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
-          <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-          <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
-          <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
-          <li><a href="/admin/dashboard"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
-          <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
-          <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
-        {% elif session.get('role') == 'investor' %}
-          <li><a href="/dashboard/investor"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
-          <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-          <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
-          <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+        <li><a href="/admin/dashboard"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
         {% endif %}
+        <li class="dropdown">
+          <a href="#"><i class="fa fa-tachometer-alt"></i> Dashboard <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="/dashboard/investor"><i class="fa fa-coins"></i> Investor</a></li>
+            <li><a href="/dashboard/landbuyer"><i class="fa fa-landmark"></i> Land Buyer</a></li>
+          </ul>
+        </li>
+        <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
+        <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
       {% else %}
-        <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
         <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
-        <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-        <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
-        <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
+        <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
       {% endif %}
     </ul>
   </nav>
 </header>
+
 <!-- Page Content -->
 <main>
   {% block content %}{% endblock %}
@@ -52,15 +70,20 @@
 <footer class="site-footer" style="background: #181d23; color: #f4f4f4; padding: 48px 0 0 0; font-family: 'Segoe UI', Arial, sans-serif; border-top: 4px solid #2ecc71;">
   <div class="footer-content" style="display: flex; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; justify-content: space-between; gap: 48px;">
     <div class="footer-section about" style="flex: 1 1 260px; min-width: 220px;">
-      <h3 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.5em;">Amsa Capital</h3>
-      <p style="font-size: 1em; line-height: 1.6;">Providing micro-investment solutions in Kenya and beyond.</p>
+      <h3 style="color: #2ecc71; margin-bottom: 10px; font-size: 1.5em;">Amsa Group</h3>
+      <p style="font-size: 1em; line-height: 1.6;">Empowering microfinance &amp; land ownership in Kenya and beyond.</p>
     </div>
     <div class="footer-section links" style="flex: 1 1 180px; min-width: 180px;">
       <h4 style="color: #2ecc71; margin-bottom: 10px;">Quick Links</h4>
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li style="margin-bottom: 8px;"><a href="/invest" style="color: #f4f4f4;">Invest</a></li>
+        <li style="margin-bottom: 8px;"><a href="/buy-land" style="color: #f4f4f4;">Buy Land</a></li>
+        
+        <li style="margin-bottom: 8px;"><a href="/microfinance" style="color: #f4f4f4;">MicroInvest</a></li>
         <li style="margin-bottom: 8px;"><a href="/dashboard/investor" style="color: #f4f4f4;">Investor Dashboard</a></li>
-        <li style="margin-bottom: 8px;"><a href="/faqs" style="color: #f4f4f4;">FAQS</a></li>
+        
+        <li><a href="/dashboard/landbuyer" style="color: #f4f4f4;">Land Buyer Dashboard</a></li>
+        <li style="margin-bottom: 8px;"><a href="/invest_land" style="color: #f4f4f4;"></a></li>
       </ul>
     </div>
     <div class="footer-section contact" style="flex: 1 1 220px; min-width: 220px;">
@@ -86,7 +109,9 @@
     &copy; 2025 <span style="color: #2ecc71;">Amsa Developers Limited</span>. All rights reserved.
   </div>
 </footer>
-  <script>
+
+<!-- Loader Script -->
+<script>
   const loaderMessages = [
     "Empowering Investment...",
     "Securing Your Future...",
@@ -114,23 +139,49 @@
     }, 100);
   });
 </script>
-<!-- Firebase -->
+
 <script type="module">
+
+  // Import the functions you need from the SDKs you need
+
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
 
+  // TODO: Add SDKs for Firebase products that you want to use
+
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+  // Your web app's Firebase configuration
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
   const firebaseConfig = {
+
     apiKey: "AIzaSyDlMBO0dcIJR6dA8liF9tkqGRlmexbIWZU",
+
     authDomain: "amsa-bb972.firebaseapp.com",
+
     projectId: "amsa-bb972",
-    storageBucket: "amsa-bb972.appspot.com",
+
+    storageBucket: "amsa-bb972.firebasestorage.app",
+
     messagingSenderId: "623077124603",
+
     appId: "1:623077124603:web:bb052d6a31b1062fd3435e",
+
     measurementId: "G-YMED4RPH0S"
+
   };
 
+
+  // Initialize Firebase
+
   const app = initializeApp(firebaseConfig);
+
   const analytics = getAnalytics(app);
+
 </script>
 
 <!-- Loader Styles -->
@@ -141,91 +192,63 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: #181d23;
+    /* Changed from dark grey/black to a very light, almost white blue */
+    background: #F0F8FF; /* AliceBlue, a very subtle light blue */
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
+}
 
-  .emoji-sequence {
+.emoji-sequence {
     font-size: 3rem;
     display: flex;
     gap: 20px;
-  }
+    /* Added blue color to the emojis */
+    color: #007BFF; /* A vibrant blue for the emojis */
+}
 
-  .loader-text {
+.loader-text {
     margin-top: 20px;
-    color: #2ecc71;
+    /* Changed from green to a prominent blue */
+    color: #0056b3; /* A medium blue for the loader text */
     font-size: 1.3rem;
     font-weight: bold;
     text-align: center;
-  }
+}
 
-  .emoji {
+.emoji {
     animation: bounce 1.2s infinite;
-  }
+}
 
-  @keyframes bounce {
+@keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
-  }
-</style>
+}
 
-<!-- Responsive Navbar Styles -->
-<style>
-  .navbar {
-    background-color: #0A4F32;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    color: #E0FFE9;
-    font-size: 1.5em;
-    font-weight: bold;
-  }
-
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
-    flex-wrap: wrap;
-  }
-
-  .nav-links li {
-    display: inline;
-  }
-
-  .nav-links a {
-    color: #E0FFE9;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-    font-size: 1rem;
-  }
-
-  .nav-links a:hover {
-    color: #ffffff;
-  }
-
-  @media (max-width: 768px) {
-    .nav-links {
-      flex-direction: row;
-      justify-content: center;
-      gap: 10px;
+/* --- Responsive & Dropdown Styles (No color changes needed here, only structural) --- */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
-    .nav-links a {
-      font-size: 0.9rem;
-      padding: 8px;
+
+    .footer-section {
+        flex: 1 1 100%;
+        min-width: auto !important;
+        margin-bottom: 24px;
     }
-  }
+
+    .footer-section ul {
+        padding-left: 0;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
 </style>
 
 </body>
