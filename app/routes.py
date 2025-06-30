@@ -1544,6 +1544,9 @@ def microfinance():
 @main.route('/about')
 def about():
     return render_template('about.html')
+@main.faqs('/faqs')
+def faqs():
+    return render_template('faqs.html')
 
 @main.route('/contact')
 def contact():
