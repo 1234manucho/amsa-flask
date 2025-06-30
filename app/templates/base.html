@@ -23,7 +23,7 @@
         {# User is logged in #}
 
         {% if session.get('role') == 'investor' %}
-          {# Investor specific links: Home, Invest, Profile, Logout #}
+       
           <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
@@ -38,11 +38,11 @@
           <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
 
         {% else %}
-          {# Fallback for any other logged-in role (if applicable) #}
+
           <li><a href="/dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li> {# Example: a generic dashboard #}
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
-          {# Other authenticated users also see general public links #}
+      
           <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
           <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
         {% endif %}
