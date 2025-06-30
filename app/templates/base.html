@@ -10,9 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
-
-
-
 <!-- Navbar -->
 <header>
   <nav class="navbar">
@@ -31,12 +28,8 @@
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         {% elif session.get('role') == 'investor' %}
-           <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
-          <li><a href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
+          <li><a href="/dashboard/investor"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
           <li><a href="/invest"><i class="fa fa-chart-line"></i> Invest</a></li>
-          <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
-          <li><a href="/contact"><i class="fa fa-envelope"></i> Contact</a></li>
-          <li><a href="/dashboard/investor"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
         {% endif %}
@@ -50,9 +43,6 @@
     </ul>
   </nav>
 </header>
-
-
-
 <!-- Page Content -->
 <main>
   {% block content %}{% endblock %}
