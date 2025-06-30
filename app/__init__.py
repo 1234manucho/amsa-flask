@@ -47,33 +47,25 @@ def floatformat_filter(value, precision=2):
 # --- App Factory ---
 def create_app():
     app = Flask(__name__)
-# --- Flask Config ---
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///database.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# --- M-Pesa Configuration (Production) ---
-# Your Safaricom Production Credentials stored safely as environment variables
-app.config['MPESA_CONSUMER_KEY'] = os.getenv('MPESA_CONSUMER_KEY')
-app.config['MPESA_CONSUMER_SECRET'] = os.getenv('MPESA_CONSUMER_SECRET')
+    # --- Flask Config ---
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'a_very_secure_fallback_secret_key_change_me_in_prod')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///database.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Use the PRODUCTION base URL
-app.config['MPESA_API_BASE_URL'] = os.getenv('MPESA_API_BASE_URL', 'https://api.safaricom.co.ke')
+   
 
-# Your PayBill number (Business Shortcode)
-app.config['MPESA_BUSINESS_SHORTCODE'] = os.getenv('MPESA_BUSINESS_SHORTCODE', '542542')
+    # --- M-Pesa Configuration ---
+    app.config['MPESA_CONSUMER_KEY'] = os.getenv('MPESA_CONSUMER_KEY')
+    app.config['MPESA_CONSUMER_SECRET'] = os.getenv('MPESA_CONSUMER_SECRET')
+    app.config['MPESA_API_BASE_URL'] = os.getenv('MPESA_API_BASE_URL', 'https://sandbox.safaricom.co.ke')
+    app.config['MPESA_BUSINESS_SHORTCODE'] = os.getenv('MPESA_BUSINESS_SHORTCODE')
+    app.config['MPESA_PASSKEY'] = os.getenv('MPESA_PASSKEY')
+    app.config['MPESA_CALLBACK_URL'] = os.getenv('MPESA_CALLBACK_URL')
 
-# Your Lipa Na M-Pesa Online Passkey for Production
-app.config['MPESA_PASSKEY'] = os.getenv('MPESA_PASSKEY')
-
-# Your PayBill Account Number used as the AccountReference field
-app.config['MPESA_ACCOUNT_NUMBER'] = os.getenv('MPESA_ACCOUNT_NUMBER', '334455')
-
-# The publicly accessible URL where Safaricom will send payment callbacks
-app.config['MPESA_CALLBACK_URL'] = os.getenv('MPESA_CALLBACK_URL', 'https://your-production-domain.com/mpesa_callback')
-
-    # --- Firebase Configuration (for client-side/web API) ---
+    # --- Firebase Configuration ---
     app.config['FIREBASE_WEB_API_KEY'] = os.getenv('FIREBASE_WEB_API_KEY')
+
 
     # --- File Upload Config ---
     upload_path = os.path.join(os.path.dirname(__file__), 'static', 'uploads', 'land_images')
