@@ -398,9 +398,40 @@
                 <p style="font-size: 0.9rem; color: #64748b; margin-top: -0.8rem; margin-bottom: 1.1rem;">This amount is fixed for the {{ tier }} tier.</p>
             {% endif %}
 
-            <label for="target_amount">Target Investment Goal (Optional KES)</label>
-            <input type="number" step="0.01" class="form-control" id="target_amount" name="target_amount" placeholder="e.g., 500000 (your overall goal)">
-            <small class="form-text text-muted">Set a goal for your total investment over time.</small>
+<div class="mb-3">
+    <label for="target_amount" class="form-label">Target Investment Goal (Optional KES)</label>
+    <select class="form-select" id="target_amount" name="target_amount">
+        <option value="" selected>Select your investment goal</option>
+        <option value="5500">KES 5,500</option>
+        <option value="20800">KES 20,800</option>
+        <option value="51200">KES 51,200</option>
+        <option value="100700">KES 100,700</option>
+        <option value="256200">KES 256,200</option>
+        <option value="498500">KES 498,500</option>
+        <option value="above_500000">Above KES 500,000</option>
+    </select>
+</div>
+
+<div class="mb-3" id="custom_amount_container" style="display: none;">
+    <label for="custom_target_amount" class="form-label">Enter Your Custom Target Amount (KES)</label>
+    <input type="number" class="form-control" id="custom_target_amount" name="custom_target_amount" placeholder="e.g., 750000">
+</div>  
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const targetAmountSelect = document.getElementById('target_amount');
+    const customAmountContainer = document.getElementById('custom_amount_container');
+
+    targetAmountSelect.addEventListener('change', () => {
+        if (targetAmountSelect.value === 'above_500000') {
+            customAmountContainer.style.display = 'block';
+        } else {
+            customAmountContainer.style.display = 'none';
+        }
+    });
+});
+</script>
+ 
+      
 
             <label for="investment_purpose">Investment Purpose / Notes</label>
             <textarea id="investment_purpose" name="investment_purpose" rows="3" placeholder="Describe your investment goals (optional)"></textarea>
