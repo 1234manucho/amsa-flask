@@ -64,7 +64,7 @@ def index():
         role = user_data.get('role', '').lower()
 
         if role == 'investor':
-            return redirect(url_for('main.invest'))
+            return redirect(url_for('main.invest_tiers_page'))
         elif role == 'land_buyer':
             return redirect(url_for('main.dashboard_landbuyer'))
         elif role == 'admin':
@@ -285,7 +285,7 @@ def dashboard():
         return redirect(url_for('main.login'))
 
     if user_role == 'investor':
-        return redirect(url_for('main.invest'))
+        return redirect(url_for('main.dashboard_investor'))
     elif user_role == 'landbuyer':
         return redirect(url_for('main.dashboard_landbuyer'))
     elif user_role == 'admin':
