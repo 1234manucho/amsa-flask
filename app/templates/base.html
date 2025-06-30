@@ -15,7 +15,7 @@
   <nav class="navbar">
     <div class="logo">💰 <strong>Amsa</strong> Capital</div>
     <ul class="nav-links">
-      {# Always visible links #}
+     
       <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
 
       {# Conditional links based on user authentication status and role #}
@@ -29,7 +29,7 @@
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
 
         {% elif session.get('role') == 'admin' %}
-          {# Admin specific links #}
+        
           <li><a href="/admin/dashboard"><i class="fa fa-user-shield"></i> Admin Dashboard</a></li>
           <li><a href="/profile"><i class="fa fa-user-circle"></i> Profile</a></li>
           <li><a href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
