@@ -1,5 +1,4 @@
-
- {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Register - AMSA Capital{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -311,7 +310,7 @@
                         <select class="form-select form-select-lg" id="role" name="role" required>
                             <option value="" disabled selected>Select Role</option>
                             <option value="investor">Investor</option>
-<!--                             <option value="landbuyer">Land Buyer</option> -->
+<!--                            <option value="landbuyer">Land Buyer</option> -->
                             <!-- Add other roles if needed -->
                         </select>
                     </div>
@@ -382,6 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (passwordInput.value !== confirmPasswordInput.value) {
             confirmPasswordInput.setCustomValidity('Passwords do not match.');
+            registrationForm.classList.add('was-validated'); // Show validation message
+            return;
         } else {
             confirmPasswordInput.setCustomValidity('');
         }
@@ -417,14 +418,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // ✅ Redirect directly to main.invest page, no alert
-                window.location.href = "{{ url_for('main.login') }}";
+                // ✅ Redirect directly to the invest page after successful registration
+                window.location.href = "{{ url_for('main.invest_tiers_page') }}";
             } else {
-                alert(data.message || 'Registration failed.');
+                // Log the error message to the console instead of using alert()
+                console.error('Registration failed:', data.message || 'Unknown error');
+                // You might want to display this error message in a more user-friendly way on the page
+                // For example, by updating a dedicated error message div.
+                // For now, we'll just re-enable the button.
             }
         } catch (error) {
-            console.error(error);
-            alert('An error occurred. Please try again.');
+            console.error('An error occurred during registration:', error);
+            // Same as above, consider displaying this error on the page.
         } finally {
             btn.disabled = false;
             btn.textContent = originalText;
