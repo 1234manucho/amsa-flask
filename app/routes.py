@@ -285,7 +285,7 @@ def dashboard():
         return redirect(url_for('main.login'))
 
     if user_role == 'investor':
-        return redirect(url_for('main.dashboard_investor'))
+        return redirect(url_for('main.invest'))
     elif user_role == 'landbuyer':
         return redirect(url_for('main.dashboard_landbuyer'))
     elif user_role == 'admin':
