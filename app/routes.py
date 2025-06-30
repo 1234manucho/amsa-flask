@@ -64,7 +64,7 @@ def index():
         role = user_data.get('role', '').lower()
 
         if role == 'investor':
-            return redirect(url_for('main.dashboard_investor'))
+            return redirect(url_for('main.invest'))
         elif role == 'land_buyer':
             return redirect(url_for('main.dashboard_landbuyer'))
         elif role == 'admin':
@@ -1544,9 +1544,9 @@ def microfinance():
 @main.route('/about')
 def about():
     return render_template('about.html')
-# @main.route('/faqs')
-# def faqs():
-#     return render_template('faqs.html')
+@main.route('/faqs')
+def faqs():
+    return render_template('faqs.html')
 
 @main.route('/contact')
 def contact():
