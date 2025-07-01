@@ -388,29 +388,59 @@
             <label for="email">Email Address</label>
             <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" value="{{ user.email if user else '' }}">
 
-            <label for="amount">Investment Amount (KES)</label>
-            <input type="number" id="amount" name="amount" step="any" min="0"
-                   {% if tier == 'Starter' %}value="3000" readonly{% elif tier == 'Growth' %}value="10000" readonly{% elif tier == 'Premium' %}value="50000" readonly{% endif %}
-                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm
-                   {% if tier != 'Custom' %}bg-gray-50 text-gray-600 cursor-not-allowed{% endif %}"
-                   required>
-            {% if tier != 'Custom' %}
-                <p style="font-size: 0.9rem; color: #64748b; margin-top: -0.8rem; margin-bottom: 1.1rem;">This amount is fixed for the {{ tier }} tier.</p>
-            {% endif %}
+           <label for="amount">Investment Amount (KES)</label>
 
-<div class="mb-3">
-    <label for="target_amount" class="form-label">Target Investment Goal (Optional KES)</label>
-    <select class="form-select" id="target_amount" name="target_amount">
-        <option value="" selected>Select your investment goal</option>
-        <option value="5500">KES 5,500</option>
-        <option value="20800">KES 20,800</option>
-        <option value="51200">KES 51,200</option>
-        <option value="100700">KES 100,700</option>
-        <option value="256200">KES 256,200</option>
-        <option value="498500">KES 498,500</option>
-        <option value="above_500000">Above KES 500,000</option>
-    </select>
+<select id="amount" name="amount"
+        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+        {% if tier != 'Pinnacle' and tier != 'Custom' %}bg-gray-50 text-gray-600 cursor-not-allowed{% endif %}"
+        {% if tier != 'Pinnacle' and tier != 'Custom' %}disabled{% endif %}
+        onchange="toggleCustomAmount(this)"
+        required>
+    <option value="" disabled {% if tier == 'Custom' or tier == 'Pinnacle' %}selected{% endif %}>Select an amount</option>
+    <option value="5500" {% if tier == 'Seed' %}selected{% endif %}>KES 5,500 (Seed)</option>
+    <option value="20800" {% if tier == 'Sprout' %}selected{% endif %}>KES 20,800 (Sprout)</option>
+    <option value="51200" {% if tier == 'Harvest' %}selected{% endif %}>KES 51,200 (Harvest)</option>
+    <option value="100700" {% if tier == 'Orchard' %}selected{% endif %}>KES 100,700 (Orchard)</option>
+    <option value="256200" {% if tier == 'Legacy' %}selected{% endif %}>KES 256,200 (Legacy)</option>
+    <option value="498500" {% if tier == 'Summit' %}selected{% endif %}>KES 498,500 (Summit)</option>
+    <option value="above_500000" {% if tier == 'Pinnacle' %}selected{% endif %}>Above KES 500,000 (Pinnacle)</option>
+</select>
+
+<!-- Only for Pinnacle or Custom -->
+<div id="custom-amount-field" style="display: none; margin-top: 1rem;">
+    <label for="customAmount">Enter Custom Amount</label>
+    <input type="number" id="customAmount" name="custom_amount" min="500001" step="any"
+           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+           placeholder="Enter amount above KES 500,000">
 </div>
+
+{% if tier != 'Pinnacle' and tier != 'Custom' %}
+    <p style="font-size: 0.9rem; color: #64748b; margin-top: -0.8rem; margin-bottom: 1.1rem;">
+        This amount is fixed for the {{ tier }} tier.
+    </p>
+{% endif %}
+
+<script>
+function toggleCustomAmount(select) {
+    const customField = document.getElementById("custom-amount-field");
+    if (select.value === "above_500000") {
+        customField.style.display = "block";
+    } else {
+        customField.style.display = "none";
+    }
+}
+
+// Auto-show custom input if already selected server-side
+document.addEventListener("DOMContentLoaded", () => {
+    const amountSelect = document.getElementById("amount");
+    if (amountSelect.value === "above_500000") {
+        document.getElementById("custom-amount-field").style.display = "block";
+    }
+});
+</script>
+
+
+
 
 <div class="mb-3" id="custom_amount_container" style="display: none;">
     <label for="custom_target_amount" class="form-label">Enter Your Custom Target Amount (KES)</label>
