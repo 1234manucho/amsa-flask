@@ -446,22 +446,6 @@ document.addEventListener("DOMContentLoaded", () => {
     <label for="custom_target_amount" class="form-label">Enter Your Custom Target Amount (KES)</label>
     <input type="number" class="form-control" id="custom_target_amount" name="custom_target_amount" placeholder="e.g., 750000">
 </div>  
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const targetAmountSelect = document.getElementById('target_amount');
-    const customAmountContainer = document.getElementById('custom_amount_container');
-
-    targetAmountSelect.addEventListener('change', () => {
-        if (targetAmountSelect.value === 'above_500000') {
-            customAmountContainer.style.display = 'block';
-        } else {
-            customAmountContainer.style.display = 'none';
-        }
-    });
-});
-</script>
- 
-      
 
             <label for="investment_purpose">Investment Purpose / Notes</label>
             <textarea id="investment_purpose" name="investment_purpose" rows="3" placeholder="Describe your investment goals (optional)"></textarea>
@@ -842,6 +826,20 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage('Payment initiation cancelled.', 'info');
         currentTransactionId = null;
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const targetAmountSelect = document.getElementById('target_amount');
+    const customAmountContainer = document.getElementById('custom_amount_container');
+
+    targetAmountSelect.addEventListener('change', () => {
+        if (targetAmountSelect.value === 'above_500000') {
+            customAmountContainer.style.display = 'block';
+        } else {
+            customAmountContainer.style.display = 'none';
+        }
+    });
+});
 </script>
 
 {% endblock %}
