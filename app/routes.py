@@ -683,19 +683,36 @@ def invest_form():
             tier = data.get('tier', 'Custom').strip()
             purpose = data.get('investment_purpose', '').strip()
             target_amount_str = data.get('target_amount')
+            custom_amount_str = data.get('custom_amount')  # For Pinnacle tier
 
             errors = []
 
             if tier not in VALID_TIERS:
                 errors.append('Invalid investment tier selected.')
 
-            try:
-                amount = float(amount_str)
-                if amount <= 0:
-                    errors.append("Investment amount must be greater than zero.")
-            except (ValueError, TypeError):
-                errors.append("Invalid amount format.")
+            # Determine and validate investment amount
+            amount = None
+            if amount_str == 'above_500000' and tier == 'Pinacle':
+                if not custom_amount_str:
+                    errors.append("Please enter a custom amount for the Pinnacle tier.")
+                else:
+                    try:
+                        custom_amount = float(custom_amount_str)
+                        if custom_amount <= 500000:
+                            errors.append("Custom amount must be greater than KES 500,000 for Pinnacle tier.")
+                        else:
+                            amount = custom_amount
+                    except (ValueError, TypeError):
+                        errors.append("Invalid custom amount format.")
+            else:
+                try:
+                    amount = float(amount_str)
+                    if amount <= 0:
+                        errors.append("Investment amount must be greater than zero.")
+                except (ValueError, TypeError):
+                    errors.append("Invalid amount format.")
 
+            # Optional target amount
             target_amount = None
             if target_amount_str:
                 try:
@@ -705,10 +722,10 @@ def invest_form():
                 except (ValueError, TypeError):
                     errors.append("Invalid target amount format.")
 
+            # Phone number validation
             if not phone_number:
                 errors.append("No phone number found in your profile.")
             else:
-                # Convert phone number to Safaricom format (2547XXXXXXXX or 2541XXXXXXXX)
                 if phone_number.startswith('0'):
                     phone_number = '254' + phone_number[1:]
                 elif phone_number.startswith('+254'):
@@ -733,17 +750,13 @@ def invest_form():
             db.session.commit()
 
             def get_mpesa_token():
-                """
-                Generates an OAuth token from Safaricom production servers
-                """
                 try:
                     key = current_app.config['MPESA_CONSUMER_KEY']
                     secret = current_app.config['MPESA_CONSUMER_SECRET']
                     token_url = f"{current_app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
                     r = requests.get(token_url, auth=(key, secret))
                     r.raise_for_status()
-                    token = r.json().get('access_token')
-                    return token
+                    return r.json().get('access_token')
                 except Exception as e:
                     current_app.logger.exception("[M-PESA ERROR] Token fetch failed:")
                     return None
@@ -758,7 +771,6 @@ def invest_form():
             shortcode = current_app.config['MPESA_BUSINESS_SHORTCODE']
             passkey = current_app.config['MPESA_PASSKEY']
             account_number = current_app.config['MPESA_ACCOUNT_NUMBER']
-
             password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
 
             stk_url = f"{current_app.config['MPESA_API_BASE_URL']}/mpesa/stkpush/v1/processrequest"
@@ -779,15 +791,8 @@ def invest_form():
                 "AccountReference": account_number,
                 "TransactionDesc": f"Investment for {tier}"
             }
-#             payload = {
-#     "BusinessShortCode": "542542",
-#     "PartyB": "542542",
-#     "AccountReference": "334455",
-#     ...
-# }
 
             current_app.logger.info(f"Sending STK Push payload: {payload}")
-
             response = requests.post(stk_url, headers=headers, json=payload)
             response.raise_for_status()
             stk_response = response.json()
@@ -823,8 +828,6 @@ def invest_form():
             current_app.logger.exception("Unexpected server error during investment:")
             db.session.rollback()
             return jsonify({'status': 'error', 'message': 'Unexpected server error during investment.'}), 500
-
-
 
 @main.route('/check_payment_status/<int:transaction_id>', methods=['GET'])
 def check_payment_status(transaction_id):
