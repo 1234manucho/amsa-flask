@@ -7,7 +7,7 @@ import base64
 import datetime
 import requests
 
-from flask import Flask, flash, current_app, jsonify, request
+from flask import Flask, current_app, jsonify, request
 from dotenv import load_dotenv
 import click
 import firebase_admin
@@ -58,15 +58,10 @@ def floatformat_filter(value, precision=2):
         return f"{float(value):.{precision}f}"
     except (ValueError, TypeError):
         return value
-<<<<<<< HEAD
 
 # -----------------------------------------------------------
 # M-Pesa Helpers
 # -----------------------------------------------------------
-=======
-# --- M-Pesa Helpers ---
->>>>>>> 1aca512e5499ed637730220e6433a402eb574811
-
 def get_mpesa_token():
     """
     Fetch OAuth token from M-Pesa API.
@@ -76,11 +71,7 @@ def get_mpesa_token():
         secret = current_app.config['MPESA_CONSUMER_SECRET']
         token_url = f"{current_app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
 
-<<<<<<< HEAD
         response = requests.get(token_url, auth=HTTPBasicAuth(key, secret))
-=======
-        response = requests.get(token_url, auth=(key, secret))
->>>>>>> 1aca512e5499ed637730220e6433a402eb574811
         response.raise_for_status()
 
         token_data = response.json()
@@ -103,25 +94,18 @@ def get_mpesa_token():
         current_app.logger.exception("[M-PESA ERROR] Failed to fetch token due to unexpected error:")
         return None
 
-
-<<<<<<< HEAD
 def lipa_na_mpesa(phone_number, amount):
     """
     Initiate an STK Push to the customer's phone.
     """
-=======
-def register_c2b_urls():
->>>>>>> 1aca512e5499ed637730220e6433a402eb574811
     access_token = get_mpesa_token()
     if not access_token:
         current_app.logger.error("[M-PESA] Access token missing. Cannot proceed with STK Push.")
         return {"error": "Failed to obtain access token."}
 
     try:
-<<<<<<< HEAD
-        # Generate timestamp and password
         timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        shortcode = current_app.config['MPESA_BUSINESS_SHORTCODE']   # Paybill number
+        shortcode = current_app.config['MPESA_BUSINESS_SHORTCODE']
         passkey = current_app.config['MPESA_PASSKEY']
 
         raw_password = f"{shortcode}{passkey}{timestamp}"
@@ -168,23 +152,6 @@ def register_c2b_urls():
 # -----------------------------------------------------------
 # App Factory
 # -----------------------------------------------------------
-=======
-        current_app.logger.info("[M-PESA] Registering C2B URLs with payload: %s", payload)
-        response = requests.post(url, headers=headers, json=payload)
-        response.raise_for_status()
-
-        current_app.logger.info("[M-PESA] C2B URLs successfully registered: %s", response.json())
-
-    except requests.exceptions.HTTPError as http_err:
-        current_app.logger.error("[M-PESA ERROR] C2B registration failed with HTTP error: %s", http_err)
-        if http_err.response is not None:
-            current_app.logger.error("[M-PESA ERROR] Response content: %s", http_err.response.text)
-
-    except Exception as e:
-        current_app.logger.exception("[M-PESA ERROR] C2B registration failed due to unexpected error:")
-
->>>>>>> 1aca512e5499ed637730220e6433a402eb574811
-
 def create_app():
     app = Flask(__name__)
 
