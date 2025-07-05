@@ -3,7 +3,7 @@ import os
 try:
     from firebase_functions import https_fn
     from firebase_functions.options import set_global_options
-    from firebase_admin import initialize_app
+    from firebase_admin import initialize_app, get_app, _DEFAULT_APP
     IS_FIREBASE = True
 except ImportError:
     # Firebase SDK not available (local dev)
@@ -16,11 +16,13 @@ flask_app = create_app()
 
 # --- Firebase Setup ---
 if IS_FIREBASE:
-    # Set global Cloud Function options
     set_global_options(max_instances=10)
 
-    # Initialize Firebase Admin SDK
-    initialize_app()
+    # Only initialize Firebase Admin if not already initialized
+    try:
+        get_app(_DEFAULT_APP)
+    except ValueError:
+        initialize_app()
 
     # Cloud Function Entry Point
     @https_fn.on_request()
