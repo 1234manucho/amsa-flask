@@ -387,9 +387,9 @@ def login():
             return redirect_by_role(session['user_role'])
 
         flash("Invalid email or password.", "danger")
-        return render_template('login.html', next=next_page)
+        return render_template("login.html", form=form, next=next_page)
 
-    return render_template('login.html', next=next_page)
+    return render_template("login.html", form=form, next=next_page)
 
 
 # --- LOGOUT ROUTE ---
