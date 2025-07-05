@@ -197,17 +197,24 @@ def signup_api():
         current_app.logger.exception("Registration failed:")
         return jsonify({"status": "error", "message": f"Error creating user: {str(e)}"}), 500
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['GET', 'POST']) # Ensure 'main' is a correctly defined and registered Flask Blueprint.
+                                              # If not, this should likely be '@app.route' or '@your_actual_blueprint_name.route'.
 def login():
     if 'user_id' in session:
         return redirect_by_role(session.get('user_role'))
 
     form = LoginForm()
-    next_page = request.args.get('next') or request.form.get('next')
+    # Prioritize next from query params, then from form data
+    next_page = request.args.get('next')
+    if not next_page: # Only get from form if not in args
+        next_page = request.form.get('next')
 
     if form.validate_on_submit():
         email = form.email.data.strip().lower()
         password = form.password.data
+
+        # Initialize authenticated_via_firebase flag
+        authenticated_via_firebase = False
 
         try:
             # ----------------------------------------------------
@@ -222,7 +229,7 @@ def login():
             }
 
             response = requests.post(login_url, json=payload, timeout=10)
-            response.raise_for_status()
+            response.raise_for_status() # Raise an HTTPError for bad responses (4xx or 5xx)
             result = response.json()
 
             if "error" not in result:
@@ -231,16 +238,18 @@ def login():
 
                 if user_doc.exists:
                     user_data = user_doc.to_dict()
-                    session.clear()
+                    session.clear() # Clear existing session before setting new ones
                     session['user_id'] = local_id
                     session['user_role'] = user_data.get('role', '').lower()
+                    authenticated_via_firebase = True # Set flag
 
                     flash("Login successful!", "success")
 
+                    # Check for safe URL redirection after successful login
                     if next_page and is_safe_url(next_page):
                         return redirect(next_page)
-
-                    return redirect_by_role(session['user_role'])
+                    else:
+                        return redirect_by_role(session['user_role'])
 
                 else:
                     current_app.logger.warning(
@@ -249,45 +258,51 @@ def login():
                     flash("Login failed. User profile not found. Please contact support.", "danger")
 
             else:
-                error_code = result['error'].get('message', '')
-                current_app.logger.error(f"[LOGIN] Firebase error code: {error_code}")
+                error_message = result['error'].get('message', 'Unknown error from Firebase')
+                current_app.logger.error(f"[LOGIN] Firebase error: {error_message}")
 
-                if error_code in ["EMAIL_NOT_FOUND", "INVALID_PASSWORD"]:
+                if error_message in ["EMAIL_NOT_FOUND", "INVALID_PASSWORD"]:
                     flash("Invalid email or password.", "danger")
-                elif error_code == "USER_DISABLED":
+                elif error_message == "USER_DISABLED":
                     flash("Your account has been disabled. Please contact support.", "danger")
                 else:
-                    flash("An unexpected error occurred during login. Please try again.", "danger")
+                    flash(f"An authentication error occurred: {error_message}. Please try again.", "danger")
 
         except requests.exceptions.RequestException as e:
-            current_app.logger.exception("[LOGIN] Firebase request error:")
+            current_app.logger.exception(f"[LOGIN] Firebase request error: {e}")
             flash("An error occurred while contacting authentication service. Please try again.", "danger")
         except Exception as e:
-            current_app.logger.exception("[LOGIN] Unexpected error:")
+            current_app.logger.exception(f"[LOGIN] Unexpected error during Firebase auth: {e}")
             flash("An unexpected error occurred. Please try again.", "danger")
 
         # ----------------------------------------------------
-        # Local DB fallback
+        # Local DB fallback - Only attempt if Firebase authentication failed
+        # or did not complete successfully.
         # ----------------------------------------------------
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            session.clear()
-            session['user_id'] = str(user.id)
-            session['user_role'] = (
-                user.role.lower()
-                if isinstance(user.role, str)
-                else user.role.value.lower()
-            )
+        if not authenticated_via_firebase:
+            user = User.query.filter_by(email=email).first()
+            if user and check_password_hash(user.password, password):
+                session.clear() # Clear existing session
+                session['user_id'] = str(user.id)
+                session['user_role'] = (
+                    user.role.lower()
+                    if isinstance(user.role, str)
+                    else user.role.value.lower() # Assumes user.role might be an Enum
+                )
 
-            flash("Login successful!", "success")
+                flash("Login successful!", "success")
 
-            if next_page and is_safe_url(next_page):
-                return redirect(next_page)
+                if next_page and is_safe_url(next_page):
+                    return redirect(next_page)
+                else:
+                    return redirect_by_role(session['user_role'])
+            else:
+                # This flash message will only appear if neither Firebase nor local DB worked.
+                # If Firebase provided an error, it would have already flashed.
+                if not get_flashed_messages(category_filter=['danger']): # Prevent double flashing
+                    flash("Invalid email or password.", "danger")
 
-            return redirect_by_role(session['user_role'])
-
-        flash("Invalid email or password.", "danger")
-
+    # This return happens if form validation fails (GET request or POST with errors)
     return render_template("login.html", form=form, next=next_page)
 #for logout
 @main.route('/logout')
