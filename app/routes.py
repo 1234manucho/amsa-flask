@@ -292,7 +292,7 @@ def login():
 
     # --- THE CRITICAL CHANGE IS HERE ---
     # Pass the 'form' object to your template
-    return render_template("login.html", form=form, next=next_page)
+   return render_template("login.html", form=form, next=next_page)
 #for logout
 @main.route('/logout')
 @login_required
