@@ -108,7 +108,7 @@
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('main.login', next=next) }}">
+    <form method="POST" action="{{ url_for('login', next=next) }}">
       {{ form.hidden_tag() }}
 
       {% if next %}
