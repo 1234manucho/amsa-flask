@@ -7,16 +7,18 @@ import base64
 import datetime
 import requests
 
-from flask import Flask, current_app, jsonify, request
+from flask import Flask, current_app
 from dotenv import load_dotenv
 import click
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from firebase_admin import exceptions as fb_exceptions
 from werkzeug.security import generate_password_hash
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from requests.auth import HTTPBasicAuth
+
+# Import the *single* SQLAlchemy db from extensions.py
+from app.extensions import db
 
 # -----------------------------------------------------------
 # Load environment variables
@@ -33,9 +35,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------
-# Initialize DB and Migrate
+# Initialize Migrate
 # -----------------------------------------------------------
-db = SQLAlchemy()
 migrate = Migrate()
 
 # -----------------------------------------------------------
@@ -273,5 +274,4 @@ def create_app():
     return app
 
 
-# Make db and migrate available for external import
 __all__ = ["create_app", "db", "migrate"]
