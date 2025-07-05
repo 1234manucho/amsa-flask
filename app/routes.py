@@ -1350,58 +1350,6 @@ def download_receipt(txn_id):
     return send_file(pdf_output, as_attachment=True, download_name=filename, mimetype='application/pdf')
 
 
-# --- Other informational routes ---
-@main.route('/buy-land')
-def buy_land():
-    available_land = Land.query.filter_by(status='Available').all()
-    return render_template('buy_land.html', land_listings=available_land)
-
-@main.route('/available_land') # Changed from @app.route('/') to avoid conflict with main.index
-def available_land():
-    """
-    Renders the available land listings page, fetching data from the database.
-    """
-    land_listings = Land.query.order_by(Land.added_date.desc()).all()
-    return render_template('available_land.html', land_listings=land_listings)
-
-@main.route('/microfinance', methods=['GET', 'POST'])
-def microfinance():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        subject = request.form.get('subject')
-        message = request.form.get('message')
-
-        if not name or not email or not message:
-            flash('Please fill in all required fields (Name, Email, Message).', 'error')
-            return render_template('microfinance.html')
-
-        try:
-            msg = MIMEMultipart()
-            msg['From'] = current_app.config.get('MAIL_DEFAULT_SENDER') # Use current_app.config.get for safety
-            msg['To'] = 'amsavillage@gmail.com'
-            msg['Subject'] = f"New Message from Microfinance Contact Form: {subject}"
-
-            body = f"Name: {name}\n" \
-                    f"Email: {email}\n" \
-                    f"Subject: {subject}\n\n" \
-                    f"Message:\n{message}"
-            msg.attach(MIMEText(body, 'plain'))
-
-            with smtplib.SMTP(current_app.config.get('MAIL_SERVER'), current_app.config.get('MAIL_PORT')) as server: # Use current_app.config.get
-                server.starttls()
-                server.login(current_app.config.get('MAIL_USERNAME'), current_app.config.get('MAIL_PASSWORD')) # Use current_app.config.get
-                server.send_message(msg)
-
-            flash('Your message has been sent successfully!', 'success')
-            return redirect(url_for('main.microfinance') + '#contact')
-        except Exception as e:
-            flash(f'An error occurred while sending your message: {e}', 'error')
-            current_app.logger.exception(f"Error sending microfinance contact email: {e}") # Use current_app.logger
-            return render_template('microfinance.html')
-
-    return render_template('microfinance.html')
-
 @main.route('/about')
 def about():
     return render_template('about.html')
