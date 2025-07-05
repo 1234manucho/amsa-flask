@@ -2,6 +2,7 @@ import os
 import traceback
 from firebase_admin import auth, firestore
 from app import create_app
+from app.decorators import login_required, role_required
 
 # --- Create Flask App ---
 app = create_app()
