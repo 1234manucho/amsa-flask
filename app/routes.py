@@ -1674,3 +1674,14 @@ def generate_pdf():
 
     filename = f"profile_{user.id}.pdf"
     return send_file(pdf_output, as_attachment=True, download_name=filename, mimetype='application/pdf')
+
+@main.route('/register_c2b', methods=['GET'])
+@role_required('admin')  # Optional: protect it with a role
+def trigger_register_c2b():
+    try:
+        register_c2b_urls()
+        return jsonify({"status": "success", "message": "C2B URLs registered successfully."})
+    except Exception as e:
+        current_app.logger.exception("Error registering C2B URLs:")
+        return jsonify({"status": "error", "message": str(e)})
+
