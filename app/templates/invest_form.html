@@ -708,11 +708,11 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         closeTermsBtn.onclick = () => {
-            window.location.href = "{{ url_for('main.invest_form') }}";
+            window.location.href = "{{ url_for('invest_form') }}";
         };
 
         cancelTermsBtn.onclick = () => {
-            window.location.href = "{{ url_for('main.invest_form') }}";
+            window.location.href = "{{ url_for('invest_form') }}";
         };
 
         continueTermsBtn.onclick = () => {
@@ -723,7 +723,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         termsModal.addEventListener('click', (e) => {
             if (e.target === termsModal) {
-                window.location.href = "{{ url_for('main.invest_form') }}";
+                window.location.href = "{{ url_for('invest_form') }}";
             }
         });
     });
@@ -746,7 +746,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data['tier'] = "{{ tier }}";
 
         try {
-            const actionUrl = "{{ url_for('main.invest_form') }}";
+            const actionUrl = "{{ url_for('invest_form') }}";
             const response = await fetch(actionUrl, {
                 method: 'POST',
                 headers: {
@@ -800,7 +800,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (result.status === 'COMPLETED') {
                     displayMessage('Payment confirmed successfully! Redirecting to dashboard...', 'success', modalMessagesDiv);
                     setTimeout(() => {
-                        window.location.href = "{{ url_for('main.dashboard') }}";
+                        window.location.href = "{{ url_for('dashboard') }}";
                     }, 2000);
                 } else if (result.status === 'PENDING') {
                     displayMessage('Payment is still pending. Please wait a moment and try again if the M-Pesa prompt hasn\'t appeared or completed.', 'warning', modalMessagesDiv);
