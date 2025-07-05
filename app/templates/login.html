@@ -112,7 +112,7 @@
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('main.login', next=next) }}">
+    <form method="POST" action="{{ url_for('login', next=next) }}">
       {{ form.hidden_tag() }}
 
       {% if next %}
@@ -136,7 +136,7 @@
       </div>
 
       <div class="text-end mb-3">
-        <a href="{{ url_for('main.forgot_password_api') }}" class="forgot-link">Forgot password?</a>
+        <a href="{{ url_for('forgot_password_api') }}" class="forgot-link">Forgot password?</a>
       </div>
 
       <div class="d-grid mb-3">
@@ -145,7 +145,7 @@
 
       <div class="text-center">
         <p class="small">Don't have an account?
-          <a href="{{ url_for('main.register') }}" class="register-link">Register</a>
+          <a href="{{ url_for('register') }}" class="register-link">Register</a>
         </p>
       </div>
     </form>
