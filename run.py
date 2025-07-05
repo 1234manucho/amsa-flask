@@ -1,8 +1,6 @@
-from werkzeug.utils import secure_filename # ✅ this line fixes the error
+from werkzeug.utils import secure_filename
 from app.forms import LoginForm
 
-
-# The rest of your code remains exactly the same as you provided it in the last snippet.
 import base64
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
@@ -23,6 +21,12 @@ from app.decorators import login_required, redirect_by_role, role_required
 # --- Create Flask App ---
 app = create_app()
 main = app  # For Firebase Cloud Function
+
+# ✅ FIX for SQLAlchemy RuntimeError
+# Make sure db is properly attached to app
+# (if your create_app does NOT already do this inside)
+with app.app_context():
+    db.init_app(app)
 
 # --- Firebase Admin User Setup ---
 with app.app_context():
