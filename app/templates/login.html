@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
 
 {% block content %}
+
 <style>
   :root {
     --bg-light: #f8fafc;
@@ -108,7 +112,7 @@
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="{{ url_for('login', next=next) }}">
+    <form method="POST" action="{{ url_for('main.login', next=next) }}">
       {{ form.hidden_tag() }}
 
       {% if next %}
@@ -142,7 +146,6 @@
       <div class="text-center">
         <p class="small">Don't have an account?
           <a href="{{ url_for('main.register') }}" class="register-link">Register</a>
-
         </p>
       </div>
     </form>
@@ -163,4 +166,5 @@
     localStorage.setItem('dark-mode', switchInput.checked);
   });
 </script>
+
 {% endblock %}
