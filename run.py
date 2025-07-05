@@ -371,14 +371,14 @@ def login():
 
 # --- LOGOUT ROUTE ---
 @app.route('/logout')
-@login_required
+
 def logout():
     session.clear()
     flash('You have been logged out successfully.', 'info')
     return redirect(url_for('login'))
 # --- BASE DASHBOARD REDIRECT ROUTE ---
 @app.route('/dashboard')
-@login_required
+
 def dashboard():
     user_id = session.get('user_id')
     user_role = session.get('user_role')
@@ -401,7 +401,7 @@ def dashboard():
 
 # --- ADMIN DASHBOARD ROUTE ---
 @app.route('/dashboard/admin')
-@login_required
+
 @role_required('admin')
 def dashboard_admin():
     total_users = User.query.count()
@@ -442,7 +442,7 @@ def dashboard_admin():
     })
 # --- INVESTOR DASHBOARD ROUTE ---
 @app.route('/dashboard/investor')
-@login_required
+
 @role_required('investor')
 def dashboard_investor():
     user_id = session.get('user_id')  # This is the Firebase UID
@@ -484,94 +484,9 @@ def dashboard_investor():
         'total_earned_interest': 0  # placeholder
     })
 
-# --- LAND BUYER DASHBOARD ROUTE ---
-@app.route('/dashboard/landbuyer')
-@login_required
-@role_required('landbuyer')
-def dashboard_landbuyer():
-    from sqlalchemy import extract, func
-
-    user_id = session.get('user_id')  # Firebase UID
-
-    # Fetch all completed and pending transactions for the user
-    transactions = Transaction.query.filter_by(user_id=user_id).order_by(Transaction.date.desc()).all()
-
-    # Fetch all land purchases
-    purchases = LandPurchase.query.filter_by(user_id=user_id).order_by(LandPurchase.purchase_date.desc()).all()
-
-    # Calculate total invested (completed transactions only)
-    total_invested = db.session.query(
-        func.coalesce(func.sum(Transaction.amount), 0)
-    ).filter_by(user_id=user_id, status='COMPLETED').scalar()
-
-    # Calculate total pending payments
-    pending_payments = db.session.query(
-        func.coalesce(func.sum(Transaction.amount), 0)
-    ).filter_by(user_id=user_id, status='PENDING').scalar()
-
-    # Prepare detailed land purchase data
-    land_data = []
-    for purchase in purchases:
-        land = purchase.land
-        land_price = getattr(land, 'price', 0) or 0
-
-        total_paid = db.session.query(
-            func.coalesce(func.sum(Transaction.amount), 0)
-        ).filter(
-            Transaction.user_id == user_id,
-            Transaction.land_purchase_id == purchase.id,
-            Transaction.status == 'COMPLETED'
-        ).scalar()
-
-        balance_remaining = max(0, land_price - total_paid)
-        progress_percentage = round(min(100, (total_paid / land_price * 100) if land_price else 0), 2)
-
-        land_data.append({
-            'plot_name': getattr(land, 'name', 'Unnamed Plot'),
-            'purchase_date': purchase.purchase_date.strftime('%Y-%m-%d') if purchase.purchase_date else 'N/A',
-            'total_paid': total_paid,
-            'balance_remaining': balance_remaining,
-            'progress_percentage': progress_percentage,
-            'status': getattr(purchase, 'status', 'Unknown'),
-            'purchase': purchase,
-            'land': land
-        })
-
-    # Monthly payments aggregation (for chart display)
-    monthly_payments = db.session.query(
-        extract('year', Transaction.date).label('year'),
-        extract('month', Transaction.date).label('month'),
-        func.coalesce(func.sum(Transaction.amount), 0)
-    ).filter(
-        Transaction.user_id == user_id,
-        Transaction.status == 'COMPLETED'
-    ).group_by('year', 'month').order_by('year', 'month').all()
-
-    payment_data = {
-        'labels': [f"{int(year)}-{int(month):02d}" for year, month, _ in monthly_payments],
-        'amounts': [amount for _, _, amount in monthly_payments]
-    }
-
-    # Final stats and recent purchases (limit 5)
-    stats = {
-        'total_plots': len(purchases),
-        'total_invested': total_invested,
-        'pending_payments': pending_payments
-    }
-
-    recent_purchases = land_data[:5]
-
-    return render_template(
-        'dashboard_landbuyer.html',
-        stats=stats,
-        recent_purchases=recent_purchases,
-        payment_data=payment_data,
-        transactions=transactions
-    )
-
 # --- PROFILE ROUTE ---
 @app.route('/profile', methods=['GET', 'POST'])
-@login_required
+
 def profile():
     user = User.query.get(session['user_id'])
     if not user:
@@ -603,7 +518,7 @@ def profile():
     return render_template('profile.html', user=user)
 
 @app.route('/generate-pdf')
-@login_required 
+
 def generate_pdf():
     user = User.query.get(session['user_id'])
     if not user:
@@ -821,8 +736,8 @@ def mpesa_callback():
 
 # --- Investment Tiers Landing Page ---
 @app.route('/invest', methods=['GET'])
-@login_required
-@role_required('investor')
+
+
 def invest_tiers_page():
     """
     Displays investment tiers to logged-in investors.
@@ -863,7 +778,7 @@ def invest_tiers_page():
 
 # --- Investment Form Page with M-Pesa STK Push Integration ---
 @app.route('/invest_form', methods=['GET', 'POST'])
-@login_required
+
 @role_required('investor')
 def invest_form():
     from sqlalchemy.orm import Session
@@ -1046,201 +961,6 @@ def check_payment_status(transaction_id):
         return jsonify({"status": "error", "message": "Transaction not found or unauthorized."}), 404
 
     return jsonify({"status": transaction.status})
-# --- Route: Invest Land ---
-@app.route('/invest_land', methods=['GET'])
-@login_required
-def invest_land():
-    user_id = session.get('user_id')
-    user = db.session.get(User, user_id)
-
-    if not user:
-        session.clear()
-        flash('User session expired or invalid. Please log in again.', 'danger')
-        return redirect(url_for('login'))
-
-    plan_id = request.args.get('plan_id')
-    if plan_id:
-        return redirect(url_for('land_purchase_form', plan_id=plan_id))
-
-    return render_template('invest_land.html', user=user)
-
-
-# --- Route: Land Purchase Form with M-Pesa STK Push ---
-@app.route('/land_purchase_form', methods=['GET', 'POST'])
-@login_required
-def land_purchase_form():
-    user_id = session.get('user_id')
-    user = db.session.get(User, user_id)
-
-    if not user:
-        session.clear()
-        flash('Session expired. Please log in again.', 'danger')
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        data = request.get_json()
-        if not data:
-            return jsonify({'status': 'error', 'message': 'No data received.'}), 400
-
-        plot_location = data.get('plot_location', '').strip()
-        purchase_price_str = data.get('purchase_price')
-        purpose = data.get('purchase_purpose', '').strip()
-        plan_id_post = data.get('plan_id', '').strip()
-
-        errors = []
-
-        # Validate purchase price
-        try:
-            purchase_price = float(purchase_price_str)
-            if purchase_price <= 0:
-                errors.append("Purchase price must be greater than zero.")
-        except (ValueError, TypeError):
-            errors.append("Invalid purchase price format.")
-
-        # Validate phone number
-        phone_number = user.phone_number
-        if not phone_number:
-            errors.append("No phone number found in your profile.")
-        else:
-            if phone_number.startswith('0'):
-                phone_number = '254' + phone_number[1:]
-            elif phone_number.startswith('+254'):
-                phone_number = phone_number[1:]
-
-            if not (phone_number.startswith('2547') or phone_number.startswith('2541')) or len(phone_number) != 12:
-                errors.append("Invalid phone number. Use Safaricom format: 2547XXXXXXXX.")
-
-        if errors:
-            return jsonify({'status': 'error', 'errors': errors}), 400
-
-        # Save purchase
-        new_purchase = LandPurchase(
-            user_id=user.id,
-            plot_location=plot_location,
-            purchase_price=purchase_price,
-            purpose=purpose
-        )
-        db.session.add(new_purchase)
-        db.session.commit()
-
-        # Generate M-Pesa Token
-        def get_mpesa_access_token():
-            try:
-                token_url = f"{app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
-                res = requests.get(token_url, auth=(app.config['MPESA_CONSUMER_KEY'], app.config['MPESA_CONSUMER_SECRET']))
-                res.raise_for_status()
-                return res.json().get('access_token')
-            except Exception as e:
-                print("[M-PESA TOKEN ERROR]", e)
-                return None
-
-        access_token = get_mpesa_access_token()
-        if not access_token:
-            db.session.rollback()
-            return jsonify({'status': 'error', 'message': 'Failed to retrieve M-Pesa token.'}), 500
-
-        # Prepare STK Push
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        shortcode = app.config['MPESA_BUSINESS_SHORTCODE']
-        passkey = app.config['MPESA_PASSKEY']
-        password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
-
-        payload = {
-            "BusinessShortCode": shortcode,
-            "Password": password,
-            "Timestamp": timestamp,
-            "TransactionType": "CustomerPayBillOnline",
-            "Amount": int(purchase_price),
-            "PartyA": phone_number,
-            "PartyB": shortcode,
-            "PhoneNumber": phone_number,
-            "CallBackURL": app.config['MPESA_CALLBACK_URL'],
-            "AccountReference": f"LAND_{new_purchase.id}",
-            "TransactionDesc": f"Land Purchase at {plot_location}"
-        }
-
-        headers = {
-            'Authorization': f'Bearer {access_token}',
-            'Content-Type': 'application/json'
-        }
-
-        try:
-            response = requests.post(
-                f"{app.config['MPESA_API_BASE_URL']}/mpesa/stkpush/v1/processrequest",
-                headers=headers,
-                json=payload
-            )
-            response.raise_for_status()
-            mpesa_response = response.json()
-
-            transaction = Transaction(
-                user_id=user.id,
-                land_purchase_id=new_purchase.id,
-                amount=purchase_price,
-                date=datetime.utcnow(),
-                description=f"STK Push for Land Purchase at {plot_location}",
-                status="PENDING",
-                phone_number=phone_number,
-                merchant_request_id=mpesa_response.get('MerchantRequestID'),
-                checkout_request_id=mpesa_response.get('CheckoutRequestID')
-            )
-            db.session.add(transaction)
-            db.session.commit()
-
-            if mpesa_response.get('ResponseCode') == '0':
-                return jsonify({
-                    'status': 'success',
-                    'message': 'STK Push sent. Check your phone to complete payment.',
-                    'transaction_id': transaction.id
-                }), 200
-            else:
-                return jsonify({'status': 'error', 'message': mpesa_response.get('ResponseDescription')}), 500
-
-        except Exception as e:
-            db.session.rollback()
-            print("[M-PESA ERROR]", e)
-            traceback.print_exc()
-            return jsonify({'status': 'error', 'message': f'STK Push failed: {str(e)}'}), 500
-
-    # --- GET: Render form page with prefilled plan if any ---
-    selected_plan_id = request.args.get('plan_id', '').strip()
-    plan_details = {
-        'daily-500': {
-            'name': 'Daily Installment Plan',
-            'rate': 'KES 500/day',
-            'period': '36 months',
-            'description': 'Daily installments for 36 months.',
-            'suggested_price': 500 * 30 * 36
-        },
-        '90-day-5000': {
-            'name': 'Short-Term Installment',
-            'rate': 'KES 5,000/month',
-            'period': '3 months',
-            'description': 'Monthly for 3 months.',
-            'suggested_price': 5000 * 3
-        },
-        'monthly-40000': {
-            'name': 'Annual Installment Plan',
-            'rate': 'KES 40,000/month',
-            'period': '12 months',
-            'description': 'Monthly for 1 year.',
-            'suggested_price': 40000 * 12
-        },
-        'one-off-500000': {
-            'name': 'One-Off Cash Purchase',
-            'rate': 'KES 500,000',
-            'period': 'One-off',
-            'description': 'One-time payment with 5% discount.',
-            'suggested_price': 500000
-        }
-    }
-
-    selected_plan_info = plan_details.get(selected_plan_id, {})
-    return render_template('land_purchase_form.html',
-                           user=user,
-                           selected_plan_id=selected_plan_id,
-                           selected_plan_info=selected_plan_info)
-
 
 @app.route('/manage_land', methods=['GET', 'POST'])
 def manage_land_view():
