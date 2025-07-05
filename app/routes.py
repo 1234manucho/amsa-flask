@@ -203,16 +203,15 @@ def login():
     if 'user_id' in session:
         return redirect_by_role(session.get('user_role'))
 
-    form = LoginForm() # This is where 'form' should be defined.
-
-    # Debugging: Print to console to confirm 'form' exists
-    print(f"DEBUG: 'form' object type before render_template: {type(form)}", file=sys.stderr)
-    print(f"DEBUG: 'next_page' value before render_template: {next_page}", file=sys.stderr)
-
+    form = LoginForm()
 
     next_page = request.args.get('next')
     if not next_page:
         next_page = request.form.get('next')
+
+    # Debugging: confirm variables exist
+    print(f"DEBUG: 'form' object type before render_template: {type(form)}", file=sys.stderr)
+    print(f"DEBUG: 'next_page' value before render_template: {next_page}", file=sys.stderr)
 
     if form.validate_on_submit():
         email = form.email.data.strip().lower()
@@ -297,6 +296,7 @@ def login():
                     flash("Invalid email or password.", "danger")
 
     return render_template("login.html", form=form, next=next_page)
+
 #for logout
 @main.route('/logout')
 @login_required
