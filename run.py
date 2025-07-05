@@ -1,32 +1,11 @@
-from werkzeug.utils import secure_filename
-from app.forms import LoginForm
-
-import base64
-from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import io
 import os
-import smtplib
 import traceback
-import click
-from flask import Flask, json, send_file, send_from_directory
 from firebase_admin import auth, firestore
-from flask.cli import with_appcontext
-from fpdf import FPDF
-from app import create_app, db
-from app.models import Investment, Transaction
-from app.decorators import login_required, redirect_by_role, role_required
+from app import create_app
 
 # --- Create Flask App ---
 app = create_app()
-main = app  # For Firebase Cloud Function
-
-# ✅ FIX for SQLAlchemy RuntimeError
-# Make sure db is properly attached to app
-# (if your create_app does NOT already do this inside)
-with app.app_context():
-    db.init_app(app)
+main = app  # For Firebase Cloud Function if needed
 
 # --- Firebase Admin User Setup ---
 with app.app_context():
@@ -116,6 +95,9 @@ app.allowed_file = allowed_file  # attach utility
 
 # --- Firebase API Key for Client SDK ---
 app.config['FIREBASE_WEB_API_KEY'] = os.getenv('FIREBASE_WEB_API_KEY')
+
+
+
 
 
 @app.route('/')
