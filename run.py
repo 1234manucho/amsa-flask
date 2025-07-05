@@ -331,27 +331,21 @@ def is_safe_url(target):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        # Already logged in, redirect based on role
         return redirect_by_role(session.get('user_role'))
 
+    form = LoginForm()
     next_page = request.args.get('next') or request.form.get('next')
 
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+    if form.validate_on_submit():
+        email = form.email.data.strip().lower()
+        password = form.password.data
 
-        if not email or not password:
-            flash("Please enter both email and password.", "danger")
-            return render_template('login.html', next=next_page)
-
+        # Firebase login
         try:
-            # Firebase authentication
             firebase_api_key = app.config['FIREBASE_WEB_API_KEY']
             login_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={firebase_api_key}"
             payload = {"email": email, "password": password, "returnSecureToken": True}
-
             response = requests.post(login_url, json=payload)
-            response.raise_for_status()
             result = response.json()
 
             if "error" not in result:
@@ -360,45 +354,25 @@ def login():
 
                 if user_doc.exists:
                     user_data = user_doc.to_dict()
-                    session.clear()
                     session['user_id'] = local_id
                     session['user_role'] = user_data.get('role', '').lower()
-
                     flash("Login successful!", "success")
+                    return redirect(next_page) if next_page and is_safe_url(next_page) else redirect_by_role(session['user_role'])
 
-                    if next_page and is_safe_url(next_page):
-                        return redirect(next_page)
-
-                    return redirect_by_role(session['user_role'])
-
-        except requests.RequestException as e:
-            app.logger.exception("[Firebase login error] %s", e)
-            flash("Error contacting authentication service.", "danger")
         except Exception as e:
-            app.logger.exception("[Unexpected login error] %s", e)
-            flash("An unexpected error occurred. Please try again.", "danger")
+            print("[Firebase login error]", e)
 
-        # Fallback to local DB
+        # Local DB fallback
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
-            session.clear()
             session['user_id'] = str(user.id)
-            session['user_role'] = (
-                user.role.lower() if isinstance(user.role, str)
-                else user.role.value.lower()
-            )
-
+            session['user_role'] = user.role.lower() if isinstance(user.role, str) else user.role.value.lower()
             flash("Login successful!", "success")
-
-            if next_page and is_safe_url(next_page):
-                return redirect(next_page)
-
-            return redirect_by_role(session['user_role'])
+            return redirect(next_page) if next_page and is_safe_url(next_page) else redirect_by_role(session['user_role'])
 
         flash("Invalid email or password.", "danger")
-        return render_template("login.html", next=next_page)
 
-    return render_template("login.html", next=next_page)
+    return render_template("login.html", form=form, next=next_page)
 
 
 
