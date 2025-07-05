@@ -196,22 +196,21 @@ def signup_api():
     except Exception as e:
         current_app.logger.exception("Registration failed:")
         return jsonify({"status": "error", "message": f"Error creating user: {str(e)}"}), 500
-
-
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
         return redirect_by_role(session.get('user_role'))
 
-    form = LoginForm()
+    form = LoginForm() # <--- THIS LINE IS CRUCIAL AND MUST BE EXECUTED FOR 'form' TO BE DEFINED
+
+    # Debugging print statements - these should appear in your Render logs!
+    print(f"DEBUG: 'form' object type before render_template: {type(form)}", file=sys.stderr)
+    print(f"DEBUG: 'next_page' value before render_template: {request.args.get('next') or request.form.get('next')}", file=sys.stderr) # Use the request args/form directly here for clarity
+
 
     next_page = request.args.get('next')
     if not next_page:
         next_page = request.form.get('next')
-
-    # Debugging: confirm variables exist
-    print(f"DEBUG: 'form' object type before render_template: {type(form)}", file=sys.stderr)
-    print(f"DEBUG: 'next_page' value before render_template: {next_page}", file=sys.stderr)
 
     if form.validate_on_submit():
         email = form.email.data.strip().lower()
@@ -295,6 +294,7 @@ def login():
                 if not get_flashed_messages(category_filter=['danger']):
                     flash("Invalid email or password.", "danger")
 
+    # This line should always have 'form=form' passed
     return render_template("login.html", form=form, next=next_page)
 
 #for logout
