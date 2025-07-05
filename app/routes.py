@@ -12,6 +12,13 @@ from datetime import datetime
 from urllib.parse import urlparse, urljoin
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask import Blueprint, request, jsonify, current_app, render_template, session, redirect, url_for, flash
+
+from .decorators import role_required
+from .models import Transaction, Investment, db
+from . import lipa_na_mpesa
+from datetime import datetime
+import json
 import logging # Import the logging module
 
 # --- THIRD-PARTY LIBRARIES ---
@@ -554,6 +561,13 @@ def pay_api_endpoint():
     current_app.logger.info(f"Received generic payment request for phone: {phone}, amount: {amount}")
     return jsonify({"status": "success", "message": "Generic payment request received."})
 
+
+main = Blueprint('main', __name__)
+
+# -------------------------
+# M-Pesa Callback Endpoint
+# -------------------------
+
 @main.route('/mpesa_callback', methods=['POST'])
 def mpesa_callback():
     data = request.json
@@ -562,8 +576,11 @@ def mpesa_callback():
     current_app.logger.info("---------------------------------")
 
     try:
-        result_code = data['Body']['stkCallback']['ResultCode']
-        checkout_request_id = data['Body']['stkCallback']['CheckoutRequestID']
+        # Safely extract the required fields
+        body = data.get('Body', {})
+        stk_callback = body.get('stkCallback', {})
+        result_code = stk_callback.get('ResultCode')
+        checkout_request_id = stk_callback.get('CheckoutRequestID')
 
         transaction_status = 'FAILED'
         mpesa_receipt_number = None
@@ -572,18 +589,21 @@ def mpesa_callback():
 
         if result_code == 0:
             transaction_status = 'COMPLETED'
-            metadata = data['Body']['stkCallback'].get('CallbackMetadata', {}).get('Item', [])
+            metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
             for item in metadata:
-                if item['Name'] == 'MpesaReceiptNumber':
-                    mpesa_receipt_number = item['Value']
-                elif item['Name'] == 'Amount':
-                    amount_from_callback = item['Value']
-                elif item['Name'] == 'PhoneNumber':
-                    phone_number_from_callback = item['Value']
+                name = item.get('Name')
+                value = item.get('Value')
+                if name == 'MpesaReceiptNumber':
+                    mpesa_receipt_number = value
+                elif name == 'Amount':
+                    amount_from_callback = value
+                elif name == 'PhoneNumber':
+                    phone_number_from_callback = value
         else:
-            desc = data['Body']['stkCallback'].get('ResultDesc', 'No description')
+            desc = stk_callback.get('ResultDesc', 'No description')
             current_app.logger.warning(f"M-Pesa transaction failed/cancelled: ResultCode {result_code}. Desc: {desc}")
 
+        # Find the pending transaction
         transaction = Transaction.query.filter_by(
             checkout_request_id=checkout_request_id,
             status='PENDING'
@@ -607,6 +627,11 @@ def mpesa_callback():
     except Exception as e:
         current_app.logger.exception(f"Error processing M-Pesa callback: {e}")
         return jsonify({"ResultCode": 1, "ResultDesc": "Error processing callback"}), 200
+
+
+# -------------------------
+# Investment Tiers Page
+# -------------------------
 
 @main.route('/invest', methods=['GET'])
 @login_required
@@ -642,6 +667,10 @@ def invest_tiers_page():
         session.clear()
         return redirect(url_for('main.login'))
 
+
+# -------------------------
+# Investment Form
+# -------------------------
 
 @main.route('/invest_form', methods=['GET', 'POST'])
 @login_required
@@ -690,7 +719,7 @@ def invest_form():
             if tier not in VALID_TIERS:
                 errors.append('Invalid investment tier selected.')
 
-            # --- Validate investment amount ---
+            # Validate investment amount
             amount = None
             if amount_str == 'above_500000' and tier == 'Pinacle':
                 try:
@@ -709,7 +738,7 @@ def invest_form():
                 except (ValueError, TypeError):
                     errors.append("Invalid amount format.")
 
-            # --- Validate target amount ---
+            # Validate target amount
             target_amount = None
             if target_amount_str:
                 try:
@@ -719,7 +748,7 @@ def invest_form():
                 except (ValueError, TypeError):
                     errors.append("Invalid target amount format.")
 
-            # --- Validate phone number ---
+            # Validate phone number
             if not phone_number:
                 errors.append("No phone number found.")
             else:
@@ -734,7 +763,7 @@ def invest_form():
             if errors:
                 return jsonify({'status': 'error', 'errors': errors}), 400
 
-            # --- Create investment record ---
+            # Create investment record
             investment = Investment(
                 user_id=user_id,
                 amount=amount,
@@ -746,83 +775,31 @@ def invest_form():
             db.session.add(investment)
             db.session.commit()
 
-            # --- M-PESA Credentials Check ---
-            shortcode = current_app.config.get('MPESA_BUSINESS_SHORTCODE')
-            passkey = current_app.config.get('MPESA_PASSKEY')
-            account_number = current_app.config.get('MPESA_ACCOUNT_NUMBER')
-            api_base = current_app.config.get('MPESA_API_BASE_URL')
-            consumer_key = current_app.config.get('MPESA_CONSUMER_KEY')
-            consumer_secret = current_app.config.get('MPESA_CONSUMER_SECRET')
-
-            if not all([shortcode, passkey, account_number, api_base, consumer_key, consumer_secret]):
-                current_app.logger.error("Missing M-Pesa credentials in config.")
-                db.session.rollback()
-                return jsonify({'status': 'error', 'message': 'M-Pesa is not properly configured.'}), 500
-
-            # --- Fetch M-Pesa token ---
-            def get_mpesa_token():
-                try:
-                    token_url = f"{api_base}/oauth/v1/generate?grant_type=client_credentials"
-                    r = requests.get(token_url, auth=(consumer_key, consumer_secret))
-                    r.raise_for_status()
-                    return r.json().get('access_token')
-                except Exception as e:
-                    current_app.logger.exception("[M-PESA ERROR] Token fetch failed:")
-                    return None
-
-            access_token = get_mpesa_token()
-            if not access_token:
-                db.session.rollback()
-                return jsonify({'status': 'error', 'message': 'M-Pesa token fetch failed.'}), 500
-
-            # --- Construct STK Push ---
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
-            stk_url = f"{api_base}/mpesa/stkpush/v1/processrequest"
-            headers = {
-                'Authorization': f'Bearer {access_token}',
-                'Content-Type': 'application/json'
-            }
-            payload = {
-                "BusinessShortCode": shortcode,
-                "Password": password,
-                "Timestamp": timestamp,
-                "TransactionType": "CustomerPayBillOnline",
-                "Amount": int(amount),
-                "PartyA": phone_number,
-                "PartyB": shortcode,
-                "PhoneNumber": phone_number,
-                "CallBackURL": current_app.config['MPESA_CALLBACK_URL'],
-                "AccountReference": account_number,
-                "TransactionDesc": f"Investment for {tier}"
-            }
-
-            current_app.logger.info(f"Sending STK Push: {json.dumps(payload)}")
-            response = requests.post(stk_url, headers=headers, json=payload)
-            response.raise_for_status()
-            stk_response = response.json()
-
-            transaction = Transaction(
-                user_id=user_id,
-                investment_id=investment.id,
-                amount=amount,
-                date=datetime.utcnow(),
-                description=f"STK Push for {tier} Tier",
-                status="PENDING",
-                phone_number=phone_number,
-                merchant_request_id=stk_response.get('MerchantRequestID'),
-                checkout_request_id=stk_response.get('CheckoutRequestID')
-            )
-            db.session.add(transaction)
-            db.session.commit()
+            # Call the helper for STK push
+            stk_response = lipa_na_mpesa(phone_number, amount)
 
             if stk_response.get('ResponseCode') == '0':
+                transaction = Transaction(
+                    user_id=user_id,
+                    investment_id=investment.id,
+                    amount=amount,
+                    date=datetime.utcnow(),
+                    description=f"STK Push for {tier} Tier",
+                    status="PENDING",
+                    phone_number=phone_number,
+                    merchant_request_id=stk_response.get('MerchantRequestID'),
+                    checkout_request_id=stk_response.get('CheckoutRequestID')
+                )
+                db.session.add(transaction)
+                db.session.commit()
+
                 return jsonify({
                     'status': 'success',
                     'message': 'STK Push sent. Complete payment on your phone.',
                     'transaction_id': transaction.id
                 }), 200
             else:
+                db.session.rollback()
                 return jsonify({
                     'status': 'error',
                     'message': stk_response.get('ResponseDescription', 'M-Pesa failed.'),
@@ -835,7 +812,12 @@ def invest_form():
             return jsonify({'status': 'error', 'message': 'Unexpected server error.'}), 500
 
 
+# -------------------------
+# Check Payment Status
+# -------------------------
+
 @main.route('/check_payment_status/<int:transaction_id>', methods=['GET'])
+@login_required
 def check_payment_status(transaction_id):
     user_id = session.get('user_id')
     transaction = Transaction.query.filter_by(id=transaction_id, user_id=user_id).first()
@@ -1465,13 +1447,4 @@ def generate_pdf():
     filename = f"profile_{user.id}.pdf"
     return send_file(pdf_output, as_attachment=True, download_name=filename, mimetype='application/pdf')
 
-@main.route('/register_c2b', methods=['GET'])
-@role_required('admin')  # Optional: protect it with a role
-def trigger_register_c2b():
-    try:
-        register_c2b_urls()
-        return jsonify({"status": "success", "message": "C2B URLs registered successfully."})
-    except Exception as e:
-        current_app.logger.exception("Error registering C2B URLs:")
-        return jsonify({"status": "error", "message": str(e)})
 
