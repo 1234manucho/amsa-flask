@@ -1,4 +1,5 @@
 from werkzeug.utils import secure_filename # ✅ this line fixes the error
+from app.forms import LoginForm
 
 # The rest of your code remains exactly the same as you provided it in the last snippet.
 import base64
