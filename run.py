@@ -5,7 +5,7 @@ from app import create_app
 
 # --- Create Flask App ---
 app = create_app()
-main = app  # For Firebase Cloud Function if needed
+main = app  # Optional, for Firebase Cloud Function
 
 # --- Firebase Admin User Setup ---
 with app.app_context():
@@ -15,6 +15,8 @@ with app.app_context():
     admin_password = os.getenv('FIREBASE_ADMIN_PASSWORD')
     admin_full_name = os.getenv('FIREBASE_ADMIN_FULL_NAME')
     admin_id = os.getenv('FIREBASE_ADMIN_ID')
+
+    # Only attempt Firestore if Firebase is initialized
     firestore_users = app.firebase_db.collection('users') if app.firebase_db else None
 
     try:
@@ -22,13 +24,14 @@ with app.app_context():
             raise ValueError("Missing Firebase admin credentials.")
 
         if app.firebase_auth is None:
-            raise Exception("Firebase Auth not initialized")
+            raise Exception("Firebase Auth not initialized.")
 
+        # Check if admin user already exists in Firebase Auth
         try:
             existing_user = auth.get_user_by_email(admin_email)
             print(f"✅ Firebase Auth user exists: {admin_email}")
         except auth.UserNotFoundError:
-            print("⚠️ Admin not found. Creating...")
+            print("⚠️ Admin not found. Creating new user...")
             existing_user = auth.create_user(
                 email=admin_email,
                 password=admin_password,
@@ -36,6 +39,7 @@ with app.app_context():
             )
             print(f"✅ Firebase Admin created: {admin_email}")
 
+        # Check Firestore for user doc
         if firestore_users:
             user_doc_ref = firestore_users.document(existing_user.uid)
             if not user_doc_ref.get().exists:
@@ -50,7 +54,8 @@ with app.app_context():
             else:
                 print("ℹ️ Admin Firestore doc already exists.")
         else:
-            print("⚠️ Firestore not initialized. Skipping user doc.")
+            print("⚠️ Firestore not initialized. Skipping Firestore user doc.")
+
     except Exception as e:
         print(f"❌ Firebase setup error: {e}")
         traceback.print_exc()
@@ -74,12 +79,15 @@ MPESA_ACCOUNT = os.getenv("MPESA_ACCOUNT")
 
 # --- Email Config ---
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT'))
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', '587'))
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS') == 'True'
 app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL') == 'True'
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', app.config['MAIL_USERNAME'])
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get(
+    'MAIL_DEFAULT_SENDER',
+    app.config['MAIL_USERNAME']
+)
 
 # --- File Upload Setup ---
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads', 'land_images')
@@ -95,9 +103,6 @@ app.allowed_file = allowed_file  # attach utility
 
 # --- Firebase API Key for Client SDK ---
 app.config['FIREBASE_WEB_API_KEY'] = os.getenv('FIREBASE_WEB_API_KEY')
-
-
-
 
 
 @app.route('/')
