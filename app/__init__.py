@@ -63,9 +63,6 @@ def floatformat_filter(value, precision=2):
 # M-Pesa Helpers
 # -----------------------------------------------------------
 def get_mpesa_token():
-    """
-    Fetch OAuth token from M-Pesa API.
-    """
     try:
         key = current_app.config['MPESA_CONSUMER_KEY']
         secret = current_app.config['MPESA_CONSUMER_SECRET']
@@ -95,9 +92,6 @@ def get_mpesa_token():
         return None
 
 def lipa_na_mpesa(phone_number, amount):
-    """
-    Initiate an STK Push to the customer's phone.
-    """
     access_token = get_mpesa_token()
     if not access_token:
         current_app.logger.error("[M-PESA] Access token missing. Cannot proceed with STK Push.")
@@ -273,10 +267,11 @@ def create_app():
     # Register blueprints
     # ------------------------
     from .routes import main as main_blueprint
-    app.register_blueprint(main_blueprint)
-    logger.info("Blueprint registered.")
+    app.register_blueprint(main_blueprint, url_prefix="/main")
+    logger.info("Blueprint registered with prefix '/main'.")
 
     return app
+
 
 # Make db and migrate available for external import
 __all__ = ["create_app", "db", "migrate"]
