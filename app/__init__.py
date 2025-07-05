@@ -270,6 +270,12 @@ def create_app():
     app.register_blueprint(main_blueprint, url_prefix="/main")
     logger.info("Blueprint registered with prefix '/main'.")
 
+    # Add a root route that redirects to login (or dashboard) to avoid empty '/'
+    @app.route("/")
+    def index():
+        from flask import redirect, url_for
+        return redirect(url_for("main.login"))
+
     return app
 
 
