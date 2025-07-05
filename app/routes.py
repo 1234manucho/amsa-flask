@@ -572,16 +572,17 @@ def mpesa_callback():
 
         if result_code == 0:
             transaction_status = 'COMPLETED'
-            if 'CallbackMetadata' in data['Body']['stkCallback'] and 'Item' in data['Body']['stkCallback']['CallbackMetadata']:
-                for item in data['Body']['stkCallback']['CallbackMetadata']['Item']:
-                    if item['Name'] == 'MpesaReceiptNumber':
-                        mpesa_receipt_number = item['Value']
-                    elif item['Name'] == 'Amount':
-                        amount_from_callback = item['Value']
-                    elif item['Name'] == 'PhoneNumber':
-                        phone_number_from_callback = item['Value']
+            metadata = data['Body']['stkCallback'].get('CallbackMetadata', {}).get('Item', [])
+            for item in metadata:
+                if item['Name'] == 'MpesaReceiptNumber':
+                    mpesa_receipt_number = item['Value']
+                elif item['Name'] == 'Amount':
+                    amount_from_callback = item['Value']
+                elif item['Name'] == 'PhoneNumber':
+                    phone_number_from_callback = item['Value']
         else:
-            current_app.logger.warning(f"M-Pesa transaction failed/cancelled: ResultCode {result_code}. Desc: {data['Body']['stkCallback'].get('ResultDesc')}")
+            desc = data['Body']['stkCallback'].get('ResultDesc', 'No description')
+            current_app.logger.warning(f"M-Pesa transaction failed/cancelled: ResultCode {result_code}. Desc: {desc}")
 
         transaction = Transaction.query.filter_by(
             checkout_request_id=checkout_request_id,
@@ -599,7 +600,7 @@ def mpesa_callback():
             db.session.commit()
             current_app.logger.info(f"Transaction {transaction.id} updated to {transaction_status}. MpesaReceipt: {mpesa_receipt_number}")
         else:
-            current_app.logger.warning(f"No matching PENDING transaction found for CheckoutRequestID: {checkout_request_id}. This might be a duplicate callback or a transaction that failed initial logging.")
+            current_app.logger.warning(f"No matching PENDING transaction found for CheckoutRequestID: {checkout_request_id}.")
 
         return jsonify({"ResultCode": 0, "ResultDesc": "Callback received successfully"}), 200
 
@@ -663,7 +664,6 @@ def invest_form():
 
     user_data = user_doc.to_dict()
     phone_number = user_data.get("phone_number", "").strip()
-
     VALID_TIERS = ['Seed', 'Sprout', 'Harvest', 'Orchard', 'Legacy', 'Summit', 'Pinacle']
 
     if request.method == 'GET':
@@ -683,36 +683,33 @@ def invest_form():
             tier = data.get('tier', 'Custom').strip()
             purpose = data.get('investment_purpose', '').strip()
             target_amount_str = data.get('target_amount')
-            custom_amount_str = data.get('custom_amount')  # For Pinnacle tier
+            custom_amount_str = data.get('custom_amount')
 
             errors = []
 
             if tier not in VALID_TIERS:
                 errors.append('Invalid investment tier selected.')
 
-            # Determine and validate investment amount
+            # --- Validate investment amount ---
             amount = None
             if amount_str == 'above_500000' and tier == 'Pinacle':
-                if not custom_amount_str:
-                    errors.append("Please enter a custom amount for the Pinnacle tier.")
-                else:
-                    try:
-                        custom_amount = float(custom_amount_str)
-                        if custom_amount <= 500000:
-                            errors.append("Custom amount must be greater than KES 500,000 for Pinnacle tier.")
-                        else:
-                            amount = custom_amount
-                    except (ValueError, TypeError):
-                        errors.append("Invalid custom amount format.")
+                try:
+                    custom_amount = float(custom_amount_str)
+                    if custom_amount <= 500000:
+                        errors.append("Custom amount must be greater than 500,000 KES for Pinnacle.")
+                    else:
+                        amount = custom_amount
+                except (ValueError, TypeError):
+                    errors.append("Invalid custom amount format.")
             else:
                 try:
                     amount = float(amount_str)
                     if amount <= 0:
-                        errors.append("Investment amount must be greater than zero.")
+                        errors.append("Amount must be greater than zero.")
                 except (ValueError, TypeError):
                     errors.append("Invalid amount format.")
 
-            # Optional target amount
+            # --- Validate target amount ---
             target_amount = None
             if target_amount_str:
                 try:
@@ -722,9 +719,9 @@ def invest_form():
                 except (ValueError, TypeError):
                     errors.append("Invalid target amount format.")
 
-            # Phone number validation
+            # --- Validate phone number ---
             if not phone_number:
-                errors.append("No phone number found in your profile.")
+                errors.append("No phone number found.")
             else:
                 if phone_number.startswith('0'):
                     phone_number = '254' + phone_number[1:]
@@ -732,12 +729,12 @@ def invest_form():
                     phone_number = phone_number[1:]
 
                 if not (phone_number.startswith('2547') or phone_number.startswith('2541')) or len(phone_number) != 12:
-                    errors.append("Invalid Safaricom phone number format. Must be 2547xxxxxxxxx or 2541xxxxxxxxx.")
+                    errors.append("Phone must be a valid Safaricom number (2547xxxxxxx or 2541xxxxxxx).")
 
             if errors:
                 return jsonify({'status': 'error', 'errors': errors}), 400
 
-            # Create investment record
+            # --- Create investment record ---
             investment = Investment(
                 user_id=user_id,
                 amount=amount,
@@ -749,12 +746,24 @@ def invest_form():
             db.session.add(investment)
             db.session.commit()
 
+            # --- M-PESA Credentials Check ---
+            shortcode = current_app.config.get('MPESA_BUSINESS_SHORTCODE')
+            passkey = current_app.config.get('MPESA_PASSKEY')
+            account_number = current_app.config.get('MPESA_ACCOUNT_NUMBER')
+            api_base = current_app.config.get('MPESA_API_BASE_URL')
+            consumer_key = current_app.config.get('MPESA_CONSUMER_KEY')
+            consumer_secret = current_app.config.get('MPESA_CONSUMER_SECRET')
+
+            if not all([shortcode, passkey, account_number, api_base, consumer_key, consumer_secret]):
+                current_app.logger.error("Missing M-Pesa credentials in config.")
+                db.session.rollback()
+                return jsonify({'status': 'error', 'message': 'M-Pesa is not properly configured.'}), 500
+
+            # --- Fetch M-Pesa token ---
             def get_mpesa_token():
                 try:
-                    key = current_app.config['MPESA_CONSUMER_KEY']
-                    secret = current_app.config['MPESA_CONSUMER_SECRET']
-                    token_url = f"{current_app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
-                    r = requests.get(token_url, auth=(key, secret))
+                    token_url = f"{api_base}/oauth/v1/generate?grant_type=client_credentials"
+                    r = requests.get(token_url, auth=(consumer_key, consumer_secret))
                     r.raise_for_status()
                     return r.json().get('access_token')
                 except Exception as e:
@@ -764,16 +773,12 @@ def invest_form():
             access_token = get_mpesa_token()
             if not access_token:
                 db.session.rollback()
-                return jsonify({'status': 'error', 'message': 'M-Pesa token generation failed.'}), 500
+                return jsonify({'status': 'error', 'message': 'M-Pesa token fetch failed.'}), 500
 
-            # Construct STK push
+            # --- Construct STK Push ---
             timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            shortcode = current_app.config['MPESA_BUSINESS_SHORTCODE']
-            passkey = current_app.config['MPESA_PASSKEY']
-            account_number = current_app.config['MPESA_ACCOUNT_NUMBER']
             password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
-
-            stk_url = f"{current_app.config['MPESA_API_BASE_URL']}/mpesa/stkpush/v1/processrequest"
+            stk_url = f"{api_base}/mpesa/stkpush/v1/processrequest"
             headers = {
                 'Authorization': f'Bearer {access_token}',
                 'Content-Type': 'application/json'
@@ -792,7 +797,7 @@ def invest_form():
                 "TransactionDesc": f"Investment for {tier}"
             }
 
-            current_app.logger.info(f"Sending STK Push payload: {payload}")
+            current_app.logger.info(f"Sending STK Push: {json.dumps(payload)}")
             response = requests.post(stk_url, headers=headers, json=payload)
             response.raise_for_status()
             stk_response = response.json()
@@ -814,20 +819,21 @@ def invest_form():
             if stk_response.get('ResponseCode') == '0':
                 return jsonify({
                     'status': 'success',
-                    'message': 'STK Push sent. Check your phone to complete payment.',
+                    'message': 'STK Push sent. Complete payment on your phone.',
                     'transaction_id': transaction.id
                 }), 200
             else:
                 return jsonify({
                     'status': 'error',
-                    'message': stk_response.get('ResponseDescription', 'Unknown M-Pesa error.'),
+                    'message': stk_response.get('ResponseDescription', 'M-Pesa failed.'),
                     'safaricom_response': stk_response
                 }), 500
 
         except Exception as e:
-            current_app.logger.exception("Unexpected server error during investment:")
+            current_app.logger.exception("Investment error:")
             db.session.rollback()
-            return jsonify({'status': 'error', 'message': 'Unexpected server error during investment.'}), 500
+            return jsonify({'status': 'error', 'message': 'Unexpected server error.'}), 500
+
 
 @main.route('/check_payment_status/<int:transaction_id>', methods=['GET'])
 def check_payment_status(transaction_id):
