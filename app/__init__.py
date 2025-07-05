@@ -43,19 +43,37 @@ def floatformat_filter(value, precision=2):
         return f"{float(value):.{precision}f}"
     except (ValueError, TypeError):
         return value
-
 # --- M-Pesa Helpers ---
+
 def get_mpesa_token():
     try:
         key = current_app.config['MPESA_CONSUMER_KEY']
         secret = current_app.config['MPESA_CONSUMER_SECRET']
         token_url = f"{current_app.config['MPESA_API_BASE_URL']}/oauth/v1/generate?grant_type=client_credentials"
+
         response = requests.get(token_url, auth=(key, secret))
         response.raise_for_status()
-        return response.json().get('access_token')
-    except Exception as e:
-        current_app.logger.exception("[M-PESA ERROR] Failed to fetch token:")
+
+        token_data = response.json()
+        token = token_data.get('access_token')
+
+        if not token:
+            current_app.logger.error("[M-PESA ERROR] No access token returned in response: %s", token_data)
+            return None
+
+        current_app.logger.info("[M-PESA] Successfully obtained access token.")
+        return token
+
+    except requests.exceptions.HTTPError as http_err:
+        current_app.logger.error("[M-PESA ERROR] Token request failed with HTTP error: %s", http_err)
+        if http_err.response is not None:
+            current_app.logger.error("[M-PESA ERROR] Response content: %s", http_err.response.text)
         return None
+
+    except Exception as e:
+        current_app.logger.exception("[M-PESA ERROR] Failed to fetch token due to unexpected error:")
+        return None
+
 
 def register_c2b_urls():
     access_token = get_mpesa_token()
@@ -76,11 +94,20 @@ def register_c2b_urls():
     }
 
     try:
+        current_app.logger.info("[M-PESA] Registering C2B URLs with payload: %s", payload)
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
-        current_app.logger.info("[M-PESA] C2B URLs registered: %s", response.json())
+
+        current_app.logger.info("[M-PESA] C2B URLs successfully registered: %s", response.json())
+
+    except requests.exceptions.HTTPError as http_err:
+        current_app.logger.error("[M-PESA ERROR] C2B registration failed with HTTP error: %s", http_err)
+        if http_err.response is not None:
+            current_app.logger.error("[M-PESA ERROR] Response content: %s", http_err.response.text)
+
     except Exception as e:
-        current_app.logger.exception("[M-PESA ERROR] C2B registration failed:")
+        current_app.logger.exception("[M-PESA ERROR] C2B registration failed due to unexpected error:")
+
 
 # --- App Factory ---
 def create_app():
