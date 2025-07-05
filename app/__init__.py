@@ -12,13 +12,11 @@ from dotenv import load_dotenv
 import click
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
-from firebase_admin import exceptions as fb_exceptions
 from werkzeug.security import generate_password_hash
-from flask_migrate import Migrate
 from requests.auth import HTTPBasicAuth
 
-# Import the *single* SQLAlchemy db from extensions.py
-from app.extensions import db
+# ✅ Import single db and migrate instance
+from app.extensions import db, migrate
 
 # -----------------------------------------------------------
 # Load environment variables
@@ -33,11 +31,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-# -----------------------------------------------------------
-# Initialize Migrate
-# -----------------------------------------------------------
-migrate = Migrate()
 
 # -----------------------------------------------------------
 # Jinja Filters
@@ -274,4 +267,5 @@ def create_app():
     return app
 
 
+# ✅ Export correct symbols
 __all__ = ["create_app", "db", "migrate"]
