@@ -1,13 +1,17 @@
+# app/models.py
+
 from enum import Enum
 from datetime import datetime
 from app.extensions import db
 
+# --------------------------------------------
+# ENUMS
+# --------------------------------------------
 
 class UserRole(Enum):
     INVESTOR = 'investor'
     LANDBUYER = 'landbuyer'
     ADMIN = 'admin'
-
 
 class LandStatus(Enum):
     AVAILABLE = 'Available'
@@ -15,22 +19,29 @@ class LandStatus(Enum):
     RESERVED = 'Reserved'
     PENDING_VERIFICATION = 'Pending Verification'
 
+# --------------------------------------------
+# USER
+# --------------------------------------------
 
 class User(db.Model):
+    __tablename__ = "user"
+
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+
     role = db.Column(
         db.Enum(
             UserRole,
-            values_callable=lambda x: [e.value for e in x],
+            values_callable=lambda enum: [e.value for e in enum],
             native_enum=False,
             create_type=False
         ),
         default=UserRole.INVESTOR,
         nullable=False
     )
+
     id_number = db.Column(db.String(50), unique=True, nullable=True)
     phone_number = db.Column(db.String(20), unique=True, nullable=True)
     next_of_kin_name = db.Column(db.String(100), nullable=True)
@@ -39,18 +50,21 @@ class User(db.Model):
     firebase_uid = db.Column(db.String(120), unique=True, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # Relationships
     investments = db.relationship(
         'Investment',
         backref='investor',
         lazy=True,
         cascade='all, delete-orphan'
     )
+
     transactions = db.relationship(
         'Transaction',
         backref='user_rel',
         lazy=True,
         cascade='all, delete-orphan'
     )
+
     land_purchases = db.relationship(
         'LandPurchase',
         backref='buyer',
@@ -61,8 +75,13 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.email} ({self.role.value})>'
 
+# --------------------------------------------
+# INVESTMENT
+# --------------------------------------------
 
 class Investment(db.Model):
+    __tablename__ = "investment"
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -80,8 +99,13 @@ class Investment(db.Model):
     def __repr__(self):
         return f'<Investment {self.id} by User ID {self.user_id}>'
 
+# --------------------------------------------
+# TRANSACTION
+# --------------------------------------------
 
 class Transaction(db.Model):
+    __tablename__ = "transaction"
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     investment_id = db.Column(db.Integer, db.ForeignKey('investment.id'), nullable=True)
@@ -97,23 +121,30 @@ class Transaction(db.Model):
     def __repr__(self):
         return f'<Transaction {self.id} - {self.status}>'
 
+# --------------------------------------------
+# LAND
+# --------------------------------------------
 
 class Land(db.Model):
+    __tablename__ = "land"
+
     id = db.Column(db.Integer, primary_key=True)
     plot_reference = db.Column(db.String(100), unique=True, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     size_acres = db.Column(db.Float, nullable=False)
     price_kes = db.Column(db.Float, nullable=False)
+
     status = db.Column(
         db.Enum(
             LandStatus,
-            values_callable=lambda x: [e.value for e in x],
+            values_callable=lambda enum: [e.value for e in enum],
             native_enum=False,
             create_type=False
         ),
         default=LandStatus.AVAILABLE,
         nullable=False
     )
+
     description = db.Column(db.Text, nullable=True)
     added_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     image_filename = db.Column(db.String(255), nullable=True)
@@ -128,8 +159,13 @@ class Land(db.Model):
     def __repr__(self):
         return f'<Land {self.plot_reference} at {self.location}>'
 
+# --------------------------------------------
+# LAND PURCHASE
+# --------------------------------------------
 
 class LandPurchase(db.Model):
+    __tablename__ = "land_purchase"
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     land_id = db.Column(db.Integer, db.ForeignKey('land.id'), nullable=False)
@@ -139,6 +175,9 @@ class LandPurchase(db.Model):
     def __repr__(self):
         return f'<LandPurchase {self.id} (User: {self.user_id}, Land: {self.land_id})>'
 
+# --------------------------------------------
+# UserModel (DTO / helper, NOT db table)
+# --------------------------------------------
 
 class UserModel:
     def __init__(
