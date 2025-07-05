@@ -20,7 +20,7 @@ from . import lipa_na_mpesa
 from datetime import datetime
 import json
 import logging # Import the logging module
-
+import sys # Add this at the top of your file for sys.exc_info()
 # --- THIRD-PARTY LIBRARIES ---
 import requests
 from fpdf import FPDF
@@ -196,13 +196,19 @@ def signup_api():
     except Exception as e:
         current_app.logger.exception("Registration failed:")
         return jsonify({"status": "error", "message": f"Error creating user: {str(e)}"}), 500
-# Assuming 'main' is your Blueprint, or if not, adjust @main.route accordingly
+
+
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
         return redirect_by_role(session.get('user_role'))
 
-    form = LoginForm() # <-- This line correctly initializes the form
+    form = LoginForm() # This is where 'form' should be defined.
+
+    # Debugging: Print to console to confirm 'form' exists
+    print(f"DEBUG: 'form' object type before render_template: {type(form)}", file=sys.stderr)
+    print(f"DEBUG: 'next_page' value before render_template: {next_page}", file=sys.stderr)
+
 
     next_page = request.args.get('next')
     if not next_page:
@@ -290,9 +296,6 @@ def login():
                 if not get_flashed_messages(category_filter=['danger']):
                     flash("Invalid email or password.", "danger")
 
-    # This line MUST be consistently indented. It should be at the same level
-    # as the `if form.validate_on_submit():` and `form = LoginForm()` lines,
-    # which is 4 spaces from the `def login():` line.
     return render_template("login.html", form=form, next=next_page)
 #for logout
 @main.route('/logout')
