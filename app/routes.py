@@ -5,22 +5,15 @@ import os
 import io
 import json
 import base64
-from secrets import token_hex
 import traceback
-import smtplib
+from secrets import token_hex
 from datetime import datetime
 from urllib.parse import urlparse, urljoin
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Blueprint, request, jsonify, current_app, render_template, session, redirect, url_for, flash
-from app.forms import LoginForm
-from .decorators import role_required
-from .models import Transaction, Investment, db
-from . import lipa_na_mpesa
-from datetime import datetime
-import json
-import logging # Import the logging module
-import sys # Add this at the top of your file for sys.exc_info()
+import logging
+import sys
+
 # --- THIRD-PARTY LIBRARIES ---
 import requests
 from fpdf import FPDF
@@ -31,23 +24,15 @@ from flask import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import extract, func
-
-# Import Firebase auth and firestore from firebase_admin
 from firebase_admin import auth, firestore
 
-# --- LOCAL MODULES (using relative imports for package structure) ---
+# --- LOCAL MODULES ---
 from .extensions import db
 from .models import User, UserRole, Investment, Land, LandPurchase, Transaction
 from .utils import allowed_file, is_safe_url
 from .decorators import login_required, role_required, redirect_by_role
-
-
-
 from .forms import LoginForm
-
-from .models import User
-
-
+from . import lipa_na_mpesa
 
 # --- Define Blueprint ---
 main = Blueprint('main', __name__)
