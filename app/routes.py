@@ -290,9 +290,10 @@ def login():
                 if not get_flashed_messages(category_filter=['danger']):
                     flash("Invalid email or password.", "danger")
 
-    # --- THE CRITICAL CHANGE IS HERE ---
-    # Pass the 'form' object to your template
-   return render_template("login.html", form=form, next=next_page)
+    # This line MUST be consistently indented. It should be at the same level
+    # as the `if form.validate_on_submit():` and `form = LoginForm()` lines,
+    # which is 4 spaces from the `def login():` line.
+    return render_template("login.html", form=form, next=next_page)
 #for logout
 @main.route('/logout')
 @login_required
