@@ -11,6 +11,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from firebase_admin import exceptions as fb_exceptions
 from werkzeug.security import generate_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 # Load environment variables
 load_dotenv()
@@ -18,6 +20,10 @@ load_dotenv()
 # Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# Initialize DB and Migrate
+db = SQLAlchemy()
+migrate = Migrate()
 
 # --- Jinja Filters ---
 def intcomma_filter(value):
@@ -113,7 +119,6 @@ def create_app():
     logger.info("Jinja2 filters registered.")
 
     # DB init
-    from .models import db, migrate
     db.init_app(app)
     migrate.init_app(app, db)
 
@@ -187,3 +192,6 @@ def create_app():
     logger.info("Blueprint registered.")
 
     return app
+
+# Make db and migrate available for external import
+__all__ = ["create_app", "db", "migrate"]
